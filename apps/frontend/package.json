@@ -1,0 +1,25 @@
+{
+  "name": "@abe/frontend",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Frontend workspace for ABE annotation platform",
+  "scripts": {
+    "dev": "pnpm --filter web dev",
+    "build": "pnpm --filter @abe/web build",
+    "start": "pnpm --filter @abe/web start",
+    "lint": "pnpm run lint --recursive",
+    "lint:fix": "pnpm run lint:fix --recursive",
+    "type-check": "pnpm run type-check --recursive",
+    "test": "pnpm run test --recursive",
+    "test:e2e": "pnpm run test:e2e --filter @abe/web",
+    "clean": "pnpm run clean --recursive"
+  },
+  "devDependencies": {
+    "husky": "^8.0.3",
+    "lint-staged": "^15.2.0"
+  },
+  "engines": {
+    "node": ">=18.0.0",
+    "pnpm": ">=8.0.0"
+  }
+} 

@@ -1,0 +1,17 @@
+#!/usr/bin/env sh
+. "$(dirname -- "$0")/_/husky.sh"
+
+# Change to frontend directory
+cd apps/frontend/shared
+
+# Run linting
+pnpm lint 
+
+# Run type checking
+pnpm type-check
+
+# Run tests (when implemented)
+# pnpm test
+
+# Try to build packages to ensure they're working
+pnpm build:shared 

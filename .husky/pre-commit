@@ -1,0 +1,11 @@
+#!/usr/bin/env sh
+. "$(dirname -- "$0")/_/husky.sh"
+
+# Change to frontend directory for all operations
+cd apps/frontend
+
+# Run lint-staged to check and fix staged files
+npx lint-staged 
+
+# Run type checking
+pnpm type-check 

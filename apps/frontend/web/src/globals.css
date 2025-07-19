@@ -1,0 +1,4 @@
+/* Import shared global styles */
+@import '../../cross_platform/src/globals.css';
+
+/* Web-specific styles can be added here if needed */ 

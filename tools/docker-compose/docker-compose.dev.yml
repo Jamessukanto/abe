@@ -1,0 +1,76 @@
+version: '3.8'
+
+services:
+  # Frontend web application
+  web:
+    build:
+      context: .
+      dockerfile: apps/frontend/web/Dockerfile
+      target: builder
+    ports:
+      - "3000:3000"
+    environment:
+      - NODE_ENV=development
+      - NEXT_TELEMETRY_DISABLED=1
+    volumes:
+      - .:/app
+      - /app/node_modules
+      - /app/apps/frontend/web/node_modules
+      - /app/packages/ui/node_modules
+      - /app/packages/types/node_modules
+      - /app/packages/utils/node_modules
+      - /app/packages/config/node_modules
+      - /app/apps/frontend/shared/node_modules
+    command: sh -c "cd apps/frontend/shared && pnpm dev:web"
+    stdin_open: true
+    tty: true
+    networks:
+      - abe-network
+
+  # Development database (for future backend)
+  # postgres:
+  #   image: postgres:15-alpine
+  #   environment:
+  #     POSTGRES_DB: abe_dev
+  #     POSTGRES_USER: abe_user
+  #     POSTGRES_PASSWORD: abe_password
+  #   ports:
+  #     - "5432:5432"
+  #   volumes:
+  #     - postgres_data:/var/lib/postgresql/data
+  #   networks:
+  #     - abe-network
+
+  # Redis for caching (for future backend)
+  # redis:
+  #   image: redis:7-alpine
+  #   ports:
+  #     - "6379:6379"
+  #   volumes:
+  #     - redis_data:/data
+  #   networks:
+  #     - abe-network
+
+  # MinIO for local S3-compatible storage (for future backend)
+  # minio:
+  #   image: minio/minio:latest
+  #   ports:
+  #     - "9000:9000"
+  #     - "9001:9001"
+  #   environment:
+  #     MINIO_ROOT_USER: minioadmin
+  #     MINIO_ROOT_PASSWORD: minioadmin
+  #   volumes:
+  #     - minio_data:/data
+  #   command: server /data --console-address ":9001"
+  #   networks:
+  #     - abe-network
+
+networks:
+  abe-network:
+    driver: bridge
+
+volumes:
+  postgres_data:
+  redis_data:
+  minio_data: 
