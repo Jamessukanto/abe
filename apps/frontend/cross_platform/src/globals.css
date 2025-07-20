@@ -25,12 +25,6 @@
     --ring: 221.2 83.2% 53.3%;
     --radius: 0.5rem;
     
-    /* Annotation-specific colors */
-    --annotation-selected: 221.2 83.2% 53.3%;
-    --annotation-hover: 217.2 91.2% 59.8%;
-    --annotation-active: 221.2 83.2% 53.3%;
-    --annotation-outline: 214.3 31.8% 91.4%;
-    
     /* Canvas-specific colors */
     --canvas-background: 0 0% 100%;
     --canvas-grid: 214.3 31.8% 91.4%;
@@ -42,34 +36,31 @@
   }
 
   .dark {
-    --background: 222.2 84% 4.9%;
-    --foreground: 210 40% 98%;
-    --card: 222.2 84% 4.9%;
+    --background: 170 23% 5%;
+    --foreground: 215 3% 80%;
+    --card: 170 23% 8%;
     --card-foreground: 210 40% 98%;
     --popover: 222.2 84% 4.9%;
     --popover-foreground: 210 40% 98%;
-    --primary: 217.2 91.2% 59.8%;
-    --primary-foreground: 222.2 84% 4.9%;
+
+    --primary: 212 100% 45%;
+    --primary-foreground: 215 3% 2%;
     --secondary: 217.2 32.6% 17.5%;
     --secondary-foreground: 210 40% 98%;
-    --muted: 217.2 32.6% 17.5%;
-    --muted-foreground: 215 20.2% 65.1%;
-    --accent: 217.2 32.6% 17.5%;
+
+    --muted: 170 20% 10%;
+    --muted-foreground: 200 10% 40%;
+    --accent: 217.2 22.6% 17.5%;
     --accent-foreground: 210 40% 98%;
+
     --destructive: 0 62.8% 30.6%;
     --destructive-foreground: 210 40% 98%;
-    --border: 217.2 32.6% 17.5%;
+    --border: 217.2 22% 12%;
     --input: 217.2 32.6% 17.5%;
-    --ring: 224.3 76.3% 94.1%;
-    
-    /* Annotation-specific colors (dark mode) */
-    --annotation-selected: 217.2 91.2% 59.8%;
-    --annotation-hover: 221.2 83.2% 53.3%;
-    --annotation-active: 217.2 91.2% 59.8%;
-    --annotation-outline: 217.2 32.6% 17.5%;
+    --ring: 217.2 22% 20%;
     
     /* Canvas-specific colors (dark mode) */
-    --canvas-background: 222.2 84% 4.9%;
+    --canvas-background: 170 23% 1.5%;
     --canvas-grid: 217.2 32.6% 17.5%;
     --canvas-overlay: 0 0% 100%;
     
@@ -85,5 +76,30 @@
   }
   body {
     @apply bg-background text-foreground;
+  }
+}
+
+@layer components {
+  .custom-scrollbar {
+    scrollbar-width: thin;
+    scrollbar-color: hsl(var(--muted-foreground)) hsl(var(--muted));
+  }
+  
+  .custom-scrollbar::-webkit-scrollbar {
+    width: 8px;
+  }
+  
+  .custom-scrollbar::-webkit-scrollbar-track {
+    background: hsl(var(--muted));
+    border-radius: 4px;
+  }
+  
+  .custom-scrollbar::-webkit-scrollbar-thumb {
+    background: hsl(var(--muted-foreground));
+    border-radius: 4px;
+  }
+  
+  .custom-scrollbar::-webkit-scrollbar-thumb:hover {
+    background: hsl(var(--foreground));
   }
 } 
