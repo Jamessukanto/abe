@@ -1,12 +1,10 @@
+'use client'
+
 import { configureStore } from '@reduxjs/toolkit'
-import { enableMapSet } from 'immer'
 import annotationReducer from './annotationSlice'
 
-// Enable Immer support for Maps and Sets
-enableMapSet()
-
 // Create store function to ensure it's created on the client side
-const createStore = () => {
+const createClientStore = () => {
   return configureStore({
     reducer: {
       annotation: annotationReducer
@@ -22,27 +20,13 @@ const createStore = () => {
           ignoredPaths: ['annotation.dirtyShapeIds', 'annotation.dirtyGroupIds'],
         },
       }),
-    devTools: process.env.NODE_ENV !== 'production'
+    devTools: false // Disable dev tools for client store
   })
 }
 
 // Create store instance
-export const store = createStore()
+export const clientStore = createClientStore()
 
 // Infer the `RootState` and `AppDispatch` types from the store itself
-export type RootState = ReturnType<typeof store.getState>
-export type AppDispatch = typeof store.dispatch
-
-// Export client-side hooks and store
-export { useAppDispatch, useAppSelector } from './clientHooks'
-export { clientStore } from './clientStore'
-
-// Export all Redux actions and thunks
-export * from './annotationSlice'
-export * from './thunks'
-
-// Export all selectors
-export * from './selectors'
-
-// Export store (for backward compatibility)
-export default store 
+export type ClientRootState = ReturnType<typeof clientStore.getState>
+export type ClientAppDispatch = typeof clientStore.dispatch 

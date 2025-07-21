@@ -1,18 +1,17 @@
-// Export shared components
-export * from './components/ui';
-export * from './components/providers';
+// Feature-agnostic UI components
+export * from './components/ui'
 
-// Export shared utilities
-export * from './lib/utils';
-export * from './lib/constants';
-export * from './lib/types';
-export * from './lib/hooks';
+// Feature-specific exports
+export * from './features/annotation'
 
-// Export shared store
-export * from './store';
+// Redux store and utilities (centralized following PROJECT_TREE)
+export { default as store, useAppDispatch, useAppSelector } from './store'
+export type { RootState, AppDispatch } from './store'
+// Export all Redux actions, thunks, and selectors
+export * from './store'
 
-// Export shared features
-export * from './features/annotation';
+// Shared utilities
+export * from './lib/utils'
 
 // Export global styles
 import './globals.css'; 
