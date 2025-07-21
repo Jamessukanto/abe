@@ -14,23 +14,23 @@ interface TopBarProps {
 
 export function TopBar({ className = '' }: TopBarProps) {
   return (
-    <div className={`flex justify-between items-center w-full border-b border-border bg-background text-foreground h-20 px-8 ${className}`}>
+    <div className={`relative flex justify-between items-center w-full border-b border-border bg-background text-foreground h-20 px-8 ${className}`}>
 
-      <div className="hidden lg:block">
+      <div className="">
+      {/* <div className="hidden lg:block"> */}
         <PanelTitleDouble 
           title={"Annotation Task ID: 777xxxxxxxxxxxx777"}
           subtitle={"Name_of_image.jpg"}
         />
       </div>
 
-      <Paginator>
+      <Paginator className="absolute left-1/2 transform -translate-x-1/2">
         <SelectorButton 
           icon={ChevronLeft}
         />
         
         <SelectorCustom>
           <span>Go to:</span>
-          
           <InputNumber className="w-16" />
 
           <span>/ 140</span>

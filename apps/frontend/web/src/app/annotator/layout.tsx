@@ -11,15 +11,11 @@ export default function AnnotatorLayout({
       <TopBar  />
 
       <div className="flex h-full">
-
-        <div className="flex-1 relative">
-          <CanvasArea />
-          <BottomToolsPanel />
-        </div>
-
+        <CanvasArea />
         <RightPanel />
-
       </div>
+
+      <BottomToolsPanel />
       
       {/* Web-specific content */}
       {children}
