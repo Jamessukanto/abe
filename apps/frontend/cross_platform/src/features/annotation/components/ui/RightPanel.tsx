@@ -9,7 +9,7 @@ import { Scrollable, TreeRow, TreeGroupRow, InputDropdown, InputText, Icon, Fiel
 
 export function RightPanel({ children }: { children: React.ReactNode }) {
   return (
-    <div className="w-80 border-l border-border bg-background">
+    <div className="w-120 border-l border-border bg-background">
 
       {/* All-Annotations Panel */}
       <Panel >
