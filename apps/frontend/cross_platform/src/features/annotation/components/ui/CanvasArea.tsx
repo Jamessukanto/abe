@@ -137,7 +137,12 @@ export function CanvasArea() {
     
     // Allow scrolling within scrollable containers
     if (isInScrollableContainer(target)) {
-      return
+      // If this is a pinch-to-zoom gesture, block it in scrollable areas
+      if (event.ctrlKey || event.deltaZ !== 0) {
+        event.preventDefault();
+      }
+      // Allow normal scrolling
+      return;
     }
     
     // Handle interactions only when hovering over canvas
@@ -152,9 +157,6 @@ export function CanvasArea() {
       if (event.ctrlKey) {
         // Pinch-to-zoom
         event.preventDefault()
-        
-        const rect = canvasRef.current?.getBoundingClientRect()
-        if (!rect) return
         
         // Calculate zoom delta (smaller steps for finer control)
         const zoomDelta = event.deltaY > 0 ? 0.95 : 1.05
