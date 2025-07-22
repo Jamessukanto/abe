@@ -1,5 +1,5 @@
 import React, { forwardRef } from 'react'
-import { createPointerEventData, getCanvasRect } from '../../lib/utils/pointerEvents'
+import { createPointerEventData, getCanvasRect } from '../../lib/utils/pointerEventData'
 import type { PointerEventData } from '../../lib/types'
 
 interface CanvasSurfaceProps {

@@ -2,11 +2,14 @@ import { useCallback, useEffect, useRef, useState } from 'react'
 import { useAppDispatch, useAppSelector } from '../../../../store/clientHooks'
 import { selectCanvas } from '../../../../store/selectors'
 import { setCanvas } from '../../../../store/annotationSlice'
-import { shouldAllowWheelInScrollable, isInScrollableContainer } from '../utils/scrollable'
+import { createScrollableUtils } from '../utils/scrollable'
 
 export function useCanvasNavigations() {
   const dispatch = useAppDispatch()
   const canvas = useAppSelector(selectCanvas)
+  
+  // Create scrollable utilities
+  const scrollableUtils = createScrollableUtils()
   
   // Local state for immediate feedback
   const [isPanning, setIsPanning] = useState(false)
@@ -37,7 +40,7 @@ export function useCanvasNavigations() {
   // Global wheel event handler
   const handleGlobalWheel = useCallback((event: WheelEvent) => {
     const target = event.target as Element
-    if (shouldAllowWheelInScrollable(event)) {
+    if (scrollableUtils.shouldAllowWheelInScrollable(event)) {
       return
     }
     if (isHoveringRef.current) {
@@ -91,7 +94,7 @@ export function useCanvasNavigations() {
       'PageUp', 'PageDown', 'Home', 'End', 'ArrowUp', 'ArrowDown'
     ].includes(event.code)) {
       const target = event.target as Element
-      if (!isInScrollableContainer(target)) {
+      if (!scrollableUtils.isInScrollableContainer(target)) {
         event.preventDefault()
       }
     }

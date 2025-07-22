@@ -1,6 +1,6 @@
 'use client'
 
-import React, { useRef, useMemo, useCallback } from 'react'
+import React, { useRef, useMemo } from 'react'
 import { useCanvasNavigations } from '../../lib/hooks/useCanvasNavigations'
 import { useCanvasTools } from '../../lib/hooks/useCanvasTools'
 import { useRenderer } from '../../lib/hooks/useRenderer'
@@ -9,6 +9,7 @@ import { CanvasAnnotation } from './CanvasAnnotation'
 import { CanvasStatusInfo } from './CanvasStatusInfo'
 import { useAppSelector } from '../../../../store/clientHooks'
 import { selectCanvas } from '../../../../store/selectors'
+import { createPointerHandler } from '../../lib/utils/pointerEventHandlers'
 import type { PointerEventData } from '../../lib/types'
 
 export function CanvasArea() {
@@ -38,31 +39,12 @@ export function CanvasArea() {
   // Initialize renderer
   useRenderer(canvasRef, svgRef)
 
-  // Higher-order function to create pointer handlers
-  const createPointerHandler = useCallback((
-    panHandler: (event: React.PointerEvent) => void,
-    toolHandler: (event: PointerEventData, canvas: any) => void
-  ) => {
-    return (event: PointerEventData, originalEvent?: React.PointerEvent) => {
-      if (isPanning) {
-        // Route to pan/zoom logic
-        panHandler(originalEvent!)
-      } else {
-        // Route to tool logic
-        toolHandler(event, canvas)
-      }
-    }
-  }, [isPanning, canvas])
-
   // Event handlers for CanvasSurface
-  // These handlers route pointer events to either pan/zoom logic or tool logic
-  // - If the user is holding spacebar (isPanning), we handle panning
-  // - Otherwise, we route the event to the active tool (draw, select, etc.)
-  const handleCanvasPointerDown = createPointerHandler(onNavPanStart, onToolPointerDown)
-  const handleCanvasPointerMove = createPointerHandler(onNavPanMove, onToolPointerMove)
-  const handleCanvasPointerUp = createPointerHandler(onNavPanEnd, onToolPointerUp)
+  const handleCanvasPointerDown = createPointerHandler(isPanning, onNavPanStart, onToolPointerDown, canvas)
+  const handleCanvasPointerMove = createPointerHandler(isPanning, onNavPanMove, onToolPointerMove, canvas)
+  const handleCanvasPointerUp = createPointerHandler(isPanning, onNavPanEnd, onToolPointerUp, canvas)
 
-  // Get cursor style from active tool or panning state
+  // Get cursor style
   const cursorStyle = useMemo(() => {
     if (isPanning) {
       return 'grabbing'
