@@ -4,7 +4,6 @@ import React, { useRef } from 'react'
 import { useCanvasNavigations } from '../../lib/hooks/useCanvasNavigations'
 import { useCanvasTools } from '../../lib/hooks/useCanvasTools'
 import { useCanvasCursor } from '../../lib/hooks/useCanvasCursor'
-import { useRenderer } from '../../lib/hooks/useRenderer'
 import { CanvasSurface } from './CanvasSurface'
 import { CanvasAnnotation } from './CanvasAnnotation'
 import { CanvasStatusInfo } from './CanvasStatusInfo'
@@ -40,7 +39,7 @@ export function CanvasArea() {
   const cursorStyle = useCanvasCursor(isPanning, getCurrentCursor)
 
   // Initialize renderer
-  useRenderer(canvasRef, svgRef)
+
 
   // Event handlers for CanvasSurface
   const handleCanvasPointerDown = createPointerHandler(isPanning, onNavPanStart, onToolPointerDown, canvas)

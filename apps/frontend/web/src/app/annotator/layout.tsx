@@ -1,5 +1,5 @@
 import React from 'react'
-import { TopBar, RightPanel, CanvasArea, BottomToolsPanel } from '@abe/cross_platform'
+import { TopBar, RightPanel, CanvasContainer, BottomToolsPanel } from '@abe/cross_platform'
 
 export default function AnnotatorLayout({
   children,
@@ -11,7 +11,7 @@ export default function AnnotatorLayout({
       <TopBar />
 
       <div className="flex h-full">
-        <CanvasArea />
+        <CanvasContainer />
         <RightPanel>
           <div> </div>
         </ RightPanel>

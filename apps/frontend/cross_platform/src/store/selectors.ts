@@ -44,7 +44,7 @@ export const selectPreview = createSelector(
 
 export const selectActiveTool = createSelector(
   [selectAnnotation],
-  (annotation) => annotation.activeTool
+  (annotation) => annotation.tools.activeTool
 )
 
 // Derived selectors
@@ -238,12 +238,12 @@ export const selectSelectedCount = createSelector(
 // History selectors
 export const selectCanUndo = createSelector(
   [selectAnnotation],
-  (annotation) => annotation.history.past.length > 0
+  (annotation) => annotation.historyIndex > 0
 )
 
 export const selectCanRedo = createSelector(
   [selectAnnotation],
-  (annotation) => annotation.history.future.length > 0
+  (annotation) => annotation.historyIndex < annotation.historyMaxSize - 1
 )
 
 // Tool state selectors

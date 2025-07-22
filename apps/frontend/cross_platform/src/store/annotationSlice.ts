@@ -68,8 +68,8 @@ const initialState: AnnotationState = {
   },
   
   // Performance tracking
-  dirtyShapeIds: new Set<string>(),
-  dirtyGroupIds: new Set<string>(),
+  dirtyShapeIds: [],
+  dirtyGroupIds: [],
   
   // History for undo/redo
   historyIndex: -1,
@@ -108,7 +108,7 @@ const annotationSlice = createSlice({
       }
       
       state.shapes[id] = shape
-      state.dirtyShapeIds.add(id)
+      addToArray(state.dirtyShapeIds, id)
     },
     
     updateShape: (state, action: PayloadAction<UpdateShapePayload>) => {
@@ -161,15 +161,27 @@ const annotationSlice = createSlice({
 
     // Group management
     addGroup: (state, action: PayloadAction<CreateGroupPayload>) => {
-      const { id = nanoid(), name, ...rest } = action.payload
+      const { 
+        id = nanoid(), 
+        name, 
+        parentId,
+        isExpanded = true,
+        color = '#64748b',
+        isVisible = true,
+        metadata = {}
+      } = action.payload
       
       const group: AnnotationGroup = {
         id,
         name,
+        parentId,
         childIds: [],
+        isExpanded,
+        color,
+        isVisible,
+        metadata,
         createdAt: now(),
-        updatedAt: now(),
-        ...rest
+        updatedAt: now()
       }
       
       state.groups[id] = group
@@ -234,6 +246,10 @@ const annotationSlice = createSlice({
         id: groupId,
         name: groupName,
         childIds: [...shapeIds],
+        isExpanded: true,
+        color: '#64748b',
+        isVisible: true,
+        metadata: {},
         createdAt: now(),
         updatedAt: now()
       }

@@ -109,8 +109,8 @@ export const optimizePerformance = createAsyncThunk(
     
     // Log performance metrics
     const metrics = {
-      dirtyShapes: dirtyShapeIds.size,
-      dirtyGroups: dirtyGroupIds.size,
+      dirtyShapes: dirtyShapeIds.length,
+      dirtyGroups: dirtyGroupIds.length,
       timestamp: Date.now()
     }
     

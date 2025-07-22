@@ -1,7 +1,7 @@
 // UI Components
 export { TopBar } from './components/ui/TopBar'
 export { RightPanel } from './components/ui/RightPanel'
-export { CanvasArea } from './components/ui/CanvasArea'
+export { CanvasContainer } from './canvas/CanvasContainer'
 export { CanvasSurface } from './components/ui/CanvasSurface'
 export { CanvasAnnotation } from './components/ui/CanvasAnnotation'
 export { CanvasStatusInfo } from './components/ui/CanvasStatusInfo'

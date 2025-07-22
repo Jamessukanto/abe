@@ -94,6 +94,17 @@ export interface PreviewState {
   isActive: boolean
 }
 
+// Tool state interface
+export interface ToolState {
+  activeTool: ToolType
+  toolSettings: {
+    strokeWidth: number
+    strokeColor: string
+    fillColor: string
+    opacity: number
+  }
+}
+
 // Main annotation state
 export interface AnnotationState {
   // Data
@@ -107,18 +118,15 @@ export interface AnnotationState {
   preview: PreviewState
   
   // Tool state
-  activeTool: string
+  tools: ToolState
   
-  // Performance
-  dirtyShapeIds: Set<string>
-  dirtyGroupIds: Set<string>
+  // Performance - using arrays for Redux compatibility
+  dirtyShapeIds: string[]
+  dirtyGroupIds: string[]
   
-  // History (for undo/redo)
-  history: {
-    past: any[]
-    present: any
-    future: any[]
-  }
+  // History for undo/redo
+  historyIndex: number
+  historyMaxSize: number
 }
 
 // Action payload types
@@ -132,7 +140,13 @@ export interface UpdateShapePayload {
 }
 
 export interface CreateGroupPayload {
-  group: Omit<AnnotationGroup, 'id' | 'createdAt' | 'updatedAt'>
+  id?: string
+  name: string
+  parentId?: string
+  isExpanded?: boolean
+  color?: string
+  isVisible?: boolean
+  metadata?: Record<string, any>
 }
 
 export interface UpdateGroupPayload {
@@ -142,7 +156,8 @@ export interface UpdateGroupPayload {
 
 export interface GroupShapesPayload {
   shapeIds: string[]
-  groupName: string
+  groupId?: string
+  groupName?: string
   parentId?: string
 }
 
