@@ -8,7 +8,7 @@ import type {
   CreateGroupPayload,
   UpdateGroupPayload 
 } from '../../lib/types'
-import type { AppDispatch } from '../../../../store'
+import type { ClientAppDispatch } from '../../../../store'
 import { 
   addShape, 
   updateShape, 
@@ -29,7 +29,7 @@ abstract class BaseAnnotationCommand implements IAnnotationCommand {
     public readonly description: string,
     public readonly operationType: 'create' | 'update' | 'delete' | 'group' | 'ungroup' | 'move',
     public readonly affectedIds: string[],
-    protected readonly dispatch: AppDispatch
+    protected readonly dispatch: ClientAppDispatch
   ) {}
 
   abstract execute(): Promise<void> | void
@@ -49,7 +49,7 @@ export class CreateShapeCommand extends BaseAnnotationCommand {
 
   constructor(
     private readonly shapeData: CreateShapePayload['shape'],
-    dispatch: AppDispatch,
+    dispatch: ClientAppDispatch,
     description?: string
   ) {
     const id = nanoid()
@@ -101,7 +101,7 @@ export class UpdateShapeCommand extends BaseAnnotationCommand {
     private readonly shapeId: string,
     private readonly updates: Partial<AnnotationShape>,
     private readonly beforeState: Partial<AnnotationShape>,
-    dispatch: AppDispatch,
+    dispatch: ClientAppDispatch,
     description?: string
   ) {
     super(
@@ -159,7 +159,7 @@ export class DeleteShapeCommand extends BaseAnnotationCommand {
   constructor(
     private readonly shapeId: string,
     private readonly shapeData: AnnotationShape,
-    dispatch: AppDispatch,
+    dispatch: ClientAppDispatch,
     description?: string
   ) {
     super(
@@ -197,7 +197,7 @@ export class CreateGroupCommand extends BaseAnnotationCommand {
 
   constructor(
     private readonly groupData: CreateGroupPayload,
-    dispatch: AppDispatch,
+    dispatch: ClientAppDispatch,
     description?: string
   ) {
     const id = nanoid()
@@ -243,7 +243,7 @@ export class GroupShapesCommand extends BaseAnnotationCommand {
   constructor(
     private readonly shapeIds: string[],
     private readonly groupName: string,
-    dispatch: AppDispatch,
+    dispatch: ClientAppDispatch,
     description?: string
   ) {
     super(
@@ -287,7 +287,7 @@ export class UngroupShapesCommand extends BaseAnnotationCommand {
   constructor(
     private readonly groupId: string,
     private readonly groupData: AnnotationGroup,
-    dispatch: AppDispatch,
+    dispatch: ClientAppDispatch,
     description?: string
   ) {
     super(
@@ -330,7 +330,7 @@ export class UngroupShapesCommand extends BaseAnnotationCommand {
  * Command factory for creating commands with proper context
  */
 export class AnnotationCommandFactory {
-  constructor(private readonly dispatch: AppDispatch) {}
+  constructor(private readonly dispatch: ClientAppDispatch) {}
 
   createShape(shapeData: CreateShapePayload['shape'], description?: string): CreateShapeCommand {
     return new CreateShapeCommand(shapeData, this.dispatch, description)

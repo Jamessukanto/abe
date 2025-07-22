@@ -1,48 +1,9 @@
-import { configureStore } from '@reduxjs/toolkit'
-import { enableMapSet } from 'immer'
-import annotationReducer from './annotationSlice'
+// This app uses only client-side Redux state. 
+export { clientStore } from './clientStore';
+export type { ClientRootState, ClientAppDispatch } from './clientStore';
+export { useAppDispatch, useAppSelector } from './clientHooks';
 
-// Enable Immer support for Maps and Sets
-enableMapSet()
-
-// Create store function to ensure it's created on the client side
-const createStore = () => {
-  return configureStore({
-    reducer: {
-      annotation: annotationReducer
-    },
-    middleware: (getDefaultMiddleware) =>
-      getDefaultMiddleware({
-        serializableCheck: {
-          // Ignore these action types for serialization check
-          ignoredActions: ['annotation/clearDirtyFlags'],
-          // Ignore these field paths in all actions
-          ignoredActionsPaths: ['payload.dirtyShapeIds', 'payload.dirtyGroupIds'],
-          // Ignore these paths in the state
-          ignoredPaths: ['annotation.dirtyShapeIds', 'annotation.dirtyGroupIds'],
-        },
-      }),
-    devTools: process.env.NODE_ENV !== 'production'
-  })
-}
-
-// Create store instance
-export const store = createStore()
-
-// Infer the `RootState` and `AppDispatch` types from the store itself
-export type RootState = ReturnType<typeof store.getState>
-export type AppDispatch = typeof store.dispatch
-
-// Export client-side hooks and store
-export { useAppDispatch, useAppSelector } from './clientHooks'
-export { clientStore } from './clientStore'
-
-// Export all Redux actions and thunks
-export * from './annotationSlice'
-export * from './thunks'
-
-// Export all selectors
-export * from './selectors'
-
-// Export store (for backward compatibility)
-export default store 
+// Export all Redux actions, thunks, and selectors
+export * from './annotationSlice';
+export * from './thunks';
+export * from './selectors'; 

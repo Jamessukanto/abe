@@ -4,7 +4,7 @@ import type {
   CanvasState, 
   Point 
 } from '../lib/types'
-import type { AppDispatch } from '../../../store'
+import type { ClientAppDispatch } from '../../../store'
 
 /**
  * Abstract base class for all annotation tools
@@ -14,11 +14,11 @@ export abstract class BaseTool implements Tool {
   abstract type: string
   abstract cursor?: string
 
-  protected dispatch: AppDispatch
+  protected dispatch: ClientAppDispatch
   protected isActive: boolean = false
   protected isDrawing: boolean = false
 
-  constructor(dispatch: AppDispatch) {
+  constructor(dispatch: ClientAppDispatch) {
     this.dispatch = dispatch
   }
 

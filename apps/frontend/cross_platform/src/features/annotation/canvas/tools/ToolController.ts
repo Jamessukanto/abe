@@ -5,7 +5,7 @@ import { PenTool } from '../../tools/PenTool'
 import { CommandManager } from '../../tools/commands/CommandManager'
 import { AnnotationCommandFactory } from '../../tools/commands/AnnotationCommands'
 import { EventBus, globalEventBus } from '../events/EventBus'
-import type { AppDispatch } from '../../../../store'
+import type { ClientAppDispatch } from '../../../../store'
 
 /**
  * ToolController manages tool state and coordinates between tools, commands, and events
@@ -16,13 +16,13 @@ export class ToolController {
   private commandManager: CommandManager
   private commandFactory: AnnotationCommandFactory
   private eventBus: EventBus
-  private dispatch: AppDispatch
+  private dispatch: ClientAppDispatch
   
   private activeTool: ToolType = 'rectangle'
   private isToolActive: boolean = false
 
   constructor(
-    dispatch: AppDispatch,
+    dispatch: ClientAppDispatch,
     eventBus: EventBus = globalEventBus,
     commandManager?: CommandManager
   ) {
@@ -318,7 +318,7 @@ class EnhancedRectangleTool extends RectangleTool {
   constructor(
     private commandFactory: AnnotationCommandFactory,
     private eventBus: EventBus,
-    dispatch: AppDispatch
+    dispatch: ClientAppDispatch
   ) {
     super(dispatch)
   }
@@ -334,7 +334,7 @@ class EnhancedPenTool extends PenTool {
   constructor(
     private commandFactory: AnnotationCommandFactory,
     private eventBus: EventBus,
-    dispatch: AppDispatch
+    dispatch: ClientAppDispatch
   ) {
     super(dispatch)
   }

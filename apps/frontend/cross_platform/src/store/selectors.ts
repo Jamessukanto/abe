@@ -1,5 +1,5 @@
 import { createSelector } from '@reduxjs/toolkit'
-import type { RootState } from './index'
+import type { ClientRootState } from './index'
 import type { 
   AnnotationState, 
   AnnotationShape, 
@@ -10,7 +10,7 @@ import type {
 } from '../features/annotation/lib/types'
 
 // Base selectors
-export const selectAnnotation = (state: RootState): AnnotationState => state.annotation
+export const selectAnnotation = (state: ClientRootState): AnnotationState => state.annotation
 
 export const selectShapes = createSelector(
   [selectAnnotation],

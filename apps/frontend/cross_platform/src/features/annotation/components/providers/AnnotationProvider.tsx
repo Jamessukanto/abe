@@ -2,7 +2,7 @@
 
 import React from 'react'
 import { Provider } from 'react-redux'
-import { clientStore } from '../../../../store/clientStore'
+import { clientStore } from '../../../../store'
 
 interface AnnotationProviderProps {
   children: React.ReactNode

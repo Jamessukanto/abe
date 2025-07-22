@@ -8,6 +8,7 @@ export default function AnnotatorLayout({
 }) {
   return (
     <div className="h-screen w-full flex flex-col">
+      
       <TopBar />
 
       <div className="flex h-full">
@@ -21,6 +22,7 @@ export default function AnnotatorLayout({
 
       {/* Web-specific content */}
       {children}
+
     </div>
   )
 } 

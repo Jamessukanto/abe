@@ -5,10 +5,11 @@ export * from './components/ui'
 export * from './features/annotation'
 
 // Redux store and utilities (centralized following PROJECT_TREE)
-export { default as store, useAppDispatch, useAppSelector } from './store'
-export type { RootState, AppDispatch } from './store'
+export { clientStore, useAppDispatch, useAppSelector } from './store'
+export type { ClientRootState, ClientAppDispatch } from './store'
 // Export all Redux actions, thunks, and selectors
-export * from './store'
+export * from './store/annotationSlice'
+export * from './store/thunks'
 
 // Shared utilities
 export * from './lib/utils'

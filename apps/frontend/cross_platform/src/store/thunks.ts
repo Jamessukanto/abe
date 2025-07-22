@@ -5,7 +5,7 @@ import type {
   Point,
   Rectangle 
 } from '../features/annotation/lib/types'
-import type { RootState } from './index'
+import type { ClientRootState } from './index'
 
 // Async thunk for loading an image and setting up canvas
 export const loadImage = createAsyncThunk(
@@ -38,7 +38,7 @@ export const loadImage = createAsyncThunk(
 export const batchCreateShapes = createAsyncThunk(
   'annotation/batchCreateShapes',
   async (shapesData: CreateShapePayload[], { dispatch, getState }) => {
-    const state = getState() as RootState
+    const state = getState() as ClientRootState
     const timestamp = Date.now()
     
     // Create all shapes with IDs
@@ -60,7 +60,7 @@ export const autoGroupNearbyShapes = createAsyncThunk(
     { threshold = 50, selectedOnly = false }: { threshold?: number; selectedOnly?: boolean },
     { getState, dispatch }
   ) => {
-    const state = getState() as RootState
+    const state = getState() as ClientRootState
     const { shapes, selection } = state.annotation
     
     const shapesToAnalyze = selectedOnly 
@@ -104,7 +104,7 @@ export const autoGroupNearbyShapes = createAsyncThunk(
 export const optimizePerformance = createAsyncThunk(
   'annotation/optimizePerformance',
   async (_, { dispatch, getState }) => {
-    const state = getState() as RootState
+    const state = getState() as ClientRootState
     const { dirtyShapeIds, dirtyGroupIds } = state.annotation
     
     // Log performance metrics
@@ -171,7 +171,7 @@ function getShapeBoundingBox(shape: AnnotationShape): Rectangle {
 export const validateShapeIntegrity = createAsyncThunk(
   'annotation/validateShapeIntegrity',
   async (_, { getState }) => {
-    const state = getState() as RootState
+    const state = getState() as ClientRootState
     const { shapes, groups } = state.annotation
     
     const issues: string[] = []

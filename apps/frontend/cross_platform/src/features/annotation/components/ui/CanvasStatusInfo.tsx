@@ -1,5 +1,5 @@
 import React from 'react'
-import { useAppSelector } from '../../../../store/clientHooks'
+import { useAppSelector } from '../../../../store'
 import { selectCanvas, selectShapesArray } from '../../../../store/selectors'
 
 interface CanvasStatusInfoProps {

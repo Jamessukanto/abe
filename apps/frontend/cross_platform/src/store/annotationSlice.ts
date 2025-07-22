@@ -11,7 +11,6 @@ import type {
   GroupShapesPayload,
   SetCanvasPayload,
   SetSelectionPayload,
-  Point,
   ToolType
 } from '../features/annotation/lib/types'
 
@@ -35,6 +34,7 @@ const now = () => Date.now()
 
 // Initial state
 const initialState: AnnotationState = {
+
   // Data
   shapes: {},
   groups: {},
@@ -46,19 +46,19 @@ const initialState: AnnotationState = {
       isActive: true
     }
   },
-  
+
   // UI State
   canvas: {
     zoom: 1,
     pan: { x: 0, y: 0 },
     imageUrl: '',
     imageSize: { width: 800, height: 600 }, // Default canvas size
-    maxZoom: 10,
-    minZoom: 0.1,
+    maxZoom: 12,
+    minZoom: 0.2,
     isDragging: false,
     isLoading: false
   },
-  
+
   selection: {
     selectedShapeIds: [],
     selectedGroupIds: [],
@@ -66,7 +66,7 @@ const initialState: AnnotationState = {
     hoveredGroupId: undefined,
     isMultiSelect: false
   },
-  
+
   // Performance tracking
   dirtyShapeIds: [],
   dirtyGroupIds: [],
@@ -97,6 +97,7 @@ const annotationSlice = createSlice({
   name: 'annotation',
   initialState,
   reducers: {
+
     // Shape management
     addShape: (state, action: PayloadAction<CreateShapePayload>) => {
       const id = nanoid()

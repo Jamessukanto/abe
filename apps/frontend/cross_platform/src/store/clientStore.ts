@@ -3,7 +3,6 @@
 import { configureStore } from '@reduxjs/toolkit'
 import annotationReducer from './annotationSlice'
 
-// Create store function to ensure it's created on the client side
 const createClientStore = () => {
   return configureStore({
     reducer: {

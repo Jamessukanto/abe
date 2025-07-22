@@ -2,7 +2,7 @@
 
 import React from 'react'
 import { MousePointer2, Pen, Square, ChevronDown, Hand } from 'lucide-react'
-import { useAppDispatch, useAppSelector } from '../../../../store/clientHooks'
+import { useAppDispatch, useAppSelector } from '../../../../store'
 import { setActiveTool } from '../../../../store/annotationSlice'
 import { selectActiveTool } from '../../../../store/selectors'
 
