@@ -11,25 +11,23 @@ import { useAppSelector, useAppDispatch } from '../../../store'
 import { selectCanvas, selectShapesArray, selectGroupsArray, selectPreview } from '../../../store/selectors'
 import { setCanvas } from '../../../store/annotationSlice'
 import { createPointerHandler } from '../lib/utils/pointerEventHandlers'
-
-// New architecture components
 import { ViewportManager } from './viewport/ViewportManager'
 import { InteractionManager } from './interaction/InteractionManager'
 import { RenderingEngine } from './rendering/RenderingEngine'
 
 /**
- * CanvasContainer orchestrates the new layered architecture
- * Replaces the monolithic CanvasArea with proper separation of concerns
+ * CanvasContainer orchestrates Rendering Engine, Tool Controller,
+ * Event Bus, Interaction Manager and Viewport Manager
  */
 export function CanvasContainer() {
   const dispatch = useAppDispatch()
-  const canvasRef = useRef<HTMLCanvasElement>(null)
-  const svgRef = useRef<SVGSVGElement>(null)
+  const canvasSurfaceRef = useRef<HTMLCanvasElement>(null)
+  const canvasAnnotationRef = useRef<SVGSVGElement>(null)
   
   // Architecture layer instances
+  const renderingEngineRef = useRef<RenderingEngine>()
   const viewportManagerRef = useRef<ViewportManager>()
   const interactionManagerRef = useRef<InteractionManager>()
-  const renderingEngineRef = useRef<RenderingEngine>()
   
   // Redux state
   const canvas = useAppSelector(selectCanvas)
@@ -58,19 +56,19 @@ export function CanvasContainer() {
 
   // Initialize architecture layers
   useEffect(() => {
-    if (canvasRef.current && svgRef.current && !viewportManagerRef.current) {
+    if (canvasSurfaceRef.current && canvasAnnotationRef.current && !viewportManagerRef.current) {
       console.log('Initializing new canvas architecture')
       
       // Initialize viewport manager
-      viewportManagerRef.current = new ViewportManager(canvasRef.current)
+      viewportManagerRef.current = new ViewportManager(canvasSurfaceRef.current)
       
       // Initialize interaction manager
       interactionManagerRef.current = new InteractionManager()
       
       // Initialize rendering engine
       renderingEngineRef.current = new RenderingEngine(
-        canvasRef.current,
-        svgRef.current,
+        canvasSurfaceRef.current,
+        canvasAnnotationRef.current,
         viewportManagerRef.current
       )
       
@@ -142,7 +140,7 @@ export function CanvasContainer() {
     <div className="relative flex-1 w-full h-full bg-[hsl(var(--canvas-background))] overflow-hidden">
       
       <CanvasSurface
-        ref={canvasRef}
+        ref={canvasSurfaceRef}
         onPointerDown={handleCanvasPointerDown}
         onPointerMove={handleCanvasPointerMove}
         onPointerUp={handleCanvasPointerUp}
@@ -151,7 +149,7 @@ export function CanvasContainer() {
         cursorStyle={cursorStyle}
       />
       
-      <CanvasAnnotation ref={svgRef} />
+      <CanvasAnnotation ref={canvasAnnotationRef} />
       
       <CanvasStatusInfo isSpacePressed={isPanning} />
       
