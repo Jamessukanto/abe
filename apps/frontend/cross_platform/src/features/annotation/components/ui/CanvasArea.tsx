@@ -1,8 +1,9 @@
 'use client'
 
-import React, { useRef, useMemo } from 'react'
+import React, { useRef } from 'react'
 import { useCanvasNavigations } from '../../lib/hooks/useCanvasNavigations'
 import { useCanvasTools } from '../../lib/hooks/useCanvasTools'
+import { useCanvasCursor } from '../../lib/hooks/useCanvasCursor'
 import { useRenderer } from '../../lib/hooks/useRenderer'
 import { CanvasSurface } from './CanvasSurface'
 import { CanvasAnnotation } from './CanvasAnnotation'
@@ -36,6 +37,8 @@ export function CanvasArea() {
     getCurrentCursor
   } = useCanvasTools()
   
+  const cursorStyle = useCanvasCursor(isPanning, getCurrentCursor)
+
   // Initialize renderer
   useRenderer(canvasRef, svgRef)
 
@@ -43,14 +46,6 @@ export function CanvasArea() {
   const handleCanvasPointerDown = createPointerHandler(isPanning, onNavPanStart, onToolPointerDown, canvas)
   const handleCanvasPointerMove = createPointerHandler(isPanning, onNavPanMove, onToolPointerMove, canvas)
   const handleCanvasPointerUp = createPointerHandler(isPanning, onNavPanEnd, onToolPointerUp, canvas)
-
-  // Get cursor style
-  const cursorStyle = useMemo(() => {
-    if (isPanning) {
-      return 'grabbing'
-    }
-    return getCurrentCursor()
-  }, [isPanning, getCurrentCursor])
 
   return (
     <div className="relative flex-1 w-full h-full bg-[hsl(var(--canvas-background))] overflow-hidden">
