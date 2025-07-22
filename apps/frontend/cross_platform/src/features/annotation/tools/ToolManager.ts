@@ -1,7 +1,7 @@
-import type { Tool, PointerEventData, CanvasState } from '../../lib/types'
+import type { Tool, PointerEventData, CanvasState } from '../lib/types'
 import type { IToolManager } from './types'
-import type { ClientAppDispatch } from '../../../../store/clientStore'
-import { setActiveTool } from '../../../../store/annotationSlice'
+import type { ClientAppDispatch } from '../../../store/clientStore'
+import { setActiveTool } from '../../../store/annotationSlice'
 
 /**
  * Tool manager handles tool registration, activation, and event delegation

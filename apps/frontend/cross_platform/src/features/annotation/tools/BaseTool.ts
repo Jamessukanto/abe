@@ -3,8 +3,8 @@ import type {
   PointerEventData, 
   CanvasState, 
   Point 
-} from '../../lib/types'
-import type { AppDispatch } from '../../../../store'
+} from '../lib/types'
+import type { AppDispatch } from '../../../store'
 
 /**
  * Abstract base class for all annotation tools

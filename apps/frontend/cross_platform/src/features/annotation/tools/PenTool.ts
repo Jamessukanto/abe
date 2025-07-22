@@ -5,12 +5,12 @@ import type {
   Point, 
   AnnotationShape,
   CreateShapePayload 
-} from '../../lib/types'
+} from '../lib/types'
 import { 
   setPreview, 
   clearPreview, 
   addShape 
-} from '../../../../store/annotationSlice'
+} from '../../../store/annotationSlice'
 
 /**
  * Pen tool for drawing polygons

@@ -1,4 +1,4 @@
-import type { Tool, PointerEventData, CanvasState } from '../../lib/types'
+import type { Tool, PointerEventData, CanvasState } from '../lib/types'
 
 /**
  * Tool configuration interface
