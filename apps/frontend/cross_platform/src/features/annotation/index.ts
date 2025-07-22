@@ -3,7 +3,7 @@ export { TopBar } from './components/ui/TopBar'
 export { RightPanel } from './components/ui/RightPanel'
 export { CanvasArea } from './components/ui/CanvasArea'
 export { CanvasSurface } from './components/ui/CanvasSurface'
-export { CanvasOverlay } from './components/ui/CanvasOverlay'
+export { CanvasAnnotation } from './components/ui/CanvasAnnotation'
 export { CanvasStatusInfo } from './components/ui/CanvasStatusInfo'
 export { BottomToolsPanel } from './components/ui/BottomToolsPanel'
 

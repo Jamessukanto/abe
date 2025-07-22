@@ -1,10 +1,10 @@
 import React, { forwardRef } from 'react'
 
-interface CanvasOverlayProps {
+interface CanvasAnnotationProps {
   className?: string
 }
 
-export const CanvasOverlay = forwardRef<SVGSVGElement, CanvasOverlayProps>(
+export const CanvasAnnotation = forwardRef<SVGSVGElement, CanvasAnnotationProps>(
   ({ className = "absolute inset-0 w-full h-full pointer-events-none" }, ref) => {
     return (
       <svg
@@ -16,4 +16,4 @@ export const CanvasOverlay = forwardRef<SVGSVGElement, CanvasOverlayProps>(
   }
 )
 
-CanvasOverlay.displayName = 'CanvasOverlay' 
+CanvasAnnotation.displayName = 'CanvasAnnotation' 

@@ -5,7 +5,7 @@ import { ToolManager, RectangleTool, PenTool } from '../../tools'
 import type { PointerEventData } from '../types'
 import type { CanvasState } from '../types'
 
-export function useToolManager() {
+export function useCanvasTools() {
   const dispatch = useAppDispatch()
   const activeTool = useAppSelector(selectActiveTool)
   const toolManagerRef = useRef<ToolManager>()
@@ -36,20 +36,16 @@ export function useToolManager() {
   }, [activeTool])
 
   // Event handlers
-  const handlePointerDown = (event: PointerEventData, canvas: CanvasState) => {
+  const onToolPointerDown = (event: PointerEventData, canvas: CanvasState) => {
     toolManagerRef.current?.handlePointerDown(event, canvas)
   }
 
-  const handlePointerMove = (event: PointerEventData, canvas: CanvasState) => {
+  const onToolPointerMove = (event: PointerEventData, canvas: CanvasState) => {
     toolManagerRef.current?.handlePointerMove(event, canvas)
   }
 
-  const handlePointerUp = (event: PointerEventData, canvas: CanvasState) => {
+  const onToolPointerUp = (event: PointerEventData, canvas: CanvasState) => {
     toolManagerRef.current?.handlePointerUp(event, canvas)
-  }
-
-  const handleKeyDown = (event: KeyboardEvent) => {
-    toolManagerRef.current?.handleKeyDown(event)
   }
 
   const getCurrentCursor = () => {
@@ -57,10 +53,9 @@ export function useToolManager() {
   }
 
   return {
-    handlePointerDown,
-    handlePointerMove,
-    handlePointerUp,
-    handleKeyDown,
+    onToolPointerDown,
+    onToolPointerMove,
+    onToolPointerUp,
     getCurrentCursor
   }
 } 

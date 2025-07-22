@@ -1,14 +1,15 @@
 'use client'
 
-import React, { useRef, useMemo } from 'react'
-import { useCanvasZoomPan } from '../../lib/hooks/useCanvasZoomPan'
-import { useToolManager } from '../../lib/hooks/useToolManager'
+import React, { useRef, useMemo, useCallback } from 'react'
+import { useCanvasNavigations } from '../../lib/hooks/useCanvasNavigations'
+import { useCanvasTools } from '../../lib/hooks/useCanvasTools'
 import { useRenderer } from '../../lib/hooks/useRenderer'
 import { CanvasSurface } from './CanvasSurface'
-import { CanvasOverlay } from './CanvasOverlay'
+import { CanvasAnnotation } from './CanvasAnnotation'
 import { CanvasStatusInfo } from './CanvasStatusInfo'
 import { useAppSelector } from '../../../../store/clientHooks'
 import { selectCanvas } from '../../../../store/selectors'
+import type { PointerEventData } from '../../lib/types'
 
 export function CanvasArea() {
   const canvasRef = useRef<HTMLCanvasElement>(null)
@@ -19,80 +20,72 @@ export function CanvasArea() {
   
   // Custom hooks
   const {
-    isSpacePressed,
     isPanning,
-    handleMouseEnter,
-    handleMouseLeave,
-    handlePanStart,
-    handlePanMove,
-    handlePanEnd
-  } = useCanvasZoomPan()
+    onNavMouseEnterCanvas,
+    onNavMouseLeaveCanvas,
+    onNavPanStart,
+    onNavPanMove,
+    onNavPanEnd
+  } = useCanvasNavigations()
   
   const {
-    handlePointerDown,
-    handlePointerMove,
-    handlePointerUp,
-    handleKeyDown,
+    onToolPointerDown,
+    onToolPointerMove,
+    onToolPointerUp,
     getCurrentCursor
-  } = useToolManager()
+  } = useCanvasTools()
   
   // Initialize renderer
   useRenderer(canvasRef, svgRef)
 
-  // Event handlers
-  const handleCanvasPointerDown = (event: any, originalEvent?: React.PointerEvent) => {
-    if (isSpacePressed) {
-      // For panning, we need the original React.PointerEvent
-      handlePanStart(originalEvent || event)
-    } else {
-      handlePointerDown(event, canvas)
+  // Higher-order function to create pointer handlers
+  const createPointerHandler = useCallback((
+    panHandler: (event: React.PointerEvent) => void,
+    toolHandler: (event: PointerEventData, canvas: any) => void
+  ) => {
+    return (event: PointerEventData, originalEvent?: React.PointerEvent) => {
+      if (isPanning) {
+        // Route to pan/zoom logic
+        panHandler(originalEvent!)
+      } else {
+        // Route to tool logic
+        toolHandler(event, canvas)
+      }
     }
-  }
+  }, [isPanning, canvas])
 
-  const handleCanvasPointerMove = (event: any, originalEvent?: React.PointerEvent) => {
-    if (isPanning) {
-      // For panning, we need the original React.PointerEvent
-      handlePanMove(originalEvent || event)
-    } else {
-      handlePointerMove(event, canvas)
-    }
-  }
-
-  const handleCanvasPointerUp = (event: any, originalEvent?: React.PointerEvent) => {
-    if (isPanning) {
-      // For panning, we need the original React.PointerEvent
-      handlePanEnd(originalEvent || event)
-    } else {
-      handlePointerUp(event, canvas)
-    }
-  }
+  // Event handlers for CanvasSurface
+  // These handlers route pointer events to either pan/zoom logic or tool logic
+  // - If the user is holding spacebar (isPanning), we handle panning
+  // - Otherwise, we route the event to the active tool (draw, select, etc.)
+  const handleCanvasPointerDown = createPointerHandler(onNavPanStart, onToolPointerDown)
+  const handleCanvasPointerMove = createPointerHandler(onNavPanMove, onToolPointerMove)
+  const handleCanvasPointerUp = createPointerHandler(onNavPanEnd, onToolPointerUp)
 
   // Get cursor style from active tool or panning state
   const cursorStyle = useMemo(() => {
-    if (isSpacePressed) {
-      return isPanning ? 'grabbing' : 'grab'
+    if (isPanning) {
+      return 'grabbing'
     }
     return getCurrentCursor()
-  }, [isSpacePressed, isPanning, getCurrentCursor])
+  }, [isPanning, getCurrentCursor])
 
   return (
     <div className="relative flex-1 w-full h-full bg-[hsl(var(--canvas-background))] overflow-hidden">
-      {/* Canvas for shape rendering */}
+
       <CanvasSurface
         ref={canvasRef}
         onPointerDown={handleCanvasPointerDown}
         onPointerMove={handleCanvasPointerMove}
         onPointerUp={handleCanvasPointerUp}
-        onMouseEnter={handleMouseEnter}
-        onMouseLeave={handleMouseLeave}
+        onMouseEnter={onNavMouseEnterCanvas}
+        onMouseLeave={onNavMouseLeaveCanvas}
         cursorStyle={cursorStyle}
       />
       
-      {/* SVG overlay for selection handles and guides */}
-      <CanvasOverlay ref={svgRef} />
+      <CanvasAnnotation ref={svgRef} />
       
-      {/* Status info */}
-      <CanvasStatusInfo isSpacePressed={isSpacePressed} />
+      <CanvasStatusInfo isSpacePressed={isPanning} />
     </div>
   )
 } 
