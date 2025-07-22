@@ -68,45 +68,19 @@ export function CanvasContainer() {
       // Initialize interaction manager
       interactionManagerRef.current = new InteractionManager()
       
-      // Initialize rendering engine
+      // Initialize rendering engine with dispatch for state updates
       renderingEngineRef.current = new RenderingEngine(
         canvasSurfaceRef.current,
         canvasAnnotationRef.current,
-        viewportManagerRef.current
+        viewportManagerRef.current,
+        dispatch
       )
       
       // Initialize tool controller with event bus
       toolControllerRef.current = new ToolController(dispatch, eventBusRef.current)
       
-      // Load sample image
-      const img = new Image()
-      img.crossOrigin = 'anonymous'
-      img.onload = () => {
-        const initialPan = { x: 0, y: 0 }
-        const initialZoom = 1
-        dispatch(setCanvas({
-          updates: {
-            imageUrl: '/images/chimps.png',
-            imageSize: { width: img.naturalWidth, height: img.naturalHeight },
-            zoom: initialZoom,
-            pan: initialPan
-          }
-        }))
-        renderingEngineRef.current?.loadImage('/images/chimps.png')
-      }
-      img.onerror = () => {
-        // Fallback if image fails to load
-        const initialPan = { x: 0, y: 0 }
-        const initialZoom = 1
-        dispatch(setCanvas({
-          updates: {
-            imageSize: { width: 800, height: 600 },
-            zoom: initialZoom,
-            pan: initialPan
-          }
-        }))
-      }
-      img.src = '/images/chimps.png'
+      // Set initial image (moved from CanvasContainer to RenderingEngine)
+      renderingEngineRef.current.setInitialImage('/images/chimps.png')
     }
   }, [dispatch])
 

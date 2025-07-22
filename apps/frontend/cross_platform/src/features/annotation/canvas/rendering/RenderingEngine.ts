@@ -5,6 +5,8 @@ import { BackgroundRenderer } from './BackgroundRenderer'
 import { ShapeRenderer } from './ShapeRenderer'
 import { OverlayRenderer } from './OverlayRenderer'
 import { RenderingOptimizer } from './RenderingOptimizer'
+import type { ClientAppDispatch } from '../../../../store'
+import { setCanvas } from '../../../../store/annotationSlice'
 
 /**
  * RenderingEngine orchestrates the rendering pipeline using specialized renderers
@@ -29,15 +31,20 @@ export class RenderingEngine {
   private frameRequest?: number
   private imageElement?: HTMLImageElement
   private isImageLoaded: boolean = false
+  
+  // Redux dispatch for state updates
+  private dispatch?: ClientAppDispatch
 
   constructor(
     canvas: HTMLCanvasElement, 
     svgOverlay: SVGSVGElement,
-    viewportManager: ViewportManager
+    viewportManager: ViewportManager,
+    dispatch?: ClientAppDispatch
   ) {
     this.canvas = canvas
     this.svgOverlay = svgOverlay
     this.viewportManager = viewportManager
+    this.dispatch = dispatch
     
     const ctx = canvas.getContext('2d')
     if (!ctx) {
@@ -55,46 +62,58 @@ export class RenderingEngine {
   }
 
   /**
-   * Main render method - orchestrates the rendering pipeline
+   * Set the initial image URL and handle loading
+   * This replaces the image loading logic from CanvasContainer
    */
-  render(
-    shapes: AnnotationShape[], 
-    groups: AnnotationGroup[], 
-    canvasState: CanvasState,
-    previewShape?: Partial<AnnotationShape>,
-    forceFullRedraw: boolean = false
-  ): void {
-    const startTime = performance.now()
+  setInitialImage(imageUrl: string): void {
+    if (!imageUrl) return
     
-    // Cancel any pending render
-    if (this.frameRequest) {
-      cancelAnimationFrame(this.frameRequest)
+    console.log('Setting initial image:', imageUrl)
+    
+    const img = new Image()
+    img.crossOrigin = 'anonymous'
+    
+    img.onload = () => {
+      console.log('Image loaded successfully:', imageUrl, 'dimensions:', img.naturalWidth, 'x', img.naturalHeight)
+      
+      // Update Redux state with image information
+      if (this.dispatch) {
+        const initialPan = { x: 0, y: 0 }
+        const initialZoom = 1
+        
+        this.dispatch(setCanvas({
+          updates: {
+            imageUrl: imageUrl,
+            imageSize: { width: img.naturalWidth, height: img.naturalHeight },
+            zoom: initialZoom,
+            pan: initialPan
+          }
+        }))
+      }
+      
+      // Load image into background renderer
+      this.loadImage(imageUrl)
     }
     
-    this.frameRequest = requestAnimationFrame(() => {
-      try {
-        // Include preview shape in rendering if active
-        const allShapes = previewShape ? [...shapes, previewShape as AnnotationShape] : shapes
+    img.onerror = () => {
+      console.error('Failed to load image:', imageUrl)
+      
+      // Set fallback state if image fails to load
+      if (this.dispatch) {
+        const initialPan = { x: 0, y: 0 }
+        const initialZoom = 1
         
-                 // Update performance stats
-         this.performanceMonitor.updateShapeCounts(allShapes.length, this.getVisibleShapes(allShapes, canvasState).length)
-        
-        if (forceFullRedraw || this.shouldRenderFull(canvasState)) {
-          this.renderFull(allShapes, groups, canvasState)
-        } else {
-          this.renderIncremental(allShapes, groups, canvasState)
-        }
-        
-        // Record performance metrics
-        const renderTime = performance.now() - startTime
-        this.performanceMonitor.recordFrame(renderTime)
-        
-        this.frameRequest = undefined
-      } catch (error) {
-        console.error('Rendering error:', error)
-        this.frameRequest = undefined
+        this.dispatch(setCanvas({
+          updates: {
+            imageSize: { width: 800, height: 600 },
+            zoom: initialZoom,
+            pan: initialPan
+          }
+        }))
       }
-    })
+    }
+    
+    img.src = imageUrl
   }
 
   /**
@@ -142,6 +161,49 @@ export class RenderingEngine {
   markShapesDirty(shapeIds: string[]): void {
     // For now, just force full redraw
     // In the future, implement proper dirty region tracking
+  }
+
+  /**
+   * Main render method - orchestrates the rendering pipeline
+   */
+  render(
+    shapes: AnnotationShape[], 
+    groups: AnnotationGroup[], 
+    canvasState: CanvasState,
+    previewShape?: Partial<AnnotationShape>,
+    forceFullRedraw: boolean = false
+  ): void {
+    const startTime = performance.now()
+    
+    // Cancel any pending render
+    if (this.frameRequest) {
+      cancelAnimationFrame(this.frameRequest)
+    }
+    
+    this.frameRequest = requestAnimationFrame(() => {
+      try {
+        // Include preview shape in rendering if active
+        const allShapes = previewShape ? [...shapes, previewShape as AnnotationShape] : shapes
+        
+        // Update performance stats
+        this.performanceMonitor.updateShapeCounts(allShapes.length, this.getVisibleShapes(allShapes, canvasState).length)
+        
+        if (forceFullRedraw || this.shouldRenderFull(canvasState)) {
+          this.renderFull(allShapes, groups, canvasState)
+        } else {
+          this.renderIncremental(allShapes, groups, canvasState)
+        }
+        
+        // Record performance metrics
+        const renderTime = performance.now() - startTime
+        this.performanceMonitor.recordFrame(renderTime)
+        
+        this.frameRequest = undefined
+      } catch (error) {
+        console.error('Rendering error:', error)
+        this.frameRequest = undefined
+      }
+    })
   }
 
   /**
