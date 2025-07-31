@@ -987,13 +987,6 @@ const v1FontsToV2Fonts: Record<TLV1FontStyle, TLDefaultFontStyle> = {
 	[TLV1FontStyle.Serif]: 'sans',
 }
 
-const v1AlignsToV2Aligns: Record<TLV1AlignStyle, TLDefaultHorizontalAlignStyle> = {
-	[TLV1AlignStyle.Start]: 'start',
-	[TLV1AlignStyle.Middle]: 'middle',
-	[TLV1AlignStyle.End]: 'end',
-	[TLV1AlignStyle.Justify]: 'start',
-}
-
 const v1TextAlignsToV2TextAligns: Record<TLV1AlignStyle, TLDefaultTextAlignStyle> = {
 	[TLV1AlignStyle.Start]: 'start',
 	[TLV1AlignStyle.Middle]: 'middle',
@@ -1029,7 +1022,7 @@ function getV2Font(font: TLV1FontStyle | undefined): TLDefaultFontStyle {
 }
 
 function getV2Align(align: TLV1AlignStyle | undefined): TLDefaultHorizontalAlignStyle {
-	return align ? (v1AlignsToV2Aligns[align] ?? 'middle') : 'middle'
+	return 'middle'
 }
 
 function getV2TextAlign(align: TLV1AlignStyle | undefined): TLDefaultTextAlignStyle {

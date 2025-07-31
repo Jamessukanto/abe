@@ -109,18 +109,8 @@ export class GeoShapeUtil extends BaseBoxShapeUtil<TLGeoShape> {
 			children: [
 				path.toGeometry(),
 				new Rectangle2d({
-					x:
-						shape.props.align === 'start'
-							? 0
-							: shape.props.align === 'end'
-								? (unscaledW - unscaledLabelWidth) * shape.props.scale
-								: ((unscaledW - unscaledLabelWidth) / 2) * shape.props.scale,
-					y:
-						shape.props.verticalAlign === 'start'
-							? 0
-							: shape.props.verticalAlign === 'end'
-								? (unscaledH - unscaledLabelHeight) * shape.props.scale
-								: ((unscaledH - unscaledLabelHeight) / 2) * shape.props.scale,
+					x: ((unscaledW - unscaledLabelWidth) / 2) * shape.props.scale,
+					y: ((unscaledH - unscaledLabelHeight) / 2) * shape.props.scale,
 					width: unscaledLabelWidth * shape.props.scale,
 					height: unscaledLabelHeight * shape.props.scale,
 					isFilled: true,

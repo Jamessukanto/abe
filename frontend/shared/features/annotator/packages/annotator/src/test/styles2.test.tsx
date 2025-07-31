@@ -97,17 +97,17 @@ describe('Editor.styles', () => {
 			{
 				id: defaultShapesIds.box2,
 				type: 'geo',
-				props: { size: 'l', fill: 'pattern', font: 'mono' },
+				props: { size: 'm', fill: 'pattern', font: 'sans' },
 			},
 			{
 				id: defaultShapesIds.ellipse1,
 				type: 'geo',
 				props: {
-					align: 'start',
+					align: 'middle',
 					richText: toRichText('hello world this is a long sentence that should wrap'),
 					w: 100,
 					url: 'https://aol.com',
-					verticalAlign: 'start',
+					verticalAlign: 'middle',
 				},
 			},
 		])

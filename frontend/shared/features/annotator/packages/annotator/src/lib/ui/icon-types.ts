@@ -74,9 +74,6 @@ export type TLUiIconType =
 	| 'heading'
 	| 'help-circle'
 	| 'highlight'
-	| 'horizontal-align-end'
-	| 'horizontal-align-middle'
-	| 'horizontal-align-start'
 	| 'info-circle'
 	| 'italic'
 	| 'leading'
@@ -129,9 +126,6 @@ export type TLUiIconType =
 	| 'undo'
 	| 'ungroup'
 	| 'unlock'
-	| 'vertical-align-end'
-	| 'vertical-align-middle'
-	| 'vertical-align-start'
 	| 'warning-triangle'
 	| 'zoom-in'
 	| 'zoom-out'
@@ -209,9 +203,6 @@ export const iconTypes = [
 	'heading',
 	'help-circle',
 	'highlight',
-	'horizontal-align-end',
-	'horizontal-align-middle',
-	'horizontal-align-start',
 	'info-circle',
 	'italic',
 	'leading',
@@ -264,9 +255,6 @@ export const iconTypes = [
 	'undo',
 	'ungroup',
 	'unlock',
-	'vertical-align-end',
-	'vertical-align-middle',
-	'vertical-align-start',
 	'warning-triangle',
 	'zoom-in',
 	'zoom-out',

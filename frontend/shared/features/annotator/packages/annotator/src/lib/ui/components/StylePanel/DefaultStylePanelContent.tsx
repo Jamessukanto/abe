@@ -158,68 +158,24 @@ export function TextStylePickerSet({ theme, styles }: ThemeStylePickerSetProps) 
 	const onHistoryMark = useCallback((id: string) => editor.markHistoryStoppingPoint(id), [editor])
 
 	const textAlign = styles.get(DefaultTextAlignStyle)
-	const labelAlign = styles.get(DefaultHorizontalAlignStyle)
-	const verticalLabelAlign = styles.get(DefaultVerticalAlignStyle)
-	if (labelAlign === undefined) {
+	if (textAlign === undefined) {
 		return null
 	}
 
 	return (
 		<div className="tlui-style-panel__section">
-			{textAlign === undefined ? null : (
-				<AnnotatorUiToolbar label={msg('style-panel.align')} className="tlui-style-panel__row">
-					<AnnotatorUiButtonPicker
-						title={msg('style-panel.align')}
-						uiType="align"
-						style={DefaultTextAlignStyle}
-						items={STYLES.textAlign}
-						value={textAlign}
-						onValueChange={handleValueChange}
-						theme={theme}
-						onHistoryMark={onHistoryMark}
-					/>
-					<div className="tlui-style-panel__row__extra-button">
-						<AnnotatorUiToolbarButton
-							type="icon"
-							title={msg('style-panel.vertical-align')}
-							data-testid="vertical-align"
-							disabled
-						>
-							<AnnotatorUiButtonIcon icon="vertical-align-middle" />
-						</AnnotatorUiToolbarButton>
-					</div>
-				</AnnotatorUiToolbar>
-			)}
-
-			{labelAlign === undefined ? null : (
-				<AnnotatorUiToolbar label={msg('style-panel.label-align')}>
-					<AnnotatorUiButtonPicker
-						title={msg('style-panel.label-align')}
-						uiType="horizontalAlign"
-						style={DefaultHorizontalAlignStyle}
-						items={STYLES.horizontalAlign}
-						value={labelAlign}
-						onValueChange={handleValueChange}
-						theme={theme}
-						onHistoryMark={onHistoryMark}
-					/>
-				</AnnotatorUiToolbar>
-			)}
-
-			{verticalLabelAlign === undefined ? null : (
-				<AnnotatorUiToolbar label={msg('style-panel.vertical-align')}>
-					<AnnotatorUiButtonPicker
-						title={msg('style-panel.vertical-align')}
-						uiType="verticalAlign"
-						style={DefaultVerticalAlignStyle}
-						items={STYLES.verticalAlign}
-						value={verticalLabelAlign}
-						onValueChange={handleValueChange}
-						theme={theme}
-						onHistoryMark={onHistoryMark}
-					/>
-				</AnnotatorUiToolbar>
-			)}
+			<AnnotatorUiToolbar label={msg('style-panel.align')} className="tlui-style-panel__row">
+				<AnnotatorUiButtonPicker
+					title={msg('style-panel.align')}
+					uiType="align"
+					style={DefaultTextAlignStyle}
+					items={STYLES.textAlign}
+					value={textAlign}
+					onValueChange={handleValueChange}
+					theme={theme}
+					onHistoryMark={onHistoryMark}
+				/>
+			</AnnotatorUiToolbar>
 		</div>
 	)
 }

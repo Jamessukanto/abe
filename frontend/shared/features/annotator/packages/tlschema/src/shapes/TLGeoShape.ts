@@ -96,6 +96,7 @@ const geoShapeVersions = createShapePropsMigrationIds('geo', {
 	RemoveDashStyles: 11,
 	RemoveSizeSelection: 12,
 	RemoveFontSelection: 13,
+	RemoveAlignmentOptions: 14,
 })
 
 export { geoShapeVersions as geoShapeVersions }
@@ -143,19 +144,8 @@ export const geoShapeMigrations = createShapePropsMigrationSequence({
 		{
 			id: geoShapeVersions.MigrateLegacyAlign,
 			up: (props) => {
-				let newAlign: TLDefaultHorizontalAlignStyle
-				switch (props.align) {
-					case 'start':
-						newAlign = 'start'
-						break
-					case 'end':
-						newAlign = 'end'
-						break
-					default:
-						newAlign = 'middle'
-						break
-				}
-				props.align = newAlign
+				// Always set to middle since we're removing alignment options
+				props.align = 'middle'
 			},
 			down: 'retired',
 		},
@@ -211,6 +201,15 @@ export const geoShapeMigrations = createShapePropsMigrationSequence({
 			up: (props) => {
 				// Convert all font values to 'sans'
 				props.font = 'sans'
+			},
+			down: 'retired',
+		},
+		{
+			id: geoShapeVersions.RemoveAlignmentOptions,
+			up: (props) => {
+				// Convert all alignment values to 'middle'
+				props.align = 'middle'
+				props.verticalAlign = 'middle'
 			},
 			down: 'retired',
 		},

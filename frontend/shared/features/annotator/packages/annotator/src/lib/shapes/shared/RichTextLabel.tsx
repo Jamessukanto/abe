@@ -23,22 +23,18 @@ import { useEditableRichText } from './useEditableRichText'
 export interface RichTextLabelProps {
 	shapeId: TLShapeId
 	type: string
+	richText: TLRichText
+	labelColor: string
 	font: TLDefaultFontStyle
 	fontSize: number
 	lineHeight: number
-	fill?: TLDefaultFillStyle
-	align: TLDefaultHorizontalAlignStyle
-	verticalAlign: TLDefaultVerticalAlignStyle
 	wrap?: boolean
-	richText?: TLRichText
-	labelColor: string
-	bounds?: Box
-	isSelected: boolean
-	onKeyDown?(e: KeyboardEvent): void
+	isSelected?: boolean
 	classNamePrefix?: string
 	style?: React.CSSProperties
 	textWidth?: number
 	textHeight?: number
+	onKeyDown?: (e: React.KeyboardEvent<Element>) => void
 	padding?: number
 	hasCustomTabBehavior?: boolean
 }
@@ -58,8 +54,6 @@ export const RichTextLabel = React.memo(function RichTextLabel({
 	font,
 	fontSize,
 	lineHeight,
-	align,
-	verticalAlign,
 	wrap,
 	isSelected,
 	padding = 0,
@@ -128,14 +122,14 @@ export const RichTextLabel = React.memo(function RichTextLabel({
 			className={`${cssPrefix}-label tl-text-wrapper tl-rich-text-wrapper`}
 			aria-hidden={!isEditing}
 			data-font={font}
-			data-align={align}
+			data-align="middle"
 			data-hastext={!isEmpty}
 			data-isediting={isEditing}
 			data-textwrap={!!wrap}
 			data-isselected={isSelected}
 			style={{
-				justifyContent: align === 'middle' || align,
-				alignItems: verticalAlign === 'middle' ? 'center' : verticalAlign,
+				justifyContent: 'center',
+				alignItems: 'center',
 				padding,
 				...style,
 			}}
@@ -187,8 +181,6 @@ export interface RichTextSVGProps {
 	richText: TLRichText
 	fontSize: number
 	font: TLDefaultFontStyle
-	align: TLDefaultHorizontalAlignStyle
-	verticalAlign: TLDefaultVerticalAlignStyle
 	wrap?: boolean
 	labelColor: string
 	padding: number
@@ -205,8 +197,6 @@ export function RichTextSVG({
 	richText,
 	fontSize,
 	font,
-	align,
-	verticalAlign,
 	wrap,
 	labelColor,
 	padding,
@@ -214,20 +204,9 @@ export function RichTextSVG({
 }: RichTextSVGProps) {
 	const editor = useEditor()
 	const html = renderHtmlFromRichText(editor, richText)
-	const textAlign =
-		align === 'middle'
-			? ('center' as const)
-			: align === 'start'
-				? ('start' as const)
-				: ('end' as const)
-	const justifyContent =
-		align === 'middle'
-			? ('center' as const)
-			: align === 'start'
-				? ('flex-start' as const)
-				: ('flex-end' as const)
-	const alignItems =
-		verticalAlign === 'middle' ? 'center' : verticalAlign === 'start' ? 'flex-start' : 'flex-end'
+	const textAlign = 'center' as const
+	const justifyContent = 'center' as const
+	const alignItems = 'center'
 	const wrapperStyle = {
 		display: 'flex',
 		fontFamily: DefaultFontFamilies[font],

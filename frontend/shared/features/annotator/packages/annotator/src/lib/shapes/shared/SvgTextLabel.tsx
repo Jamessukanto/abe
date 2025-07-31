@@ -13,8 +13,6 @@ import { useDefaultColorTheme } from './useDefaultColorTheme'
 export function SvgTextLabel({
 	fontSize,
 	font,
-	align,
-	verticalAlign,
 	text,
 	labelColor,
 	bounds,
@@ -24,10 +22,6 @@ export function SvgTextLabel({
 }: {
 	fontSize: number
 	font: TLDefaultFontStyle
-	// fill?: TLDefaultFillStyle
-	align: TLDefaultHorizontalAlignStyle
-	verticalAlign: TLDefaultVerticalAlignStyle
-	wrap?: boolean
 	text: string
 	labelColor: string
 	bounds: Box
@@ -41,8 +35,8 @@ export function SvgTextLabel({
 	const opts = {
 		fontSize,
 		fontFamily: DefaultFontFamilies[font],
-		textAlign: align,
-		verticalTextAlign: verticalAlign,
+		textAlign: 'middle' as const,
+		verticalTextAlign: 'middle' as const,
 		width: Math.ceil(bounds.width),
 		height: Math.ceil(bounds.height),
 		padding,

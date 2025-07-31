@@ -19,8 +19,6 @@ export interface PlainTextLabelProps {
 	fontSize: number
 	lineHeight: number
 	fill?: TLDefaultFillStyle
-	align: TLDefaultHorizontalAlignStyle
-	verticalAlign: TLDefaultVerticalAlignStyle
 	wrap?: boolean
 	text?: string
 	labelColor: string
@@ -49,8 +47,6 @@ export const PlainTextLabel = React.memo(function PlainTextLabel({
 	font,
 	fontSize,
 	lineHeight,
-	align,
-	verticalAlign,
 	wrap,
 	isSelected,
 	padding = 0,
@@ -80,15 +76,15 @@ export const PlainTextLabel = React.memo(function PlainTextLabel({
 			className={`${cssPrefix}-label tl-text-wrapper tl-plain-text-wrapper`}
 			aria-hidden={!isEditing}
 			data-font={font}
-			data-align={align}
+			data-align="middle"
 			data-hastext={!isEmpty}
 			data-isediting={isEditing}
 			data-is-ready-for-editing={isReadyForEditing}
 			data-textwrap={!!wrap}
 			data-isselected={isSelected}
 			style={{
-				justifyContent: align === 'middle' || align,
-				alignItems: verticalAlign === 'middle' ? 'center' : verticalAlign,
+				justifyContent: 'center',
+				alignItems: 'center',
 				padding,
 				...style,
 			}}

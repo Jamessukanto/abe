@@ -63,6 +63,7 @@ const Versions = createShapePropsMigrationIds('note', {
 	AddLabelColor: 8,
 	AddRichText: 9,
 	RemoveFontSelection: 10,
+	RemoveAlignmentOptions: 11,
 })
 
 export { Versions as noteShapeVersions }
@@ -89,17 +90,7 @@ export const noteShapeMigrations = createShapePropsMigrationSequence({
 		{
 			id: Versions.MigrateLegacyAlign,
 			up: (props) => {
-				switch (props.align) {
-					case 'start':
-						props.align = 'start-legacy'
-						return
-					case 'end':
-						props.align = 'end-legacy'
-						return
-					default:
-						props.align = 'middle-legacy'
-						return
-				}
+				props.align = 'middle'
 			},
 			down: 'retired',
 		},
@@ -159,6 +150,15 @@ export const noteShapeMigrations = createShapePropsMigrationSequence({
 			up: (props) => {
 				// Convert all font values to 'sans'
 				props.font = 'sans'
+			},
+			down: 'retired',
+		},
+		{
+			id: Versions.RemoveAlignmentOptions,
+			up: (props) => {
+				// Convert all alignment values to 'middle'
+				props.align = 'middle'
+				props.verticalAlign = 'middle'
 			},
 			down: 'retired',
 		},

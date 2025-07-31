@@ -34,16 +34,6 @@ export const STYLES = {
 		{ value: 'middle', icon: 'text-align-center' },
 		{ value: 'end', icon: 'text-align-right' },
 	],
-	horizontalAlign: [
-		{ value: 'start', icon: 'horizontal-align-start' },
-		{ value: 'middle', icon: 'horizontal-align-middle' },
-		{ value: 'end', icon: 'horizontal-align-end' },
-	],
-	verticalAlign: [
-		{ value: 'start', icon: 'vertical-align-start' },
-		{ value: 'middle', icon: 'vertical-align-middle' },
-		{ value: 'end', icon: 'vertical-align-end' },
-	],
 	geo: [
 		{ value: 'rectangle', icon: 'geo-rectangle' },
 		{ value: 'ellipse', icon: 'geo-ellipse' },

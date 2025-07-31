@@ -4,7 +4,7 @@ import { StyleProp } from './StyleProp'
 /** @public */
 export const DefaultVerticalAlignStyle = StyleProp.defineEnum('annotator:verticalAlign', {
 	defaultValue: 'middle',
-	values: ['start', 'middle', 'end'],
+	values: ['middle'],
 })
 
 /** @public */

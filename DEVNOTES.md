@@ -76,13 +76,12 @@ Really understand the files and dirs of the project by reading all of them and m
 Note that in canvas, currently, user can: 
 1. Choose color for the outline/marks (this includes outlines for rectangles, ellipses, lines and Draw tool marks) 
 3. Change the Fill of the shapes (none, semi, solid, pattern) 
-7. Change the label alignment (start, end, middle, top)
 
 What i'd like you to do with respect to the above are:
 1. color for the outline/marks: reduce color options to only blue, green, red
 3. Fill of the shapes: reduce options to only solid and pattern
 
-7. label alignment: remove this functionality altogether cleanly. We don't need this functionality at all as user does not need it and it shouldn't appear on UI at all. DLabel alignmentash should always be middle. 
+
 
 Be careful to modify. maintain other functionalities and remove dead code or files.
 
