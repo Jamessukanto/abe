@@ -394,7 +394,6 @@ export const DEFAULT_TRANSLATION = {
 	'style-panel.arrow-kind': 'Line',
 	'style-panel.color': 'Color',
 	'style-panel.fill': 'Fill',
-	'style-panel.font': 'Font',
 	'style-panel.geo': 'Shape',
 	'style-panel.mixed': 'Mixed',
 	'style-panel.opacity': 'Opacity',

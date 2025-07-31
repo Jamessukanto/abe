@@ -324,9 +324,9 @@ function getFontSizeAndScale(fontSize: number): { size: TLDefaultSizeStyle; scal
 }
 
 const fontFamilyToFontType: Record<number, TLDefaultFontStyle> = {
-	1: 'draw',
+	1: 'sans',
 	2: 'sans',
-	3: 'mono',
+	3: 'sans',
 }
 
 const oc = {

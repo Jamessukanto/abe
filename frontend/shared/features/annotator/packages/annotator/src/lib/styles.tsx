@@ -1,7 +1,7 @@
 import { TLUiIconJsx } from './ui/components/primitives/AnnotatorUiIcon'
 
 /** @public */
-export type StyleValuesForUi<T> = readonly {
+export type StyleValuesForUi<T> =  {
 	readonly value: T
 	readonly icon: string | TLUiIconJsx
 }[]
@@ -28,12 +28,6 @@ export const STYLES = {
 		{ value: 'solid', icon: 'fill-solid' },
 		{ value: 'pattern', icon: 'fill-pattern' },
 		// { value: 'fill', icon: 'fill-fill' },
-	],
-	font: [
-		{ value: 'draw', icon: 'font-draw' },
-		{ value: 'sans', icon: 'font-sans' },
-		{ value: 'serif', icon: 'font-serif' },
-		{ value: 'mono', icon: 'font-mono' },
 	],
 	textAlign: [
 		{ value: 'start', icon: 'text-align-left' },

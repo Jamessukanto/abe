@@ -391,7 +391,6 @@ export type TLUiTranslationKey =
 	| 'style-panel.color'
 	| 'style-panel.dash'
 	| 'style-panel.fill'
-	| 'style-panel.font'
 	| 'style-panel.geo'
 	| 'style-panel.mixed'
 	| 'style-panel.opacity'

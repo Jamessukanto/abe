@@ -119,10 +119,7 @@
 	--tl-cursor-swne-rotate: pointer;
 	--tl-scale: calc(1 / var(--tl-zoom));
 	/* fonts */
-	--tl-font-draw: 'annotator_draw', sans-serif;
 	--tl-font-sans: 'annotator_sans', sans-serif;
-	--tl-font-serif: 'annotator_serif', serif;
-	--tl-font-mono: 'annotator_mono', monospace;
 	/* text outline */
 	--a: calc(min(0.5, 1 / var(--tl-zoom)) * 2px);
 	--b: calc(min(0.5, 1 / var(--tl-zoom)) * -2px);
@@ -601,20 +598,8 @@ input,
 	text-shadow: var(--tl-text-outline);
 }
 
-.tl-text-wrapper[data-font='draw'] {
-	font-family: var(--tl-font-draw);
-}
-
 .tl-text-wrapper[data-font='sans'] {
 	font-family: var(--tl-font-sans);
-}
-
-.tl-text-wrapper[data-font='serif'] {
-	font-family: var(--tl-font-serif);
-}
-
-.tl-text-wrapper[data-font='mono'] {
-	font-family: var(--tl-font-mono);
 }
 
 .tl-text-wrapper[data-align='start'],

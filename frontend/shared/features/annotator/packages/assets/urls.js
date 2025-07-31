@@ -132,10 +132,7 @@ export function getAssetUrlsByMetaUrl(opts) {
 			'fill-solid': iconsIcon0MergedSvg + '#fill-solid',
 			follow: iconsIcon0MergedSvg + '#follow',
 			following: iconsIcon0MergedSvg + '#following',
-			'font-draw': iconsIcon0MergedSvg + '#font-draw',
-			'font-mono': iconsIcon0MergedSvg + '#font-mono',
-			'font-sans': iconsIcon0MergedSvg + '#font-sans',
-			'font-serif': iconsIcon0MergedSvg + '#font-serif',
+			
 			'geo-check-box': iconsIcon0MergedSvg + '#geo-check-box',
 			'geo-cloud': iconsIcon0MergedSvg + '#geo-cloud',
 			'geo-diamond': iconsIcon0MergedSvg + '#geo-diamond',

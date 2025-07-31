@@ -110,10 +110,7 @@ export function getAssetUrlsByImport(opts) {
 			'fill-solid': iconsIcon0MergedSvg2 + '#fill-solid',
 			follow: iconsIcon0MergedSvg2 + '#follow',
 			following: iconsIcon0MergedSvg2 + '#following',
-			'font-draw': iconsIcon0MergedSvg2 + '#font-draw',
-			'font-mono': iconsIcon0MergedSvg2 + '#font-mono',
-			'font-sans': iconsIcon0MergedSvg2 + '#font-sans',
-			'font-serif': iconsIcon0MergedSvg2 + '#font-serif',
+			
 			'geo-check-box': iconsIcon0MergedSvg2 + '#geo-check-box',
 			'geo-cloud': iconsIcon0MergedSvg2 + '#geo-cloud',
 			'geo-diamond': iconsIcon0MergedSvg2 + '#geo-diamond',

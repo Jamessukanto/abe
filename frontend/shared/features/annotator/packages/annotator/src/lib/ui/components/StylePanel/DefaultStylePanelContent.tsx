@@ -157,31 +157,15 @@ export function TextStylePickerSet({ theme, styles }: ThemeStylePickerSetProps) 
 	const editor = useEditor()
 	const onHistoryMark = useCallback((id: string) => editor.markHistoryStoppingPoint(id), [editor])
 
-	const font = styles.get(DefaultFontStyle)
 	const textAlign = styles.get(DefaultTextAlignStyle)
 	const labelAlign = styles.get(DefaultHorizontalAlignStyle)
 	const verticalLabelAlign = styles.get(DefaultVerticalAlignStyle)
-	if (font === undefined && labelAlign === undefined) {
+	if (labelAlign === undefined) {
 		return null
 	}
 
 	return (
 		<div className="tlui-style-panel__section">
-			{font === undefined ? null : (
-				<AnnotatorUiToolbar label={msg('style-panel.font')}>
-					<AnnotatorUiButtonPicker
-						title={msg('style-panel.font')}
-						uiType="font"
-						style={DefaultFontStyle}
-						items={STYLES.font}
-						value={font}
-						onValueChange={handleValueChange}
-						theme={theme}
-						onHistoryMark={onHistoryMark}
-					/>
-				</AnnotatorUiToolbar>
-			)}
-
 			{textAlign === undefined ? null : (
 				<AnnotatorUiToolbar label={msg('style-panel.align')} className="tlui-style-panel__row">
 					<AnnotatorUiButtonPicker
@@ -208,10 +192,10 @@ export function TextStylePickerSet({ theme, styles }: ThemeStylePickerSetProps) 
 			)}
 
 			{labelAlign === undefined ? null : (
-				<AnnotatorUiToolbar label={msg('style-panel.label-align')} className="tlui-style-panel__row">
+				<AnnotatorUiToolbar label={msg('style-panel.label-align')}>
 					<AnnotatorUiButtonPicker
 						title={msg('style-panel.label-align')}
-						uiType="align"
+						uiType="horizontalAlign"
 						style={DefaultHorizontalAlignStyle}
 						items={STYLES.horizontalAlign}
 						value={labelAlign}
@@ -219,29 +203,21 @@ export function TextStylePickerSet({ theme, styles }: ThemeStylePickerSetProps) 
 						theme={theme}
 						onHistoryMark={onHistoryMark}
 					/>
-					<div className="tlui-style-panel__row__extra-button">
-						{verticalLabelAlign === undefined ? (
-							<AnnotatorUiToolbarButton
-								type="icon"
-								title={msg('style-panel.vertical-align')}
-								data-testid="vertical-align"
-								disabled
-							>
-								<AnnotatorUiButtonIcon icon="vertical-align-middle" />
-							</AnnotatorUiToolbarButton>
-						) : (
-							<DropdownPicker
-								type="icon"
-								id="geo-vertical-alignment"
-								uiType="verticalAlign"
-								stylePanelType="vertical-align"
-								style={DefaultVerticalAlignStyle}
-								items={STYLES.verticalAlign}
-								value={verticalLabelAlign}
-								onValueChange={handleValueChange}
-							/>
-						)}
-					</div>
+				</AnnotatorUiToolbar>
+			)}
+
+			{verticalLabelAlign === undefined ? null : (
+				<AnnotatorUiToolbar label={msg('style-panel.vertical-align')}>
+					<AnnotatorUiButtonPicker
+						title={msg('style-panel.vertical-align')}
+						uiType="verticalAlign"
+						style={DefaultVerticalAlignStyle}
+						items={STYLES.verticalAlign}
+						value={verticalLabelAlign}
+						onValueChange={handleValueChange}
+						theme={theme}
+						onHistoryMark={onHistoryMark}
+					/>
 				</AnnotatorUiToolbar>
 			)}
 		</div>

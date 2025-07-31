@@ -95,6 +95,7 @@ const geoShapeVersions = createShapePropsMigrationIds('geo', {
 	AddRichText: 10,
 	RemoveDashStyles: 11,
 	RemoveSizeSelection: 12,
+	RemoveFontSelection: 13,
 })
 
 export { geoShapeVersions as geoShapeVersions }
@@ -181,9 +182,7 @@ export const geoShapeMigrations = createShapePropsMigrationSequence({
 			up: (props) => {
 				props.scale = 1
 			},
-			down: (props) => {
-				delete props.scale
-			},
+			down: 'retired',
 		},
 		{
 			id: geoShapeVersions.AddRichText,
@@ -191,34 +190,29 @@ export const geoShapeMigrations = createShapePropsMigrationSequence({
 				props.richText = toRichText(props.text)
 				delete props.text
 			},
-			// N.B. Explicitly no down state so that we force clients to update.
-			// down: (props) => {
-			// 	delete props.richText
-			// },
+			down: 'retired',
 		},
 		{
 			id: geoShapeVersions.RemoveDashStyles,
 			up: (props) => {
-				// Convert all dash styles to 'solid' since dash styles are no longer supported
-				if (props.dash && props.dash !== 'solid') {
-					props.dash = 'solid'
-				}
+				props.dash = 'solid'
 			},
-			down: (props) => {
-				// No down migration needed since we're removing functionality
-			},
+			down: 'retired',
 		},
 		{
 			id: geoShapeVersions.RemoveSizeSelection,
 			up: (props) => {
-				// Convert all size values to 'm' since size selection is being removed
-				if (props.size && props.size !== 'm') {
-					props.size = 'm'
-				}
+				props.size = 'm'
 			},
-			down: (props) => {
-				// No down migration needed since we're removing functionality
+			down: 'retired',
+		},
+		{
+			id: geoShapeVersions.RemoveFontSelection,
+			up: (props) => {
+				// Convert all font values to 'sans'
+				props.font = 'sans'
 			},
+			down: 'retired',
 		},
 	],
 })

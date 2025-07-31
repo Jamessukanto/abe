@@ -62,6 +62,7 @@ const Versions = createShapePropsMigrationIds('note', {
 	AddScale: 7,
 	AddLabelColor: 8,
 	AddRichText: 9,
+	RemoveFontSelection: 10,
 })
 
 export { Versions as noteShapeVersions }
@@ -143,9 +144,7 @@ export const noteShapeMigrations = createShapePropsMigrationSequence({
 			up: (props) => {
 				props.labelColor = 'black'
 			},
-			down: (props) => {
-				delete props.labelColor
-			},
+			down: 'retired',
 		},
 		{
 			id: Versions.AddRichText,
@@ -153,10 +152,15 @@ export const noteShapeMigrations = createShapePropsMigrationSequence({
 				props.richText = toRichText(props.text)
 				delete props.text
 			},
-			// N.B. Explicitly no down state so that we force clients to update.
-			// down: (props) => {
-			// 	delete props.richText
-			// },
+			down: 'retired',
+		},
+		{
+			id: Versions.RemoveFontSelection,
+			up: (props) => {
+				// Convert all font values to 'sans'
+				props.font = 'sans'
+			},
+			down: 'retired',
 		},
 	],
 })

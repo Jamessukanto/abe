@@ -39,6 +39,7 @@ const Versions = createShapePropsMigrationIds('text', {
 	RemoveJustify: 1,
 	AddTextAlign: 2,
 	AddRichText: 3,
+	RemoveFontSelection: 4,
 })
 
 export { Versions as textShapeVersions }
@@ -76,6 +77,14 @@ export const textShapeMigrations = createShapePropsMigrationSequence({
 			// down: (props) => {
 			// 	delete props.richText
 			// },
+		},
+		{
+			id: Versions.RemoveFontSelection,
+			up: (props) => {
+				// Convert all font values to 'sans'
+				props.font = 'sans'
+			},
+			down: 'retired',
 		},
 	],
 })

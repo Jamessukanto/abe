@@ -981,10 +981,10 @@ const v1ColorsToV2Colors: Record<TLV1ColorStyle, TLDefaultColorStyle> = {
 }
 
 const v1FontsToV2Fonts: Record<TLV1FontStyle, TLDefaultFontStyle> = {
-	[TLV1FontStyle.Mono]: 'mono',
+	[TLV1FontStyle.Mono]: 'sans',
 	[TLV1FontStyle.Sans]: 'sans',
-	[TLV1FontStyle.Script]: 'draw',
-	[TLV1FontStyle.Serif]: 'serif',
+	[TLV1FontStyle.Script]: 'sans',
+	[TLV1FontStyle.Serif]: 'sans',
 }
 
 const v1AlignsToV2Aligns: Record<TLV1AlignStyle, TLDefaultHorizontalAlignStyle> = {
@@ -1025,7 +1025,7 @@ function getV2Color(color: TLV1ColorStyle | undefined): TLDefaultColorStyle {
 }
 
 function getV2Font(font: TLV1FontStyle | undefined): TLDefaultFontStyle {
-	return font ? (v1FontsToV2Fonts[font] ?? 'draw') : 'draw'
+	return font ? (v1FontsToV2Fonts[font] ?? 'sans') : 'sans'
 }
 
 function getV2Align(align: TLV1AlignStyle | undefined): TLDefaultHorizontalAlignStyle {

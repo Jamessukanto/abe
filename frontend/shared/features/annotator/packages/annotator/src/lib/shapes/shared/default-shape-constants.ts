@@ -26,10 +26,7 @@ export const LABEL_FONT_SIZES: Record<TLDefaultSizeStyle, number> = {
 
 /** @public */
 export const FONT_FAMILIES: Record<TLDefaultFontStyle, string> = {
-	draw: 'var(--tl-font-draw)',
 	sans: 'var(--tl-font-sans)',
-	serif: 'var(--tl-font-serif)',
-	mono: 'var(--tl-font-mono)',
 }
 
 /** @internal */

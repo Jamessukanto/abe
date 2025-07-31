@@ -53,10 +53,6 @@ export type TLUiIconType =
 	| 'fill-solid'
 	| 'follow'
 	| 'following'
-	| 'font-draw'
-	| 'font-mono'
-	| 'font-sans'
-	| 'font-serif'
 	| 'geo-check-box'
 	| 'geo-cloud'
 	| 'geo-diamond'
@@ -192,10 +188,6 @@ export const iconTypes = [
 	'fill-solid',
 	'follow',
 	'following',
-	'font-draw',
-	'font-mono',
-	'font-sans',
-	'font-serif',
 	'geo-check-box',
 	'geo-cloud',
 	'geo-diamond',
