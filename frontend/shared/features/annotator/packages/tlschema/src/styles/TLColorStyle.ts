@@ -5,18 +5,10 @@ import { StyleProp } from './StyleProp'
 /** @public */
 export const defaultColorNames = [
 	'black',
-	'grey',
-	'light-violet',
-	'violet',
-	'blue',
-	'light-blue',
-	'yellow',
-	'orange',
-	'green',
-	'light-green',
-	'light-red',
-	'red',
 	'white',
+	'blue',
+	'green',
+	'red',
 ] as const
 
 /** @public */
@@ -125,132 +117,7 @@ export const DefaultColorThemePalette: {
 				p3: 'color(display-p3 0.2536 0.984 0.7981)',
 			},
 		},
-		grey: {
-			solid: '#9fa8b2',
-			fill: '#9fa8b2',
-			frame: {
-				headingStroke: '#aaaaab',
-				headingFill: '#fbfcfc',
-				stroke: '#aaaaab',
-				fill: '#fcfcfd',
-				text: '#000000',
-			},
-			note: {
-				fill: '#C0CAD3',
-				text: '#000000',
-			},
-			semi: '#eceef0',
-			pattern: '#bcc3c9',
-			highlight: {
-				srgb: '#cbe7f1',
-				p3: 'color(display-p3 0.8163 0.9023 0.9416)',
-			},
-		},
-		'light-blue': {
-			solid: '#4ba1f1',
-			fill: '#4ba1f1',
-			frame: {
-				headingStroke: '#6cb2f3',
-				headingFill: '#f8fbfe',
-				stroke: '#6cb2f3',
-				fill: '#fafcff',
-				text: '#000000',
-			},
-			note: {
-				fill: '#9BC4FD',
-				text: '#000000',
-			},
-			semi: '#ddedfa',
-			pattern: '#6fbbf8',
-			highlight: {
-				srgb: '#00f4ff',
-				p3: 'color(display-p3 0.1512 0.9414 0.9996)',
-			},
-		},
-		'light-green': {
-			solid: '#4cb05e',
-			fill: '#4cb05e',
-			frame: {
-				headingStroke: '#6dbe7c',
-				headingFill: '#f8fcf9',
-				stroke: '#6dbe7c',
-				fill: '#fafdfa',
-				text: '#000000',
-			},
-			note: {
-				fill: '#98D08A',
-				text: '#000000',
-			},
-			semi: '#dbf0e0',
-			pattern: '#65cb78',
-			highlight: {
-				srgb: '#65f641',
-				p3: 'color(display-p3 0.563 0.9495 0.3857)',
-			},
-		},
-		'light-red': {
-			solid: '#f87777',
-			fill: '#f87777',
-			frame: {
-				headingStroke: '#f89090',
-				headingFill: '#fffafa',
-				stroke: '#f89090',
-				fill: '#fffbfb',
-				text: '#000000',
-			},
-			note: {
-				fill: '#F7A5A1',
-				text: '#000000',
-			},
-			semi: '#f4dadb',
-			pattern: '#fe9e9e',
-			highlight: {
-				srgb: '#ff7fa3',
-				p3: 'color(display-p3 0.9988 0.5301 0.6397)',
-			},
-		},
-		'light-violet': {
-			solid: '#e085f4',
-			fill: '#e085f4',
-			frame: {
-				headingStroke: '#e59bf5',
-				headingFill: '#fefaff',
-				stroke: '#e59bf5',
-				fill: '#fefbff',
-				text: '#000000',
-			},
-			note: {
-				fill: '#DFB0F9',
-				text: '#000000',
-			},
-			semi: '#f5eafa',
-			pattern: '#e9acf8',
-			highlight: {
-				srgb: '#ff88ff',
-				p3: 'color(display-p3 0.9676 0.5652 0.9999)',
-			},
-		},
-		orange: {
-			solid: '#e16919',
-			fill: '#e16919',
-			frame: {
-				headingStroke: '#e68544',
-				headingFill: '#fef9f6',
-				stroke: '#e68544',
-				fill: '#fef9f6',
-				text: '#000000',
-			},
-			note: {
-				fill: '#FAA475',
-				text: '#000000',
-			},
-			semi: '#f8e2d4',
-			pattern: '#f78438',
-			highlight: {
-				srgb: '#ffa500',
-				p3: 'color(display-p3 0.9988 0.6905 0.266)',
-			},
-		},
+
 		red: {
 			solid: '#e03131',
 			fill: '#e03131',
@@ -270,48 +137,6 @@ export const DefaultColorThemePalette: {
 			highlight: {
 				srgb: '#ff636e',
 				p3: 'color(display-p3 0.9992 0.4376 0.45)',
-			},
-		},
-		violet: {
-			solid: '#ae3ec9',
-			fill: '#ae3ec9',
-			frame: {
-				headingStroke: '#bc62d3',
-				headingFill: '#fcf7fd',
-				stroke: '#bc62d3',
-				fill: '#fdf9fd',
-				text: '#000000',
-			},
-			note: {
-				fill: '#DB91FD',
-				text: '#000000',
-			},
-			semi: '#ecdcf2',
-			pattern: '#bd63d3',
-			highlight: {
-				srgb: '#c77cff',
-				p3: 'color(display-p3 0.7469 0.5089 0.9995)',
-			},
-		},
-		yellow: {
-			solid: '#f1ac4b',
-			fill: '#f1ac4b',
-			frame: {
-				headingStroke: '#f3bb6c',
-				headingFill: '#fefcf8',
-				stroke: '#f3bb6c',
-				fill: '#fffdfa',
-				text: '#000000',
-			},
-			note: {
-				fill: '#FED49A',
-				text: '#000000',
-			},
-			semi: '#f9f0e6',
-			pattern: '#fecb92',
-			highlight: {
-				srgb: '#fddd00',
-				p3: 'color(display-p3 0.972 0.8705 0.05)',
 			},
 		},
 		white: {
@@ -405,132 +230,7 @@ export const DefaultColorThemePalette: {
 				p3: 'color(display-p3 0.0085 0.582 0.4604)',
 			},
 		},
-		grey: {
-			solid: '#9398b0',
-			fill: '#9398b0',
-			frame: {
-				headingStroke: '#42474D',
-				headingFill: '#23262A',
-				stroke: '#42474D',
-				fill: '#151719',
-				text: '#f2f2f2',
-			},
-			note: {
-				fill: '#56595F',
-				text: '#f2f2f2',
-			},
-			semi: '#33373c',
-			pattern: '#7c8187',
-			highlight: {
-				srgb: '#9cb4cb',
-				p3: 'color(display-p3 0.6299 0.7012 0.7856)',
-			},
-		},
-		'light-blue': {
-			solid: '#4dabf7',
-			fill: '#4dabf7',
-			frame: {
-				headingStroke: '#075797',
-				headingFill: '#142839',
-				stroke: '#075797',
-				fill: '#0B1823',
-				text: '#f2f2f2',
-			},
-			note: {
-				fill: '#1F5495',
-				text: '#f2f2f2',
-			},
-			semi: '#2a3642',
-			pattern: '#4d7aa9',
-			highlight: {
-				srgb: '#00bdc8',
-				p3: 'color(display-p3 0.0023 0.7259 0.7735)',
-			},
-		},
-		'light-green': {
-			solid: '#40c057',
-			fill: '#40c057',
-			frame: {
-				headingStroke: '#1C5427',
-				headingFill: '#18251A',
-				stroke: '#1C5427',
-				fill: '#0F1911',
-				text: '#f2f2f2',
-			},
-			note: {
-				fill: '#21581D',
-				text: '#f2f2f2',
-			},
-			semi: '#2a3830',
-			pattern: '#4e874e',
-			highlight: {
-				srgb: '#00a000',
-				p3: 'color(display-p3 0.2711 0.6172 0.0195)',
-			},
-		},
-		'light-red': {
-			solid: '#ff8787',
-			fill: '#ff8787',
-			frame: {
-				headingStroke: '#6f3232', // Darker and desaturated variant of solid
-				headingFill: '#341818', // Deep, muted dark red
-				stroke: '#6f3232', // Matches headingStroke
-				fill: '#181212', // Darker, muted background shade
-				text: '#f2f2f2', // Consistent bright text color
-			},
-			note: {
-				fill: '#7a3333', // Medium-dark, muted variant of solid
-				text: '#f2f2f2',
-			},
-			semi: '#3c2b2b', // Subdued, darker neutral-red tone
-			pattern: '#a56767', // Existing pattern shade retained
-			highlight: {
-				srgb: '#db005b',
-				p3: 'color(display-p3 0.7849 0.0585 0.3589)',
-			},
-		},
-		'light-violet': {
-			solid: '#e599f7',
-			fill: '#e599f7',
-			frame: {
-				headingStroke: '#6c367a',
-				headingFill: '#2D2230',
-				stroke: '#6c367a',
-				fill: '#1C151E',
-				text: '#f2f2f2',
-			},
-			note: {
-				fill: '#762F8E',
-				text: '#f2f2f2',
-			},
-			semi: '#383442',
-			pattern: '#9770a9',
-			highlight: {
-				srgb: '#c400c7',
-				p3: 'color(display-p3 0.7024 0.0403 0.753)',
-			},
-		},
-		orange: {
-			solid: '#f76707',
-			fill: '#f76707',
-			frame: {
-				headingStroke: '#773a0e', // Darker, muted version of solid
-				headingFill: '#2f1d13', // Deep, warm, muted background
-				stroke: '#773a0e', // Matches headingStroke
-				fill: '#1c1512', // Darker, richer muted background
-				text: '#f2f2f2', // Bright text for contrast
-			},
-			note: {
-				fill: '#7c3905', // Muted dark variant for note fill
-				text: '#f2f2f2',
-			},
-			semi: '#3b2e27', // Muted neutral-orange tone
-			pattern: '#9f552d', // Retained existing shade
-			highlight: {
-				srgb: '#d07a00',
-				p3: 'color(display-p3 0.7699 0.4937 0.0085)',
-			},
-		},
+
 		red: {
 			solid: '#e03131',
 			fill: '#e03131',
@@ -550,48 +250,6 @@ export const DefaultColorThemePalette: {
 			highlight: {
 				srgb: '#de002c',
 				p3: 'color(display-p3 0.7978 0.0509 0.2035)',
-			},
-		},
-		violet: {
-			solid: '#ae3ec9',
-			fill: '#ae3ec9',
-			frame: {
-				headingStroke: '#6d1583', // Darker, muted variation of solid
-				headingFill: '#27152e', // Deep, rich muted violet backdrop
-				stroke: '#6d1583', // Matches headingStroke
-				fill: '#1b0f21', // Darker muted violet background
-				text: '#f2f2f2', // Consistent bright text color
-			},
-			note: {
-				fill: '#5f1c70', // Muted dark variant for note fill
-				text: '#f2f2f2',
-			},
-			semi: '#342938', // Dark neutral-violet tone
-			pattern: '#763a8b', // Retained existing pattern color
-			highlight: {
-				srgb: '#9e00ee',
-				p3: 'color(display-p3 0.5651 0.0079 0.8986)',
-			},
-		},
-		yellow: {
-			solid: '#ffc034',
-			fill: '#ffc034',
-			frame: {
-				headingStroke: '#684e12', // Darker, muted variant of solid
-				headingFill: '#2a2113', // Rich, muted dark-yellow background
-				stroke: '#684e12', // Matches headingStroke
-				fill: '#1e1911', // Darker muted shade for background fill
-				text: '#f2f2f2', // Bright text color for readability
-			},
-			note: {
-				fill: '#8a5e1c', // Muted, dark complementary variant
-				text: '#f2f2f2',
-			},
-			semi: '#3b352b', // Dark muted neutral-yellow tone
-			pattern: '#fecb92', // Existing shade retained
-			highlight: {
-				srgb: '#d2b700',
-				p3: 'color(display-p3 0.8078 0.7225 0.0312)',
 			},
 		},
 		white: {

@@ -31,6 +31,7 @@ export const highlightShapeProps: RecordProps<TLHighlightShape> = {
 
 const Versions = createShapePropsMigrationIds('highlight', {
 	AddScale: 1,
+	ReduceColorOptions: 2,
 })
 
 export { Versions as highlightShapeVersions }
@@ -46,6 +47,27 @@ export const highlightShapeMigrations = createShapePropsMigrationSequence({
 			down: (props) => {
 				delete props.scale
 			},
+		},
+		{
+			id: Versions.ReduceColorOptions,
+			up: (props) => {
+				// Map old colors to new 5-color palette
+				const colorMap: Record<string, string> = {
+					'grey': 'black',
+					'light-blue': 'blue',
+					'light-green': 'green',
+					'light-red': 'red',
+					'light-violet': 'black',
+					'orange': 'black',
+					'violet': 'black',
+					'yellow': 'black',
+				}
+				
+				if (props.color && colorMap[props.color]) {
+					props.color = colorMap[props.color] as any
+				}
+			},
+			down: 'retired',
 		},
 	],
 })

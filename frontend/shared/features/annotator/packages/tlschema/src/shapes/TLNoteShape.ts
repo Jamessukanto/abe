@@ -64,6 +64,7 @@ const Versions = createShapePropsMigrationIds('note', {
 	AddRichText: 9,
 	RemoveFontSelection: 10,
 	RemoveAlignmentOptions: 11,
+	ReduceColorOptions: 12,
 })
 
 export { Versions as noteShapeVersions }
@@ -159,6 +160,31 @@ export const noteShapeMigrations = createShapePropsMigrationSequence({
 				// Convert all alignment values to 'middle'
 				props.align = 'middle'
 				props.verticalAlign = 'middle'
+			},
+			down: 'retired',
+		},
+		{
+			id: Versions.ReduceColorOptions,
+			up: (props) => {
+				// Map old colors to new 5-color palette
+				const colorMap: Record<string, string> = {
+					'grey': 'black',
+					'light-blue': 'blue',
+					'light-green': 'green',
+					'light-red': 'red',
+					'light-violet': 'black',
+					'orange': 'black',
+					'violet': 'black',
+					'yellow': 'black',
+				}
+
+				if (props.color && colorMap[props.color]) {
+					props.color = colorMap[props.color] as any
+				}
+
+				if (props.labelColor && colorMap[props.labelColor]) {
+					props.labelColor = colorMap[props.labelColor] as any
+				}
 			},
 			down: 'retired',
 		},

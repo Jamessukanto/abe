@@ -966,18 +966,18 @@ export interface TLV1Document {
 /* ------------------ Translations ------------------ */
 
 const v1ColorsToV2Colors: Record<TLV1ColorStyle, TLDefaultColorStyle> = {
-	[TLV1ColorStyle.White]: 'black',
+	[TLV1ColorStyle.White]: 'white',
 	[TLV1ColorStyle.Black]: 'black',
-	[TLV1ColorStyle.LightGray]: 'grey',
-	[TLV1ColorStyle.Gray]: 'grey',
-	[TLV1ColorStyle.Green]: 'light-green',
+	[TLV1ColorStyle.LightGray]: 'black',
+	[TLV1ColorStyle.Gray]: 'black',
+	[TLV1ColorStyle.Green]: 'green',
 	[TLV1ColorStyle.Cyan]: 'green',
-	[TLV1ColorStyle.Blue]: 'light-blue',
+	[TLV1ColorStyle.Blue]: 'blue',
 	[TLV1ColorStyle.Indigo]: 'blue',
-	[TLV1ColorStyle.Orange]: 'orange',
-	[TLV1ColorStyle.Yellow]: 'yellow',
+	[TLV1ColorStyle.Orange]: 'black',
+	[TLV1ColorStyle.Yellow]: 'black',
 	[TLV1ColorStyle.Red]: 'red',
-	[TLV1ColorStyle.Violet]: 'light-violet',
+	[TLV1ColorStyle.Violet]: 'black',
 }
 
 const v1FontsToV2Fonts: Record<TLV1FontStyle, TLDefaultFontStyle> = {

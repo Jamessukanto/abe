@@ -40,6 +40,7 @@ const Versions = createShapePropsMigrationIds('text', {
 	AddTextAlign: 2,
 	AddRichText: 3,
 	RemoveFontSelection: 4,
+	ReduceColorOptions: 5,
 })
 
 export { Versions as textShapeVersions }
@@ -83,6 +84,27 @@ export const textShapeMigrations = createShapePropsMigrationSequence({
 			up: (props) => {
 				// Convert all font values to 'sans'
 				props.font = 'sans'
+			},
+			down: 'retired',
+		},
+		{
+			id: Versions.ReduceColorOptions,
+			up: (props) => {
+				// Map old colors to new 5-color palette
+				const colorMap: Record<string, string> = {
+					'grey': 'black',
+					'light-blue': 'blue',
+					'light-green': 'green',
+					'light-red': 'red',
+					'light-violet': 'black',
+					'orange': 'black',
+					'violet': 'black',
+					'yellow': 'black',
+				}
+
+				if (props.color && colorMap[props.color]) {
+					props.color = colorMap[props.color] as any
+				}
 			},
 			down: 'retired',
 		},

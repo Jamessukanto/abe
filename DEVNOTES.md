@@ -70,25 +70,22 @@ Testing Checklist
 
 
 
+1. User can currently choose color for the outline/marks (this includes outlines for rectangles, ellipses, lines and Draw tool marks). Reduce color options to only blue, green, red
 
-Really understand the files and dirs of the project by reading all of them and making sense of it all. I want to shave off some functionality.
-
-Note that in canvas, currently, user can: 
-1. Choose color for the outline/marks (this includes outlines for rectangles, ellipses, lines and Draw tool marks) 
-3. Change the Fill of the shapes (none, semi, solid, pattern) 
-
-What i'd like you to do with respect to the above are:
-1. color for the outline/marks: reduce color options to only blue, green, red
-3. Fill of the shapes: reduce options to only solid and pattern
-
-
-
-Be careful to modify. maintain other functionalities and remove dead code or files.
+3. User can currently change the Fill of the shapes (none, semi, solid, pattern) . Fill of the shapes: reduce options to only solid and pattern
 
 
 
 
 
+(base) ➜  abe git:(main) echo "TypeScript/JavaScript files" && find . -type f \( -name "*.ts" -o -name "*.tsx" -o -name "*.js" -o -name "*.jsx" \) -not -path "./frontend/node_modules/*" -not -path "./backend/node_modules/*" -not -path "./.git/*" -not -path "*/node_modules/*" -not -path "*/.tsbuild/*" -not -path "*/dist/*" 
+<st/*" -not -path "*/build/*" | xargs wc -l | tail -1
+TypeScript/JavaScript files
+  204536 total
+
+
+
+  
 
 Really understand the files and dirs of the project by reading all of them and making sense of it all. I want to shave off some functionality. In partficular, I want to completely remove the Arrow drawing functionality from annotator. This includes:
 

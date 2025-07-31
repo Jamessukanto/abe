@@ -54,6 +54,7 @@ const Versions = createShapePropsMigrationIds('draw', {
 	AddScale: 2,
 	RemoveDashStyles: 3,
 	RemoveSizeSelection: 4,
+	ReduceColorOptions: 5,
 })
 
 export { Versions as drawShapeVersions }
@@ -118,6 +119,27 @@ export const drawShapeMigrations = createShapePropsMigrationSequence({
 			down: (props) => {
 				// No down migration needed since we're removing functionality
 			},
+		},
+		{
+			id: Versions.ReduceColorOptions,
+			up: (props) => {
+				// Map old colors to new 5-color palette
+				const colorMap: Record<string, string> = {
+					'grey': 'black',
+					'light-blue': 'blue',
+					'light-green': 'green',
+					'light-red': 'red',
+					'light-violet': 'black',
+					'orange': 'black',
+					'violet': 'black',
+					'yellow': 'black',
+				}
+				
+				if (props.color && colorMap[props.color]) {
+					props.color = colorMap[props.color] as any
+				}
+			},
+			down: 'retired',
 		},
 	],
 })

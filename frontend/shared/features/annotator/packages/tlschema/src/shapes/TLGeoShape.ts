@@ -97,6 +97,7 @@ const geoShapeVersions = createShapePropsMigrationIds('geo', {
 	RemoveSizeSelection: 12,
 	RemoveFontSelection: 13,
 	RemoveAlignmentOptions: 14,
+	ReduceColorOptions: 15,
 })
 
 export { geoShapeVersions as geoShapeVersions }
@@ -210,6 +211,31 @@ export const geoShapeMigrations = createShapePropsMigrationSequence({
 				// Convert all alignment values to 'middle'
 				props.align = 'middle'
 				props.verticalAlign = 'middle'
+			},
+			down: 'retired',
+		},
+		{
+			id: geoShapeVersions.ReduceColorOptions,
+			up: (props) => {
+				// Map old colors to new 5-color palette
+				const colorMap: Record<string, string> = {
+					'grey': 'black',
+					'light-blue': 'blue',
+					'light-green': 'green',
+					'light-red': 'red',
+					'light-violet': 'black',
+					'orange': 'black',
+					'violet': 'black',
+					'yellow': 'black',
+				}
+
+				if (props.color && colorMap[props.color]) {
+					props.color = colorMap[props.color] as any
+				}
+
+				if (props.labelColor && colorMap[props.labelColor]) {
+					props.labelColor = colorMap[props.labelColor] as any
+				}
 			},
 			down: 'retired',
 		},

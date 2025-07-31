@@ -355,16 +355,16 @@ function mapExcalidrawColorToAnnotatorColors(
 }
 
 const colorsToColors: Record<string, TLDefaultColorStyle> = {
-	...mapExcalidrawColorToAnnotatorColors('gray', 'grey', 'black'),
-	...mapExcalidrawColorToAnnotatorColors('red', 'light-red', 'red'),
-	...mapExcalidrawColorToAnnotatorColors('pink', 'light-red', 'red'),
-	...mapExcalidrawColorToAnnotatorColors('grape', 'light-violet', 'violet'),
-	...mapExcalidrawColorToAnnotatorColors('blue', 'light-blue', 'blue'),
-	...mapExcalidrawColorToAnnotatorColors('cyan', 'light-blue', 'blue'),
-	...mapExcalidrawColorToAnnotatorColors('teal', 'light-green', 'green'),
-	...mapExcalidrawColorToAnnotatorColors('green', 'light-green', 'green'),
-	...mapExcalidrawColorToAnnotatorColors('yellow', 'yellow', 'orange'),
-	...mapExcalidrawColorToAnnotatorColors('orange', 'yellow', 'orange'),
+	...mapExcalidrawColorToAnnotatorColors('gray', 'black', 'black'),
+	...mapExcalidrawColorToAnnotatorColors('red', 'red', 'red'),
+	...mapExcalidrawColorToAnnotatorColors('pink', 'red', 'red'),
+	...mapExcalidrawColorToAnnotatorColors('grape', 'black', 'black'),
+	...mapExcalidrawColorToAnnotatorColors('blue', 'blue', 'blue'),
+	...mapExcalidrawColorToAnnotatorColors('cyan', 'blue', 'blue'),
+	...mapExcalidrawColorToAnnotatorColors('teal', 'green', 'green'),
+	...mapExcalidrawColorToAnnotatorColors('green', 'green', 'green'),
+	...mapExcalidrawColorToAnnotatorColors('yellow', 'black', 'black'),
+	...mapExcalidrawColorToAnnotatorColors('orange', 'black', 'black'),
 	'#ffffff': 'white',
 	'#000000': 'black',
 }
