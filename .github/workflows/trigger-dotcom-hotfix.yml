@@ -1,11 +1,17 @@
 name: Trigger dotcom hotfix
 
+# Temporarily disabled - requires HUPPY_APP_ID and HUPPY_APP_PRIVATE_KEY secrets
+# on:
+#   push:
+#     branches:
+#       - main
+#   pull_request:
+#     types: [labeled]
+
+# github.event_name == 'push' ||
+
 on:
-  push:
-    branches:
-      - main
-  pull_request:
-    types: [labeled]
+  workflow_dispatch: # Only allow manual triggering for now
 
 defaults:
   run:
@@ -23,7 +29,7 @@ jobs:
     concurrency: dotcom-hotfix
     environment: npm deploy
     if: |
-      github.event_name == 'push' ||
+      github.event_name == 'workflow_dispatch' ||  
       (github.event_name == 'pull_request' && 
        github.event.pull_request.merged == true && 
        github.event.label.name == 'dotcom-hotfix-please')
