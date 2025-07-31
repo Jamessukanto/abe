@@ -78,6 +78,7 @@ export const rootShapeVersions = createMigrationIds('com.annotator.shape', {
 	HoistOpacity: 2,
 	AddMeta: 3,
 	AddWhite: 4,
+	RemoveOpacity: 5,
 } as const)
 
 /** @public */
@@ -130,6 +131,17 @@ export const rootShapeMigrations = createRecordMigrationSequence({
 				if (record.props.color === 'white') {
 					record.props.color = 'black'
 				}
+			},
+		},
+		{
+			id: rootShapeVersions.RemoveOpacity,
+			up: (record: any) => {
+				// Remove opacity property - all shapes will render at 100% opacity
+				delete record.opacity
+			},
+			down: (record: any) => {
+				// Restore opacity to 1.0 (100%) for backward compatibility
+				record.opacity = 1
 			},
 		},
 	],

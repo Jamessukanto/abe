@@ -350,7 +350,6 @@ export {
 	CommonStylePickerSet,
 	DefaultStylePanelContent,
 	GeoStylePickerSet,
-	OpacitySlider,
 	TextStylePickerSet,
 	type StylePickerSetProps,
 	type ThemeStylePickerSetProps,

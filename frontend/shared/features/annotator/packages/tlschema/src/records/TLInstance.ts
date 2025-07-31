@@ -10,7 +10,6 @@ import { T } from '@annotator/validate'
 import { BoxModel, boxModelValidator } from '../misc/geometry-types'
 import { idValidator } from '../misc/id-validator'
 import { cursorValidator, TLCursor } from '../misc/TLCursor'
-import { opacityValidator, TLOpacityType } from '../misc/TLOpacity'
 import { scribbleValidator, TLScribble } from '../misc/TLScribble'
 import { StyleProp } from '../styles/StyleProp'
 import { pageIdValidator, TLPageId } from './TLPage'
@@ -25,7 +24,6 @@ import { TLShapeId } from './TLShape'
  */
 export interface TLInstance extends BaseRecord<'instance', TLInstanceId> {
 	currentPageId: TLPageId
-	opacityForNextShape: TLOpacityType
 	stylesForNextShape: Record<string, unknown>
 	followingUserId: string | null
 	highlightedUserIds: string[]
@@ -76,7 +74,6 @@ export const shouldKeyBePreservedBetweenSessions = {
 	typeName: false, // meta
 
 	currentPageId: false, // does not preserve because who knows if the page still exists
-	opacityForNextShape: false, // does not preserve because it's a temporary state
 	stylesForNextShape: false, // does not preserve because it's a temporary state
 	followingUserId: false, // does not preserve because it's a temporary state
 	highlightedUserIds: false, // does not preserve because it's a temporary state
@@ -137,7 +134,6 @@ export function createInstanceRecordType(stylesById: Map<string, StyleProp<unkno
 			currentPageId: pageIdValidator,
 			followingUserId: T.string.nullable(),
 			brush: boxModelValidator.nullable(),
-			opacityForNextShape: opacityValidator,
 			stylesForNextShape: T.object(stylesForNextShapeValidators),
 			cursor: cursorValidator,
 			scribbles: T.arrayOf(scribbleValidator),
@@ -179,7 +175,6 @@ export function createInstanceRecordType(stylesById: Map<string, StyleProp<unkno
 			meta: false,
 
 			followingUserId: true,
-			opacityForNextShape: true,
 			stylesForNextShape: true,
 			brush: true,
 			cursor: true,
@@ -208,7 +203,6 @@ export function createInstanceRecordType(stylesById: Map<string, StyleProp<unkno
 	}).withDefaultProperties(
 		(): Omit<TLInstance, 'typeName' | 'id' | 'currentPageId'> => ({
 			followingUserId: null,
-			opacityForNextShape: 1,
 			stylesForNextShape: {},
 			brush: null,
 			scribbles: [],
@@ -268,6 +262,7 @@ export const instanceVersions = createMigrationIds('com.annotator.instance', {
 	AddInset: 23,
 	AddDuplicateProps: 24,
 	RemoveCanMoveCamera: 25,
+	RemoveOpacity: 26,
 } as const)
 
 // TODO: rewrite these to use mutation
@@ -518,6 +513,17 @@ export const instanceMigrations = createRecordMigrationSequence({
 			},
 			down: (instance) => {
 				return { ...instance, canMoveCamera: true }
+			},
+		},
+		{
+			id: instanceVersions.RemoveOpacity,
+			up: ({ opacityForNextShape: _, ...record }: any) => {
+				return {
+					...record,
+				}
+			},
+			down: (instance) => {
+				return { ...instance, opacityForNextShape: 1 }
 			},
 		},
 	],

@@ -4083,7 +4083,7 @@ export class Editor extends EventEmitter<TLEventMap> {
 				return
 			}
 
-			opacity *= shape.opacity
+			// All shapes render at 100% opacity
 			let isShapeErasing = false
 			const util = this.getShapeUtil(shape)
 
@@ -7930,8 +7930,6 @@ export class Editor extends EventEmitter<TLEventMap> {
 
 			const shapeRecordsToCreate: TLShape[] = []
 
-			const { opacityForNextShape } = this.getInstanceState()
-
 			for (const partial of partials) {
 				const util = this.getShapeUtil(partial as TLShapePartial)
 
@@ -7975,7 +7973,6 @@ export class Editor extends EventEmitter<TLEventMap> {
 				).create({
 					...partial,
 					index,
-					opacity: partial.opacity ?? opacityForNextShape,
 					parentId: partial.parentId ?? focusedGroupId,
 					props: 'props' in partial ? { ...initialProps, ...partial.props } : initialProps,
 				})
@@ -8117,7 +8114,6 @@ export class Editor extends EventEmitter<TLEventMap> {
 					...end,
 					x: start.x + (end.x - start.x) * t,
 					y: start.y + (end.y - start.y) * t,
-					opacity: start.opacity + (end.opacity - start.opacity) * t,
 					rotation: start.rotation + (end.rotation - start.rotation) * t,
 					props: this.getShapeUtil(end).getInterpolatedProps?.(start, end, t) ?? end.props,
 				})
@@ -8582,111 +8578,6 @@ export class Editor extends EventEmitter<TLEventMap> {
 		}
 
 		return styles
-	}
-
-	/**
-	 * Get the currently selected shared opacity.
-	 * If any shapes are selected, this returns the shared opacity of the selected shapes.
-	 * Otherwise, this returns the chosen opacity for the next shape.
-	 *
-	 * @public
-	 */
-	@computed getSharedOpacity(): SharedStyle<number> {
-		if (this.isIn('select') && this.getSelectedShapeIds().length > 0) {
-			const shapesToCheck: TLShape[] = []
-			const addShape = (shapeId: TLShapeId) => {
-				const shape = this.getShape(shapeId)
-				if (!shape) return
-				// For groups, ignore the opacity of the group shape and instead include
-				// the opacity of the group's children. These are the shapes that would have
-				// their opacity changed if the user called `setOpacity` on the current selection.
-				if (this.isShapeOfType<TLGroupShape>(shape, 'group')) {
-					for (const childId of this.getSortedChildIdsForParent(shape.id)) {
-						addShape(childId)
-					}
-				} else {
-					shapesToCheck.push(shape)
-				}
-			}
-			for (const shapeId of this.getSelectedShapeIds()) {
-				addShape(shapeId)
-			}
-
-			let opacity: number | null = null
-			for (const shape of shapesToCheck) {
-				if (opacity === null) {
-					opacity = shape.opacity
-				} else if (opacity !== shape.opacity) {
-					return { type: 'mixed' }
-				}
-			}
-
-			if (opacity !== null) return { type: 'shared', value: opacity }
-		}
-		return { type: 'shared', value: this.getInstanceState().opacityForNextShape }
-	}
-
-	/**
-	 * Set the opacity for the next shapes. This will effect subsequently created shapes.
-	 *
-	 * @example
-	 * ```ts
-	 * editor.setOpacityForNextShapes(0.5)
-	 * ```
-	 *
-	 * @param opacity - The opacity to set. Must be a number between 0 and 1 inclusive.
-	 * @param historyOptions - The history options for the change.
-	 */
-	setOpacityForNextShapes(opacity: number, historyOptions?: TLHistoryBatchOptions): this {
-		this.updateInstanceState({ opacityForNextShape: opacity }, historyOptions)
-		return this
-	}
-
-	/**
-	 * Set the current opacity. This will effect any selected shapes.
-	 *
-	 * @example
-	 * ```ts
-	 * editor.setOpacityForSelectedShapes(0.5)
-	 * ```
-	 *
-	 * @param opacity - The opacity to set. Must be a number between 0 and 1 inclusive.
-	 */
-	setOpacityForSelectedShapes(opacity: number): this {
-		const selectedShapes = this.getSelectedShapes()
-
-		if (selectedShapes.length > 0) {
-			const shapesToUpdate: TLShape[] = []
-
-			// We can have many deep levels of grouped shape
-			// Making a recursive function to look through all the levels
-			const addShapeById = (shape: TLShape) => {
-				if (this.isShapeOfType<TLGroupShape>(shape, 'group')) {
-					const childIds = this.getSortedChildIdsForParent(shape.id)
-					for (const childId of childIds) {
-						addShapeById(this.getShape(childId)!)
-					}
-				} else {
-					shapesToUpdate.push(shape)
-				}
-			}
-
-			for (const id of selectedShapes) {
-				addShapeById(id)
-			}
-
-			this.updateShapes(
-				shapesToUpdate.map((shape) => {
-					return {
-						id: shape.id,
-						type: shape.type,
-						opacity,
-					}
-				})
-			)
-		}
-
-		return this
 	}
 
 	/**

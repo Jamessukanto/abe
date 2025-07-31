@@ -210,7 +210,6 @@ export function getNoteShapeForAdjacentPosition(
 			x: center.x,
 			y: center.y,
 			rotation: pageRotation,
-			opacity: shape.opacity,
 			props: {
 				// Use the props of the shape we're cloning
 				...shape.props,

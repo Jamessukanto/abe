@@ -1,7 +1,7 @@
 import { BaseRecord } from '@annotator/store'
 import { IndexKey, JsonObject } from '@annotator/utils'
 import { T } from '@annotator/validate'
-import { TLOpacityType, opacityValidator } from '../misc/TLOpacity'
+
 import { idValidator } from '../misc/id-validator'
 import { TLParentId, TLShapeId } from '../records/TLShape'
 
@@ -15,7 +15,6 @@ export interface TLBaseShape<Type extends string, Props extends object>
 	index: IndexKey
 	parentId: TLParentId
 	isLocked: boolean
-	opacity: TLOpacityType
 	props: Props
 	meta: JsonObject
 }
@@ -51,7 +50,6 @@ export function createShapeValidator<
 		parentId: parentIdValidator,
 		type: T.literal(type),
 		isLocked: T.boolean,
-		opacity: opacityValidator,
 		props: props ? T.object(props) : (T.jsonValue as any),
 		meta: meta ? T.object(meta) : (T.jsonValue as any),
 	})

@@ -11,7 +11,7 @@ import {
 	TLDefaultHorizontalAlignStyle,
 	TLDefaultSizeStyle,
 	TLDefaultTextAlignStyle,
-	TLOpacityType,
+
 	TLShapeId,
 	Vec,
 	VecLike,
@@ -88,7 +88,6 @@ export async function putExcalidrawContent(
 			y: element.y,
 			rotation: 0,
 			isLocked: element.locked,
-			opacity: getOpacity(element.opacity),
 			meta: {},
 		} as const
 
@@ -294,20 +293,7 @@ export async function putExcalidrawContent(
 
 /* --------------- Translating Helpers --------_------ */
 
-const getOpacity = (opacity: number): TLOpacityType => {
-	const t = opacity / 100
-	if (t < 0.2) {
-		return 0.1
-	} else if (t < 0.4) {
-		return 0.25
-	} else if (t < 0.6) {
-		return 0.5
-	} else if (t < 0.8) {
-		return 0.75
-	}
 
-	return 1
-}
 
 const strokeWidthsToSizes: Record<number, TLDefaultSizeStyle> = {
 	1: 's',

@@ -920,65 +920,6 @@ describe('Adds NoteShape vertical alignment', () => {
 	})
 })
 
-describe('hoist opacity', () => {
-	test('hoists opacity from props to the root of the shape', () => {
-		const { up, down } = getTestMigration(rootShapeVersions.HoistOpacity)
-		const before = {
-			type: 'myShape',
-			x: 0,
-			y: 0,
-			props: {
-				color: 'red',
-				opacity: '0.5',
-			},
-		}
-		const after = {
-			type: 'myShape',
-			x: 0,
-			y: 0,
-			opacity: 0.5,
-			props: {
-				color: 'red',
-			},
-		}
-
-		expect(up(before)).toEqual(after)
-		expect(down(after)).toEqual(before)
-
-		const afterWithNonMatchingOpacity = {
-			type: 'myShape',
-			x: 0,
-			y: 0,
-			opacity: 0.6,
-			props: {
-				color: 'red',
-			},
-		}
-
-		expect(down(afterWithNonMatchingOpacity)).toEqual(before)
-	})
-
-	test('hoists opacity from propsForNextShape', () => {
-		const { up } = getTestMigration(instanceVersions.HoistOpacity)
-		const before = {
-			isToolLocked: true,
-			propsForNextShape: {
-				color: 'black',
-				opacity: '0.5',
-			},
-		}
-		const after = {
-			isToolLocked: true,
-			opacityForNextShape: 0.5,
-			propsForNextShape: {
-				color: 'black',
-			},
-		}
-
-		expect(up(before)).toEqual(after)
-	})
-})
-
 describe('Adds highlightedUserIds to instance', () => {
 	const { up } = getTestMigration(instanceVersions.AddHighlightedUserIds)
 

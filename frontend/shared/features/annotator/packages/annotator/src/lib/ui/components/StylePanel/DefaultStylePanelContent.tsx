@@ -12,7 +12,6 @@ import {
 	TLDefaultColorTheme,
 	getDefaultColorTheme,
 	kickoutOccludedShapes,
-	minBy,
 	useEditor,
 	useIsDarkMode,
 	useValue,
@@ -24,9 +23,7 @@ import { useRelevantStyles } from '../../hooks/useRelevantStyles'
 import { useTranslation } from '../../hooks/useTranslation/useTranslation'
 import { AnnotatorUiButtonIcon } from '../primitives/Button/AnnotatorUiButtonIcon'
 import { AnnotatorUiButtonPicker } from '../primitives/AnnotatorUiButtonPicker'
-import { AnnotatorUiSlider } from '../primitives/AnnotatorUiSlider'
 import { AnnotatorUiToolbar, AnnotatorUiToolbarButton } from '../primitives/AnnotatorUiToolbar'
-import { DoubleDropdownPicker } from './DoubleDropdownPicker'
 import { DropdownPicker } from './DropdownPicker'
 
 /** @public */
@@ -128,7 +125,7 @@ export function CommonStylePickerSet({ styles, theme }: ThemeStylePickerSetProps
 						/>
 					</AnnotatorUiToolbar>
 				)}
-				<OpacitySlider />
+				<>test_000</>
 			</div>
 			{showPickers && (
 				<div className="tlui-style-panel__section">
@@ -302,54 +299,4 @@ export function SplineStylePickerSet({ styles, theme }: StylePickerSetProps) {
 		</AnnotatorUiToolbar>
 	)
 }
-const AnnotatorSupportedOpacities = [0.1, 0.25, 0.5, 0.75, 1] as const
-/** @public @react */
-export function OpacitySlider() {
-	const editor = useEditor()
 
-	const onHistoryMark = useCallback((id: string) => editor.markHistoryStoppingPoint(id), [editor])
-
-	const opacity = useValue('opacity', () => editor.getSharedOpacity(), [editor])
-	const trackEvent = useUiEvents()
-	const msg = useTranslation()
-
-	const handleOpacityValueChange = React.useCallback(
-		(value: number) => {
-			const item = AnnotatorSupportedOpacities[value]
-			editor.run(() => {
-				if (editor.isIn('select')) {
-					editor.setOpacityForSelectedShapes(item)
-				}
-				editor.setOpacityForNextShapes(item)
-				editor.updateInstanceState({ isChangingStyle: true })
-			})
-
-			trackEvent('set-style', { source: 'style-panel', id: 'opacity', value })
-		},
-		[editor, trackEvent]
-	)
-
-	if (opacity === undefined) return null
-
-	const opacityIndex =
-		opacity.type === 'mixed'
-			? -1
-			: AnnotatorSupportedOpacities.indexOf(
-					minBy(AnnotatorSupportedOpacities, (supportedOpacity) =>
-						Math.abs(supportedOpacity - opacity.value)
-					)!
-				)
-
-	return (
-		<AnnotatorUiSlider
-			data-testid="style.opacity"
-			value={opacityIndex >= 0 ? opacityIndex : AnnotatorSupportedOpacities.length - 1}
-			label={opacity.type === 'mixed' ? 'style-panel.mixed' : `opacity-style.${opacity.value}`}
-			onValueChange={handleOpacityValueChange}
-			steps={AnnotatorSupportedOpacities.length - 1}
-			title={msg('style-panel.opacity')}
-			onHistoryMark={onHistoryMark}
-			ariaValueModifier={25}
-		/>
-	)
-}
