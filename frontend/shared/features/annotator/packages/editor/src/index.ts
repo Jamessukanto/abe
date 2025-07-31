@@ -101,7 +101,6 @@ export {
 } from './lib/config/TLEditorSnapshot'
 export {
 	createSessionStateSnapshotSignal,
-	extractSessionStateFromLegacySnapshot,
 	loadSessionStateSnapshotIntoStore,
 	TAB_ID,
 	type TLLoadSessionStateSnapshotOptions,

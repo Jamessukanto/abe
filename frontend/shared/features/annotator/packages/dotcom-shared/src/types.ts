@@ -37,7 +37,6 @@ export type CreateSnapshotResponseBody =
 
 export interface GetReadonlySlugResponseBody {
 	slug: string
-	isLegacy: boolean
 }
 
 /* ----------------------- App ---------------------- */

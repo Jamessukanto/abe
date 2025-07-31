@@ -8,7 +8,6 @@ import {
 	FILE_PREFIX,
 	LOCAL_FILE_PREFIX,
 	PUBLISH_PREFIX,
-	READ_ONLY_LEGACY_PREFIX,
 	READ_ONLY_PREFIX,
 	ROOM_OPEN_MODE,
 	ROOM_PREFIX,
@@ -49,7 +48,6 @@ import { isRateLimited } from './utils/rateLimit'
 import { getSlug } from './utils/roomOpenMode'
 import { throttle } from './utils/throttle'
 import { getAuth, requireAdminAccess, requireWriteAccessToFile } from './utils/tla/getAuth'
-import { getLegacyRoomData } from './utils/tla/getLegacyRoomData'
 import { isTestFile } from './utils/tla/isTestFile'
 
 const MAX_CONNECTIONS = 50
@@ -221,11 +219,6 @@ export class AnnotatorDurableObject extends DurableObject {
 			(req) => this.onRequest(req, ROOM_OPEN_MODE.READ_WRITE)
 		)
 		.get(
-			`/${READ_ONLY_LEGACY_PREFIX}/:roomId`,
-			(req) => this.extractDocumentInfoFromRequest(req, ROOM_OPEN_MODE.READ_ONLY_LEGACY),
-			(req) => this.onRequest(req, ROOM_OPEN_MODE.READ_ONLY_LEGACY)
-		)
-		.get(
 			`/${READ_ONLY_PREFIX}/:roomId`,
 			(req) => this.extractDocumentInfoFromRequest(req, ROOM_OPEN_MODE.READ_ONLY),
 			(req) => this.onRequest(req, ROOM_OPEN_MODE.READ_ONLY)
@@ -358,10 +351,10 @@ export class AnnotatorDurableObject extends DurableObject {
 		const params = Object.fromEntries(url.searchParams.entries())
 		let { sessionId, storeId } = params
 
-		// handle legacy param names
-		sessionId ??= params.sessionKey ?? params.instanceId
-		storeId ??= params.localClientId
-		const isNewSession = !this._room
+		// // handle legacy param names
+		// sessionId ??= params.sessionKey ?? params.instanceId
+		// storeId ??= params.localClientId
+		// const isNewSession = !this._room
 
 		// Create the websocket pair for the client
 		const { 0: clientWebSocket, 1: serverWebSocket } = new WebSocketPair()
@@ -425,10 +418,7 @@ export class AnnotatorDurableObject extends DurableObject {
 					}
 				}
 			}
-		} else {
-			// Legacy rooms are now read-only
-			openMode = ROOM_OPEN_MODE.READ_ONLY
-		}
+		} 
 
 		try {
 			const room = await this.getRoom()
@@ -532,18 +522,6 @@ export class AnnotatorDurableObject extends DurableObject {
 					.then((r) => r?.text())
 				break
 			}
-			case ROOM_PREFIX:
-				data = await getLegacyRoomData(this.env, id, ROOM_OPEN_MODE.READ_WRITE)
-				break
-			case READ_ONLY_PREFIX:
-				data = await getLegacyRoomData(this.env, id, ROOM_OPEN_MODE.READ_ONLY)
-				break
-			case READ_ONLY_LEGACY_PREFIX:
-				data = await getLegacyRoomData(this.env, id, ROOM_OPEN_MODE.READ_ONLY_LEGACY)
-				break
-			case SNAPSHOT_PREFIX:
-				data = await getLegacyRoomData(this.env, id, 'snapshot')
-				break
 			case PUBLISH_PREFIX:
 				data = await getPublishedRoomSnapshot(this.env, id)
 				break
@@ -847,49 +825,6 @@ export class AnnotatorDurableObject extends DurableObject {
 		if (!this._documentInfo) return
 		await this.persistToDatabase()
 	}
-
-	async __admin__hardDeleteIfLegacy() {
-		if (!this._documentInfo || this.documentInfo.deleted || this.documentInfo.isApp) return false
-		this.setDocumentInfo({
-			version: CURRENT_DOCUMENT_INFO_VERSION,
-			slug: this.documentInfo.slug,
-			isApp: false,
-			deleted: true,
-		})
-		if (this._room) {
-			const room = await this.getRoom()
-			room.close()
-		}
-		const slug = this.documentInfo.slug
-		const roomKey = getR2KeyForRoom({ slug, isApp: false })
-
-		// remove edit history
-		const editHistory = await listAllObjectKeys(this.env.ROOMS_HISTORY_EPHEMERAL, roomKey)
-		if (editHistory.length > 0) {
-			await this.env.ROOMS_HISTORY_EPHEMERAL.delete(editHistory)
-		}
-
-		// remove main file
-		await this.env.ROOMS.delete(roomKey)
-
-		return true
-	}
-
-	async __admin__createLegacyRoom(id: string) {
-		this.setDocumentInfo({
-			version: CURRENT_DOCUMENT_INFO_VERSION,
-			slug: id,
-			isApp: false,
-			deleted: false,
-		})
-		const key = getR2KeyForRoom({ slug: id, isApp: false })
-		await this.r2.rooms.put(
-			key,
-			JSON.stringify(new TLSyncRoom({ schema: createTLSchema() }).getSnapshot())
-		)
-		await this.getRoom()
-	}
-}
 
 async function listAllObjectKeys(bucket: R2Bucket, prefix: string): Promise<string[]> {
 	const keys: string[] = []

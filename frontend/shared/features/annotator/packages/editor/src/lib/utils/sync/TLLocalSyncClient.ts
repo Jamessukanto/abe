@@ -6,7 +6,6 @@ import {
 	TAB_ID,
 	TLSessionStateSnapshot,
 	createSessionStateSnapshotSignal,
-	extractSessionStateFromLegacySnapshot,
 	loadSessionStateSnapshotIntoStore,
 } from '../../config/TLSessionStateSnapshot'
 import { LocalIndexedDb } from './LocalIndexedDb'
@@ -170,12 +169,10 @@ export class TLLocalSyncClient {
 		try {
 			if (data) {
 				const documentSnapshot = Object.fromEntries(data.records.map((r) => [r.id, r]))
-				const sessionStateSnapshot =
-					data.sessionStateSnapshot ?? extractSessionStateFromLegacySnapshot(documentSnapshot)
 				const migrationResult = this.store.schema.migrateStoreSnapshot({
 					store: documentSnapshot,
 					// eslint-disable-next-line @typescript-eslint/no-deprecated
-					schema: data.schema ?? this.store.schema.serializeEarliestVersion(),
+					schema: data.schema ?? this.store.schema.serialize(),
 				})
 
 				if (migrationResult.type === 'error') {
@@ -195,8 +192,8 @@ export class TLLocalSyncClient {
 					})
 				}
 
-				if (sessionStateSnapshot) {
-					loadSessionStateSnapshotIntoStore(this.store, sessionStateSnapshot, {
+				if (data?.sessionStateSnapshot) {
+					loadSessionStateSnapshotIntoStore(this.store, data.sessionStateSnapshot, {
 						forceOverwrite: true,
 					})
 				}

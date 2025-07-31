@@ -11,9 +11,9 @@ let didWarn = false
 export function defineMigrations(opts: {
 	firstVersion?: number
 	currentVersion?: number
-	migrators?: Record<number, LegacyMigration>
+	migrators?: Record<number>
 	subTypeKey?: string
-	subTypeMigrations?: Record<string, LegacyBaseMigrationsInfo>
+	subTypeMigrations?: Record<string>
 }): LegacyMigrations {
 	const { currentVersion, firstVersion, migrators = {}, subTypeKey, subTypeMigrations } = opts
 	if (!didWarn) {

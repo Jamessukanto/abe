@@ -6,7 +6,6 @@ import { TLSessionStateSnapshot } from '../../config/TLSessionStateSnapshot'
 
 // DO NOT CHANGE THESE WITHOUT ADDING MIGRATION LOGIC. DOING SO WOULD WIPE ALL EXISTING DATA.
 const STORE_PREFIX = 'ANNOTATOR_DOCUMENT_v2'
-const LEGACY_ASSET_STORE_PREFIX = 'ANNOTATOR_ASSET_STORE_v1'
 const dbNameIndexKey = 'ANNOTATOR_DB_NAME_INDEX_v2'
 
 /** @internal */
@@ -43,45 +42,6 @@ async function openLocalDb(persistenceKey: string) {
 	})
 }
 
-async function migrateLegacyAssetDbIfNeeded(persistenceKey: string) {
-	const databases = window.indexedDB.databases
-		? (await window.indexedDB.databases()).map((db) => db.name)
-		: getAllIndexDbNames()
-	const oldStoreId = LEGACY_ASSET_STORE_PREFIX + persistenceKey
-	const existing = databases.find((dbName) => dbName === oldStoreId)
-	if (!existing) return
-
-	const oldAssetDb = await openDB<StoreName>(oldStoreId, 1, {
-		upgrade(database) {
-			if (!database.objectStoreNames.contains('assets')) {
-				database.createObjectStore('assets')
-			}
-		},
-	})
-	if (!oldAssetDb.objectStoreNames.contains('assets')) return
-
-	const oldTx = oldAssetDb.transaction(['assets'], 'readonly')
-	const oldAssetStore = oldTx.objectStore('assets')
-	const oldAssetsKeys = await oldAssetStore.getAllKeys()
-	const oldAssets = await Promise.all(
-		oldAssetsKeys.map(async (key) => [key, await oldAssetStore.get(key)] as const)
-	)
-	await oldTx.done
-
-	const newDb = await openLocalDb(persistenceKey)
-	const newTx = newDb.transaction([Table.Assets], 'readwrite')
-	const newAssetTable = newTx.objectStore(Table.Assets)
-	for (const [key, value] of oldAssets) {
-		newAssetTable.put(value, key)
-	}
-	await newTx.done
-
-	oldAssetDb.close()
-	newDb.close()
-
-	await deleteDB(oldStoreId)
-}
-
 interface LoadResult {
 	records: TLRecord[]
 	schema?: SerializedSchema
@@ -106,7 +66,6 @@ export class LocalIndexedDb {
 	constructor(persistenceKey: string) {
 		LocalIndexedDb.connectedInstances.add(this)
 		this.getDbPromise = (async () => {
-			await migrateLegacyAssetDbIfNeeded(persistenceKey)
 			return await openLocalDb(persistenceKey)
 		})()
 	}

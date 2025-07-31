@@ -26,7 +26,6 @@ export type RoomSession<R extends UnknownRecord, Meta> =
 			sessionStartTime: number
 			meta: Meta
 			isReadonly: boolean
-			requiresLegacyRejection: boolean
 	  }
 	| {
 			state: typeof RoomSessionState.AwaitingRemoval
@@ -36,7 +35,6 @@ export type RoomSession<R extends UnknownRecord, Meta> =
 			cancellationTime: number
 			meta: Meta
 			isReadonly: boolean
-			requiresLegacyRejection: boolean
 	  }
 	| {
 			state: typeof RoomSessionState.Connected
@@ -49,5 +47,4 @@ export type RoomSession<R extends UnknownRecord, Meta> =
 			outstandingDataMessages: TLSocketServerSentDataEvent<R>[]
 			meta: Meta
 			isReadonly: boolean
-			requiresLegacyRejection: boolean
 	  }

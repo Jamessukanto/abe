@@ -347,18 +347,6 @@ export class StoreSchema<R extends UnknownRecord, P = unknown> {
 		}
 	}
 
-	/**
-	 * @deprecated This is only here for legacy reasons, don't use it unless you have david's blessing!
-	 */
-	serializeEarliestVersion(): SerializedSchema {
-		return {
-			schemaVersion: 2,
-			sequences: Object.fromEntries(
-				Object.values(this.migrations).map(({ sequenceId }) => [sequenceId, 0])
-			),
-		}
-	}
-
 	/** @internal */
 	getType(typeName: string) {
 		const type = getOwnProperty(this.types, typeName)

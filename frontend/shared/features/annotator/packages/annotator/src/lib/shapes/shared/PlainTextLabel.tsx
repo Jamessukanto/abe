@@ -9,7 +9,6 @@ import {
 import React from 'react'
 import { PlainTextArea } from '../text/PlainTextArea'
 import { TextHelpers } from './TextHelpers'
-import { isLegacyAlign } from './legacyProps'
 import { useEditablePlainText } from './useEditablePlainText'
 
 /** @public */
@@ -67,8 +66,6 @@ export const PlainTextLabel = React.memo(function PlainTextLabel({
 	const finalPlainText = TextHelpers.normalizeTextForDom(plaintext || '')
 	const hasText = finalPlainText.length > 0
 
-	const legacyAlign = isLegacyAlign(align)
-
 	if (!isEditing && !hasText) {
 		return null
 	}
@@ -90,7 +87,7 @@ export const PlainTextLabel = React.memo(function PlainTextLabel({
 			data-textwrap={!!wrap}
 			data-isselected={isSelected}
 			style={{
-				justifyContent: align === 'middle' || legacyAlign ? 'center' : align,
+				justifyContent: align === 'middle' || align,
 				alignItems: verticalAlign === 'middle' ? 'center' : verticalAlign,
 				padding,
 				...style,

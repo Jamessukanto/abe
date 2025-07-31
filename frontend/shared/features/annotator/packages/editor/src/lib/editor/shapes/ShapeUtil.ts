@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import { EMPTY_ARRAY } from '@annotator/state'
-import { LegacyMigrations, MigrationSequence } from '@annotator/store'
+import { MigrationSequence } from '@annotator/store'
 import {
 	RecordProps,
 	TLHandle,
@@ -33,7 +33,7 @@ export interface TLShapeUtilConstructor<
 	new (editor: Editor): U
 	type: T['type']
 	props?: RecordProps<T>
-	migrations?: LegacyMigrations | TLPropsMigrations | MigrationSequence
+	migrations?:  TLPropsMigrations | MigrationSequence
 }
 
 /**
@@ -135,7 +135,7 @@ export abstract class ShapeUtil<Shape extends TLUnknownShape = TLUnknownShape> {
 	 * {@link https://www.annotator.dev/docs/persistence#Shape-props-migrations | shape prop migrations}
 	 * guide for more information.
 	 */
-	static migrations?: LegacyMigrations | TLPropsMigrations | MigrationSequence
+	static migrations?:  TLPropsMigrations | MigrationSequence
 
 	/**
 	 * The type of the shape util, which should match the shape's type.

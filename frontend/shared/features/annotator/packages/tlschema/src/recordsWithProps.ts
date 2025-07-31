@@ -82,37 +82,7 @@ export function processPropsMigrations<R extends UnknownRecord & { type: string;
 					),
 				})
 			)
-		} else {
-			// legacy migrations, will be removed in the future
-			result.push(
-				createMigrationSequence({
-					sequenceId,
-					retroactive: true,
-					sequence: Object.keys(migrations.migrators)
-						.map((k) => Number(k))
-						.sort((a: number, b: number) => a - b)
-						.map(
-							(version): Migration => ({
-								id: `${sequenceId}/${version}`,
-								scope: 'record',
-								filter: (r) => r.typeName === typeName && (r as R).type === subType,
-								up: (record: any) => {
-									const result = migrations.migrators[version].up(record)
-									if (result) {
-										return result
-									}
-								},
-								down: (record: any) => {
-									const result = migrations.migrators[version].down(record)
-									if (result) {
-										return result
-									}
-								},
-							})
-						),
-				})
-			)
-		}
+		} 
 	}
 
 	return result

@@ -2,7 +2,6 @@
 /// <reference types="@cloudflare/workers-types" />
 import {
 	FILE_PREFIX,
-	READ_ONLY_LEGACY_PREFIX,
 	READ_ONLY_PREFIX,
 	ROOM_OPEN_MODE,
 	ROOM_PREFIX,
@@ -62,9 +61,6 @@ const router = createRouter<Environment>()
 	.get('/snapshot/:roomId', getRoomSnapshot)
 	.get(`/${ROOM_PREFIX}/:roomId`, (req, env) =>
 		joinExistingRoom(req, env, ROOM_OPEN_MODE.READ_WRITE)
-	)
-	.get(`/${READ_ONLY_LEGACY_PREFIX}/:roomId`, (req, env) =>
-		joinExistingRoom(req, env, ROOM_OPEN_MODE.READ_ONLY_LEGACY)
 	)
 	.get(`/${READ_ONLY_PREFIX}/:roomId`, (req, env) =>
 		joinExistingRoom(req, env, ROOM_OPEN_MODE.READ_ONLY)

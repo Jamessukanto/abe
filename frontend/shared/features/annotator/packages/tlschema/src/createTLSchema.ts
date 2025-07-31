@@ -1,4 +1,4 @@
-import { LegacyMigrations, MigrationSequence, StoreSchema, StoreValidator } from '@annotator/store'
+import { MigrationSequence, StoreSchema, StoreValidator } from '@annotator/store'
 import { objectMapValues } from '@annotator/utils'
 import { TLStoreProps, createIntegrityChecker, onValidationFailure } from './TLStore'
 import { bookmarkAssetMigrations } from './assets/TLBookmarkAsset'
@@ -38,7 +38,7 @@ import { StyleProp } from './styles/StyleProp'
 
 /** @public */
 export interface SchemaPropsInfo {
-	migrations?: LegacyMigrations | TLPropsMigrations | MigrationSequence
+	migrations?: TLPropsMigrations | MigrationSequence
 	props?: Record<string, StoreValidator<any>>
 	meta?: Record<string, StoreValidator<any>>
 }

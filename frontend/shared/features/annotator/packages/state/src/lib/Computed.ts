@@ -289,61 +289,6 @@ class __UNSAFE__Computed<Value, Diff = unknown> implements Computed<Value, Diff>
 export const _Computed = singleton('Computed', () => __UNSAFE__Computed)
 export type _Computed = InstanceType<typeof __UNSAFE__Computed>
 
-function computedMethodLegacyDecorator(
-	options: ComputedOptions<any, any> = {},
-	_target: any,
-	key: string,
-	descriptor: PropertyDescriptor
-) {
-	const originalMethod = descriptor.value
-	const derivationKey = Symbol.for('__@annotator/state__computed__' + key)
-
-	descriptor.value = function (this: any) {
-		let d = this[derivationKey] as Computed<any> | undefined
-
-		if (!d) {
-			d = new _Computed(key, originalMethod!.bind(this) as any, options)
-			Object.defineProperty(this, derivationKey, {
-				enumerable: false,
-				configurable: false,
-				writable: false,
-				value: d,
-			})
-		}
-		return d.get()
-	}
-	descriptor.value[isComputedMethodKey] = true
-
-	return descriptor
-}
-
-function computedGetterLegacyDecorator(
-	options: ComputedOptions<any, any> = {},
-	_target: any,
-	key: string,
-	descriptor: PropertyDescriptor
-) {
-	const originalMethod = descriptor.get
-	const derivationKey = Symbol.for('__@annotator/state__computed__' + key)
-
-	descriptor.get = function (this: any) {
-		let d = this[derivationKey] as Computed<any> | undefined
-
-		if (!d) {
-			d = new _Computed(key, originalMethod!.bind(this) as any, options)
-			Object.defineProperty(this, derivationKey, {
-				enumerable: false,
-				configurable: false,
-				writable: false,
-				value: d,
-			})
-		}
-		return d.get()
-	}
-
-	return descriptor
-}
-
 function computedMethodTc39Decorator<This extends object, Value>(
 	options: ComputedOptions<Value, any>,
 	compute: () => Value,
@@ -379,15 +324,7 @@ function computedDecorator(
 	if (args.length === 2) {
 		const [originalMethod, context] = args
 		return computedMethodTc39Decorator(options, originalMethod, context)
-	} else {
-		const [_target, key, descriptor] = args
-		if (descriptor.get) {
-			logComputedGetterWarning()
-			return computedGetterLegacyDecorator(options, _target, key, descriptor)
-		} else {
-			return computedMethodLegacyDecorator(options, _target, key, descriptor)
-		}
-	}
+	} 
 }
 
 const isComputedMethodKey = '@@__isComputedMethod__@@'

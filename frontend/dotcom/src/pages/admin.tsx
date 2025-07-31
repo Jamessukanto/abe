@@ -98,9 +98,7 @@ export function Component() {
 				<h2>User data</h2>
 				{data && <pre style={{ userSelect: 'text' }}>{JSON.stringify(data, null, 2)}</pre>}
 			</div>
-			<DownloadTldrFile legacy={false} />
-			<DownloadTldrFile legacy={true} />
-			<CreateLegacyFile />
+			<DownloadTldrFile />
 			<HardDeleteFile />
 		</div>
 	)
@@ -152,24 +150,8 @@ function HardDeleteFile() {
 	)
 }
 
-function CreateLegacyFile() {
-	return (
-		<div>
-			<h2>Create legacy file</h2>
-			<button
-				onClick={() =>
-					fetch(`/api/app/admin/create_legacy_file`, { method: 'POST' })
-						.then((res) => res.json())
-						.then(({ slug }) => window.open(`/r/${slug}`, '_blank')?.focus())
-				}
-			>
-				Create legacy file
-			</button>
-		</div>
-	)
-}
 
-function DownloadTldrFile({ legacy }: { legacy: boolean }) {
+function DownloadTldrFile() {
 	const inputRef = useRef<HTMLInputElement>(null)
 	const [error, setError] = useState(null as string | null)
 	const onDownload = useCallback(async () => {
@@ -179,7 +161,7 @@ function DownloadTldrFile({ legacy }: { legacy: boolean }) {
 			setError('Please enter a file slug')
 			return
 		}
-		const path = legacy ? 'download-legacy-tldr' : 'download-tldr'
+		const path = 'download-tldr'
 
 		const res = await fetch(`/api/app/admin/${path}/${fileSlug}`)
 		if (!res.ok) {
@@ -197,10 +179,10 @@ function DownloadTldrFile({ legacy }: { legacy: boolean }) {
 		a.click()
 		window.URL.revokeObjectURL(url)
 		document.body.removeChild(a)
-	}, [legacy])
+	}, [])
 	return (
 		<div>
-			<h2>{legacy ? 'Download legacy .tldr file' : 'Download .tldr file'}</h2>
+			<h2>Download .tldr file</h2>
 			{error && <div style={{ color: 'red' }}>{error}</div>}
 			<div style={{ display: 'flex', gap: '8px' }}>
 				<input type="text" placeholder="file id" ref={inputRef} />

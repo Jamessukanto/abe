@@ -8,7 +8,6 @@ import {
 } from '@annotator/editor'
 import { createTextJsxFromSpans } from './createTextJsxFromSpans'
 import { TEXT_PROPS } from './default-shape-constants'
-import { getLegacyOffsetX } from './legacyProps'
 import { useDefaultColorTheme } from './useDefaultColorTheme'
 
 export function SvgTextLabel({
@@ -59,7 +58,7 @@ export function SvgTextLabel({
 	}
 
 	const spans = editor.textMeasure.measureTextSpans(text, opts)
-	const offsetX = getLegacyOffsetX(align, padding, spans, bounds.width)
+	const offsetX = 0 // getLegacyOffsetX(align, padding, spans, bounds.width)
 	if (offsetX) {
 		opts.offsetX = offsetX
 	}

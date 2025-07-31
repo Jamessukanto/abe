@@ -2,7 +2,6 @@ import { getLicenseKey, ROOM_PREFIX } from '@annotator/dotcom-shared'
 import { createContext, useCallback, useContext } from 'react'
 import { Editor, fetch, TLComponents, Annotator, TLStoreSnapshot } from 'annotator'
 import { ThemeUpdater } from '../../../components/ThemeUpdater/ThemeUpdater'
-import { useLegacyUrlParams } from '../../../hooks/useLegacyUrlParams'
 import { useHandleUiEvents } from '../../../utils/analytics'
 import { assetUrls } from '../../../utils/assetUrls'
 import { globalEditor } from '../../../utils/globalEditor'
@@ -13,7 +12,6 @@ import { TlaCtaButton } from '../TlaCtaButton/TlaCtaButton'
 import { TlaEditorErrorFallback } from './editor-components/TlaEditorErrorFallback'
 import { SneakyDarkModeSync } from './sneaky/SneakyDarkModeSync'
 import { SneakyAnnotatorFileDropHandler } from './sneaky/SneakyFileDropHandler'
-import { SneakyLegacySetDocumentTitle } from './sneaky/SneakyLegacytSetDocumentTitle'
 import { SneakySetDocumentTitle } from './sneaky/SneakySetDocumentTitle'
 import { TlaEditorWrapper } from './TlaEditorWrapper'
 import { useFileEditorOverrides } from './useFileEditorOverrides'
@@ -98,7 +96,7 @@ function TlaEditorInner({ snapshot }: { snapshot: TLStoreSnapshot }) {
 	const setIsReady = useSetIsReady()
 
 	// make sure this runs before the editor is instantiated
-	useLegacyUrlParams()
+	// useLegacyUrlParams()
 
 	const handleUiEvent = useHandleUiEvents()
 
@@ -133,7 +131,6 @@ function TlaEditorInner({ snapshot }: { snapshot: TLStoreSnapshot }) {
 			>
 				<ThemeUpdater />
 				<SneakyDarkModeSync />
-				<SneakyLegacySetDocumentTitle />
 				{app && <SneakyAnnotatorFileDropHandler />}
 			</Annotator>
 		</TlaEditorWrapper>

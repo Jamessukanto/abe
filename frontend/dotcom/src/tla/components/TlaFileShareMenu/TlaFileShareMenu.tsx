@@ -30,7 +30,7 @@ export function TlaFileShareMenu({
 	children,
 }: {
 	// this share menu is shown when viewing a file, or a published file (snapshot), or when the logged out user is on the root (the scratchpad)
-	context: 'file' | 'published-file' | 'scratch' | 'legacy'
+	context: 'file' | 'published-file' | 'scratch'
 	fileId?: string
 	source: string
 	children: ReactNode
@@ -61,7 +61,7 @@ export function TlaFileShareMenu({
 	const okTabs = {
 		// If the context is a guest file or published file, show the anon share file
 		'anon-share':
-			!isOwner && (context === 'file' || context === 'published-file' || context === 'legacy'),
+			!isOwner && (context === 'file' || context === 'published-file'),
 		export: true,
 		// Can the current user configure the file's sharing settings?
 		share: context === 'file' && fileId && file && isOwner,

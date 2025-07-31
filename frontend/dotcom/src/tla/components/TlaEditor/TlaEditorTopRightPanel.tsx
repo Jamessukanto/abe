@@ -1,7 +1,6 @@
 import { SignInButton } from '@clerk/clerk-react'
 import {
 	PUBLISH_PREFIX,
-	READ_ONLY_LEGACY_PREFIX,
 	READ_ONLY_PREFIX,
 	ROOM_PREFIX,
 	SNAPSHOT_PREFIX,
@@ -101,7 +100,7 @@ export function TlaEditorTopRightPanel({
 	context,
 }: {
 	isAnonUser: boolean
-	context: 'file' | 'published-file' | 'scratch' | 'legacy'
+	context: 'file' | 'published-file' | 'scratch'
 }) {
 	const ctaMessage = useCtaMessage()
 	const ref = useRef<HTMLDivElement>(null)
@@ -139,8 +138,7 @@ export function TlaEditorTopRightPanel({
 	return (
 		<div ref={ref} className={styles.topRightPanel}>
 			<PeopleMenu />
-			{context === 'legacy' && <LegacyImportButton />}
-			{context !== 'legacy' && (
+			{(
 				<TlaFileShareMenu fileId={fileId!} source="file-header" context={context}>
 					<TlaCtaButton
 						data-testid="tla-share-button"
@@ -178,7 +176,6 @@ function usePrefix() {
 	switch (roomPrefix) {
 		case ROOM_PREFIX:
 		case READ_ONLY_PREFIX:
-		case READ_ONLY_LEGACY_PREFIX:
 		case SNAPSHOT_PREFIX:
 		case PUBLISH_PREFIX:
 			return roomPrefix
@@ -193,33 +190,6 @@ export function useRoomInfo() {
 	return { prefix, id }
 }
 
-function LegacyImportButton() {
-	const trackEvent = useAnnotatorAppUiEvents()
-	const app = useMaybeApp()
-	const editor = useEditor()
-	const navigate = useNavigate()
-	const name = useGetFileName()
-	const roomInfo = useRoomInfo()
-
-	const handleClick = useCallback(async () => {
-		if (!app || !editor || !roomInfo) return
-
-		const { prefix, id } = roomInfo
-		const res = await app.createFile({ name, createSource: `${prefix}/${id}` })
-		if (res.ok) {
-			const { file } = res.value
-			navigate(routes.tlaFile(file.id))
-			trackEvent('create-file', { source: 'legacy-import-button' })
-		}
-	}, [app, editor, name, navigate, roomInfo, trackEvent])
-
-	return (
-		<TlaCtaButton data-testid="tla-import-button" onClick={handleClick}>
-			<F defaultMessage="Copy to my files" />
-		</TlaCtaButton>
-	)
-}
-
 export const signedOutShareMessages = defineMessages({
 	share: { defaultMessage: 'Share' },
 })
@@ -229,7 +199,7 @@ export function SignedOutShareButton({
 	context,
 }: {
 	fileId?: string
-	context: 'file' | 'published-file' | 'scratch' | 'legacy'
+	context: 'file' | 'published-file' | 'scratch'
 }) {
 	const trackEvent = useAnnotatorAppUiEvents()
 	const shareLbl = useMsg(signedOutShareMessages.share)

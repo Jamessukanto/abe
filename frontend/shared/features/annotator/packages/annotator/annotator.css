@@ -617,21 +617,6 @@ input,
 	font-family: var(--tl-font-mono);
 }
 
-.tl-text-wrapper[data-align='start'],
-.tl-text-wrapper[data-align='start-legacy'] {
-	text-align: left;
-}
-
-.tl-text-wrapper[data-align='middle'],
-.tl-text-wrapper[data-align='middle-legacy'] {
-	text-align: center;
-}
-
-.tl-text-wrapper[data-align='end'],
-.tl-text-wrapper[data-align='end-legacy'] {
-	text-align: right;
-}
-
 .tl-plain-text-wrapper[data-isediting='true'] .tl-text-content {
 	opacity: 0;
 }

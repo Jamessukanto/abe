@@ -2,7 +2,6 @@ import { getLicenseKey } from '@annotator/dotcom-shared'
 import { useMemo } from 'react'
 import { SerializedSchema, TLComponents, TLRecord, Annotator } from 'annotator'
 import { ThemeUpdater } from '../../../components/ThemeUpdater/ThemeUpdater'
-import { useLegacyUrlParams } from '../../../hooks/useLegacyUrlParams'
 import { useHandleUiEvents } from '../../../utils/analytics'
 import { assetUrls } from '../../../utils/assetUrls'
 import { globalEditor } from '../../../utils/globalEditor'
@@ -26,7 +25,7 @@ interface TlaPublishEditorProps {
 
 export function TlaPublishEditor({ schema, records }: TlaPublishEditorProps) {
 	// make sure this runs before the editor is instantiated
-	useLegacyUrlParams()
+	// useLegacyUrlParams()
 
 	const handleUiEvent = useHandleUiEvents()
 	const fileEditorOverrides = useFileEditorOverrides({

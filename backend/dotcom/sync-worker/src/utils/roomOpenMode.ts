@@ -9,8 +9,6 @@ export async function getSlug(env: Environment, slug: string | null, roomOpenMod
 			return slug
 		case ROOM_OPEN_MODE.READ_ONLY:
 			return await env.READONLY_SLUG_TO_SLUG.get(slug)
-		case ROOM_OPEN_MODE.READ_ONLY_LEGACY:
-			return lns(slug)
 		default:
 			exhaustiveSwitchError(roomOpenMode)
 	}

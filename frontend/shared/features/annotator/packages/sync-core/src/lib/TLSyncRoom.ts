@@ -564,7 +564,6 @@ export class TLSyncRoom<R extends UnknownRecord, SessionMeta> {
 			cancellationTime: Date.now(),
 			meta: session.meta,
 			isReadonly: session.isReadonly,
-			requiresLegacyRejection: session.requiresLegacyRejection,
 		})
 
 		try {
@@ -633,8 +632,6 @@ export class TLSyncRoom<R extends UnknownRecord, SessionMeta> {
 			sessionStartTime: Date.now(),
 			meta,
 			isReadonly: isReadonly ?? false,
-			// this gets set later during handleConnectMessage
-			requiresLegacyRejection: false,
 		})
 		return this
 	}
@@ -725,42 +722,8 @@ export class TLSyncRoom<R extends UnknownRecord, SessionMeta> {
 			this.removeSession(sessionId)
 			return
 		}
-		if (session.requiresLegacyRejection) {
-			try {
-				if (session.socket.isOpen) {
-					// eslint-disable-next-line @typescript-eslint/no-deprecated
-					let legacyReason: TLIncompatibilityReason
-					switch (fatalReason) {
-						case TLSyncErrorCloseEventReason.CLIENT_TOO_OLD:
-							// eslint-disable-next-line @typescript-eslint/no-deprecated
-							legacyReason = TLIncompatibilityReason.ClientTooOld
-							break
-						case TLSyncErrorCloseEventReason.SERVER_TOO_OLD:
-							// eslint-disable-next-line @typescript-eslint/no-deprecated
-							legacyReason = TLIncompatibilityReason.ServerTooOld
-							break
-						case TLSyncErrorCloseEventReason.INVALID_RECORD:
-							// eslint-disable-next-line @typescript-eslint/no-deprecated
-							legacyReason = TLIncompatibilityReason.InvalidRecord
-							break
-						default:
-							// eslint-disable-next-line @typescript-eslint/no-deprecated
-							legacyReason = TLIncompatibilityReason.InvalidOperation
-							break
-					}
-					session.socket.sendMessage({
-						type: 'incompatibility_error',
-						reason: legacyReason,
-					})
-				}
-			} catch {
-				// noop
-			} finally {
-				this.removeSession(sessionId)
-			}
-		} else {
-			this.removeSession(sessionId, fatalReason)
-		}
+		this.removeSession(sessionId, fatalReason)
+
 	}
 
 	private handleConnectRequest(
@@ -774,11 +737,6 @@ export class TLSyncRoom<R extends UnknownRecord, SessionMeta> {
 		// 5 is the same as 6
 		if (theirProtocolVersion === 5) {
 			theirProtocolVersion = 6
-		}
-		// 6 is almost the same as 7
-		session.requiresLegacyRejection = theirProtocolVersion === 6
-		if (theirProtocolVersion === 6) {
-			theirProtocolVersion++
 		}
 
 		if (theirProtocolVersion == null || theirProtocolVersion < getTlsyncProtocolVersion()) {
@@ -817,7 +775,6 @@ export class TLSyncRoom<R extends UnknownRecord, SessionMeta> {
 				outstandingDataMessages: [],
 				meta: session.meta,
 				isReadonly: session.isReadonly,
-				requiresLegacyRejection: session.requiresLegacyRejection,
 			})
 			this.sendMessage(session.sessionId, msg)
 		}

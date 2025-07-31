@@ -1,7 +1,6 @@
 import {
 	TLSessionStateSnapshot,
 	createSessionStateSnapshotSignal,
-	extractSessionStateFromLegacySnapshot,
 	loadSessionStateSnapshotIntoStore,
 	react,
 } from '@annotator/editor'
@@ -132,65 +131,4 @@ describe(loadSessionStateSnapshotIntoStore, () => {
 	})
 })
 
-describe(extractSessionStateFromLegacySnapshot, () => {
-	it('pulls a snapshot from old data if it can', () => {
-		const oldSnapshot = {
-			'shape:whatever': {
-				id: 'shape:whatever',
-				typeName: 'shape',
-			},
-			'camera:whatever': {
-				id: 'camera:whatever',
-				typeName: 'camera',
-				x: 1,
-				y: 2,
-				z: 3,
-			},
-			'page:whatever': {
-				id: 'page:whatever',
-				typeName: 'page',
-				name: 'whatever',
-				index: 'whatever',
-			},
-			'instance:whatever': {
-				id: 'instance:whatever',
-				typeName: 'instance',
-				currentPageId: 'page:whatever',
-			},
-			'instance_page_state:whatever': {
-				id: 'instance_page_state:whatever',
-				typeName: 'instance_page_state',
-				instanceId: 'instance:whatever',
-				pageId: 'page:whatever',
-				selectedShapeIds: ['shape:whatever'],
-				focusedGroupId: null,
-			},
-		}
 
-		expect(extractSessionStateFromLegacySnapshot(oldSnapshot as any)).toMatchInlineSnapshot(`
-		{
-		  "currentPageId": "page:whatever",
-		  "exportBackground": false,
-		  "isDebugMode": false,
-		  "isFocusMode": false,
-		  "isGridMode": false,
-		  "isToolLocked": false,
-		  "pageStates": [
-		    {
-		      "camera": {
-		        "x": 0,
-		        "y": 0,
-		        "z": 1,
-		      },
-		      "focusedGroupId": null,
-		      "pageId": "page:whatever",
-		      "selectedShapeIds": [
-		        "shape:whatever",
-		      ],
-		    },
-		  ],
-		  "version": 0,
-		}
-	`)
-	})
-})

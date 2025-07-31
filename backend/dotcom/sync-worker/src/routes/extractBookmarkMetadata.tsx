@@ -4,11 +4,6 @@ import { IRequest } from 'itty-router'
 import { Environment } from '../types'
 
 export async function extractBookmarkMetadata(request: IRequest, env: Environment) {
-	if (request.method === 'GET') {
-		// legacy route: extract metadata without saving image
-		return handleExtractBookmarkMetadataRequest({ request })
-	}
-
 	return handleExtractBookmarkMetadataRequest({
 		request,
 		uploadImage: async (headers, body, objectName) => {

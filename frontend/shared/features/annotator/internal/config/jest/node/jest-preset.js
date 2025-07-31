@@ -13,7 +13,6 @@ module.exports = {
 						decorators: true,
 					},
 					transform: {
-						legacyDecorator: true,
 						decoratorMetadata: true,
 						react: {
 							runtime: 'automatic',

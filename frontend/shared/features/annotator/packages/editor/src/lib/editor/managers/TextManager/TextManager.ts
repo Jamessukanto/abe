@@ -14,11 +14,8 @@ function normalizeTextForDom(text: string) {
 
 const textAlignmentsForLtr = {
 	start: 'left',
-	'start-legacy': 'left',
 	middle: 'center',
-	'middle-legacy': 'center',
 	end: 'right',
-	'end-legacy': 'right',
 }
 
 /** @public */

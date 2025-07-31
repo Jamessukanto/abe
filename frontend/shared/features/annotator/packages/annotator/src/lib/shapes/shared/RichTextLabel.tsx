@@ -17,7 +17,6 @@ import React, { useMemo } from 'react'
 import { renderHtmlFromRichText } from '../../utils/text/richText'
 import { RichTextArea } from '../text/RichTextArea'
 import { TEXT_PROPS } from './default-shape-constants'
-import { isLegacyAlign } from './legacyProps'
 import { useEditableRichText } from './useEditableRichText'
 
 /** @public */
@@ -97,7 +96,6 @@ export const RichTextLabel = React.memo(function RichTextLabel({
 		[editor]
 	)
 
-	const legacyAlign = isLegacyAlign(align)
 
 	const handlePointerDown = (e: React.MouseEvent<HTMLDivElement>) => {
 		if (e.target instanceof HTMLElement && (e.target.tagName === 'A' || e.target.closest('a'))) {
@@ -136,7 +134,7 @@ export const RichTextLabel = React.memo(function RichTextLabel({
 			data-textwrap={!!wrap}
 			data-isselected={isSelected}
 			style={{
-				justifyContent: align === 'middle' || legacyAlign ? 'center' : align,
+				justifyContent: align === 'middle' || align,
 				alignItems: verticalAlign === 'middle' ? 'center' : verticalAlign,
 				padding,
 				...style,

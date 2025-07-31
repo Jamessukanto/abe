@@ -52,24 +52,24 @@ export const adminRoutes = createRouter<Environment>()
 		await user.admin_forceHardReboot(userRow.id)
 		return new Response('Rebooted', { status: 200 })
 	})
-	.post('/app/admin/create_legacy_file', async (_res, env) => {
-		const slug = uniqueId()
-		await getRoomDurableObject(env, slug).__admin__createLegacyRoom(slug)
-		return json({ slug })
-	})
+	// .post('/app/admin/create_legacy_file', async (_res, env) => {
+	// 	const slug = uniqueId()
+	// 	await getRoomDurableObject(env, slug).__admin__createLegacyRoom(slug)
+	// 	return json({ slug })
+	// })
 	.post('/app/admin/hard_delete_file/:fileId', async (res, env) => {
 		const fileId = res.params.fileId
 		assert(typeof fileId === 'string', 'fileId is required')
 
 		const pg = createPostgresConnectionPool(env, '/app/admin/hard_delete_file')
 		const file = await pg.selectFrom('file').where('id', '=', fileId).selectAll().executeTakeFirst()
-		if (!file) {
-			if (await maybeHardDeleteLegacyFile({ id: fileId, env })) {
-				return new Response('deleted')
-			} else {
-				return new Response('File not found', { status: 404 })
-			}
-		}
+		// if (!file) {
+		// 	if (await maybeHardDeleteLegacyFile({ id: fileId, env })) {
+		// 		return new Response('deleted')
+		// 	} else {
+		// 		return new Response('File not found', { status: 404 })
+		// 	}
+		// }
 		return await hardDeleteAppFile({ pg, file, env })
 	})
 	.get('/app/admin/download-tldr/:fileSlug', async (res, env) => {
@@ -77,15 +77,10 @@ export const adminRoutes = createRouter<Environment>()
 		assert(typeof fileSlug === 'string', 'fileSlug is required')
 		return await returnFileSnapshot(env, fileSlug, true)
 	})
-	.get('/app/admin/download-legacy-tldr/:fileSlug', async (res, env) => {
-		const fileSlug = res.params.fileSlug
-		assert(typeof fileSlug === 'string', 'fileSlug is required')
-		return await returnFileSnapshot(env, fileSlug, false)
-	})
 
-async function maybeHardDeleteLegacyFile({ id, env }: { id: string; env: Environment }) {
-	return await getRoomDurableObject(env, id).__admin__hardDeleteIfLegacy()
-}
+// async function maybeHardDeleteLegacyFile({ id, env }: { id: string; env: Environment }) {
+// 	return await getRoomDurableObject(env, id).__admin__hardDeleteIfLegacy()
+// }
 
 async function hardDeleteAppFile({
 	pg,

@@ -49,15 +49,7 @@ export class DraggingHandle extends StateNode {
 		if (isCreating) {
 			if (creatingMarkId) {
 				this.markId = creatingMarkId
-			} else {
-				// handle legacy implicit `creating:{shapeId}` marks
-				const markId = this.editor.getMarkIdMatching(
-					`creating:${this.editor.getOnlySelectedShapeId()}`
-				)
-				if (markId) {
-					this.markId = markId
-				}
-			}
+			} 
 		} else {
 			this.markId = this.editor.markHistoryStoppingPoint('dragging handle')
 		}
