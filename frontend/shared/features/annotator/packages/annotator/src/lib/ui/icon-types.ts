@@ -102,10 +102,6 @@ export type TLUiIconType =
 	| 'send-backward'
 	| 'send-to-back'
 	| 'share-1'
-	| 'size-extra-large'
-	| 'size-large'
-	| 'size-medium'
-	| 'size-small'
 	| 'spline-cubic'
 	| 'spline-line'
 	| 'stack-horizontal'
@@ -245,10 +241,6 @@ export const iconTypes = [
 	'send-backward',
 	'send-to-back',
 	'share-1',
-	'size-extra-large',
-	'size-large',
-	'size-medium',
-	'size-small',
 	'spline-cubic',
 	'spline-line',
 	'stack-horizontal',

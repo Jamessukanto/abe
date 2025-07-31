@@ -53,6 +53,7 @@ const Versions = createShapePropsMigrationIds('draw', {
 	AddInPen: 1,
 	AddScale: 2,
 	RemoveDashStyles: 3,
+	RemoveSizeSelection: 4,
 })
 
 export { Versions as drawShapeVersions }
@@ -100,6 +101,18 @@ export const drawShapeMigrations = createShapePropsMigrationSequence({
 				// Convert all dash styles to 'solid' since dash styles are no longer supported
 				if (props.dash && props.dash !== 'solid') {
 					props.dash = 'solid'
+				}
+			},
+			down: (props) => {
+				// No down migration needed since we're removing functionality
+			},
+		},
+		{
+			id: Versions.RemoveSizeSelection,
+			up: (props) => {
+				// Convert all size values to 'm' since size selection is being removed
+				if (props.size && props.size !== 'm') {
+					props.size = 'm'
 				}
 			},
 			down: (props) => {

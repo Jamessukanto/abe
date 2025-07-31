@@ -94,6 +94,7 @@ const geoShapeVersions = createShapePropsMigrationIds('geo', {
 	AddScale: 9,
 	AddRichText: 10,
 	RemoveDashStyles: 11,
+	RemoveSizeSelection: 12,
 })
 
 export { geoShapeVersions as geoShapeVersions }
@@ -144,13 +145,13 @@ export const geoShapeMigrations = createShapePropsMigrationSequence({
 				let newAlign: TLDefaultHorizontalAlignStyle
 				switch (props.align) {
 					case 'start':
-						newAlign = 'start-legacy'
+						newAlign = 'start'
 						break
 					case 'end':
-						newAlign = 'end-legacy'
+						newAlign = 'end'
 						break
 					default:
-						newAlign = 'middle-legacy'
+						newAlign = 'middle'
 						break
 				}
 				props.align = newAlign
@@ -201,6 +202,18 @@ export const geoShapeMigrations = createShapePropsMigrationSequence({
 				// Convert all dash styles to 'solid' since dash styles are no longer supported
 				if (props.dash && props.dash !== 'solid') {
 					props.dash = 'solid'
+				}
+			},
+			down: (props) => {
+				// No down migration needed since we're removing functionality
+			},
+		},
+		{
+			id: geoShapeVersions.RemoveSizeSelection,
+			up: (props) => {
+				// Convert all size values to 'm' since size selection is being removed
+				if (props.size && props.size !== 'm') {
+					props.size = 'm'
 				}
 			},
 			down: (props) => {

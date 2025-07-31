@@ -1002,15 +1002,15 @@ const v1TextAlignsToV2TextAligns: Record<TLV1AlignStyle, TLDefaultTextAlignStyle
 }
 
 const v1TextSizesToV2TextSizes: Record<TLV1SizeStyle, TLDefaultSizeStyle> = {
-	[TLV1SizeStyle.Small]: 's',
-	[TLV1SizeStyle.Medium]: 'l',
-	[TLV1SizeStyle.Large]: 'xl',
+	[TLV1SizeStyle.Small]: 'm',
+	[TLV1SizeStyle.Medium]: 'm',
+	[TLV1SizeStyle.Large]: 'm',
 }
 
 const v1SizesToV2Sizes: Record<TLV1SizeStyle, TLDefaultSizeStyle> = {
 	[TLV1SizeStyle.Small]: 'm',
-	[TLV1SizeStyle.Medium]: 'l',
-	[TLV1SizeStyle.Large]: 'xl',
+	[TLV1SizeStyle.Medium]: 'm',
+	[TLV1SizeStyle.Large]: 'm',
 }
 
 const v1DashesToV2Dashes: Record<TLV1DashStyle, TLDefaultDashStyle> = {
@@ -1041,7 +1041,7 @@ function getV2TextSize(size: TLV1SizeStyle | undefined): TLDefaultSizeStyle {
 }
 
 function getV2Size(size: TLV1SizeStyle | undefined): TLDefaultSizeStyle {
-	return size ? (v1SizesToV2Sizes[size] ?? 'l') : 'l'
+	return size ? (v1SizesToV2Sizes[size] ?? 'm') : 'm'
 }
 
 function getV2Dash(dash: TLV1DashStyle | undefined): TLDefaultDashStyle {

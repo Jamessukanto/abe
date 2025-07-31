@@ -63,6 +63,7 @@ export const lineShapeVersions = createShapePropsMigrationIds('line', {
 	PointIndexIds: 4,
 	AddScale: 5,
 	RemoveDashStyles: 6,
+	RemoveSizeSelection: 7,
 })
 
 /** @public */
@@ -188,6 +189,18 @@ export const lineShapeMigrations = createShapePropsMigrationSequence({
 				// Convert all dash styles to 'solid' since dash styles are no longer supported
 				if (props.dash && props.dash !== 'solid') {
 					props.dash = 'solid'
+				}
+			},
+			down: (props) => {
+				// No down migration needed since we're removing functionality
+			},
+		},
+		{
+			id: lineShapeVersions.RemoveSizeSelection,
+			up: (props) => {
+				// Convert all size values to 'm' since size selection is being removed
+				if (props.size && props.size !== 'm') {
+					props.size = 'm'
 				}
 			},
 			down: (props) => {

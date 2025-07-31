@@ -29,12 +29,6 @@ export const STYLES = {
 		{ value: 'pattern', icon: 'fill-pattern' },
 		// { value: 'fill', icon: 'fill-fill' },
 	],
-	size: [
-		{ value: 's', icon: 'size-small' },
-		{ value: 'm', icon: 'size-medium' },
-		{ value: 'l', icon: 'size-large' },
-		{ value: 'xl', icon: 'size-extra-large' },
-	],
 	font: [
 		{ value: 'draw', icon: 'font-draw' },
 		{ value: 'sans', icon: 'font-sans' },

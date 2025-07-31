@@ -3,7 +3,6 @@ import {
 	DefaultFillStyle,
 	DefaultFontStyle,
 	DefaultHorizontalAlignStyle,
-	DefaultSizeStyle,
 	DefaultTextAlignStyle,
 	DefaultVerticalAlignStyle,
 	GeoShapeGeoStyle,
@@ -57,8 +56,8 @@ export function DefaultStylePanelContent({ styles }: TLUiStylePanelContentProps)
 			{!hideText && <TextStylePickerSet theme={theme} styles={styles} />}
 			{!(hideGeo && hideSpline) && (
 				<div className="tlui-style-panel__section">
-					<GeoStylePickerSet styles={styles} />
-					<SplineStylePickerSet styles={styles} />
+					<GeoStylePickerSet styles={styles} theme={theme} />
+					<SplineStylePickerSet styles={styles} theme={theme} />
 				</div>
 			)}
 		</>
@@ -87,14 +86,15 @@ function useStyleChangeCallback() {
 }
 
 /** @public */
-export interface ThemeStylePickerSetProps {
+export interface StylePickerSetProps {
 	styles: ReadonlySharedStyleMap
 	theme: TLDefaultColorTheme
 }
 
 /** @public */
-export interface StylePickerSetProps {
+export interface ThemeStylePickerSetProps {
 	styles: ReadonlySharedStyleMap
+	theme: TLDefaultColorTheme
 }
 
 /** @public @react */
@@ -108,9 +108,8 @@ export function CommonStylePickerSet({ styles, theme }: ThemeStylePickerSetProps
 
 	const color = styles.get(DefaultColorStyle)
 	const fill = styles.get(DefaultFillStyle)
-	const size = styles.get(DefaultSizeStyle)
 
-	const showPickers = fill !== undefined || size !== undefined
+	const showPickers = fill !== undefined
 
 	return (
 		<>
@@ -142,26 +141,6 @@ export function CommonStylePickerSet({ styles, theme }: ThemeStylePickerSetProps
 								items={STYLES.fill}
 								value={fill}
 								onValueChange={handleValueChange}
-								theme={theme}
-								onHistoryMark={onHistoryMark}
-							/>
-						</AnnotatorUiToolbar>
-					)}
-					{size === undefined ? null : (
-						<AnnotatorUiToolbar label={msg('style-panel.size')}>
-							<AnnotatorUiButtonPicker
-								title={msg('style-panel.size')}
-								uiType="size"
-								style={DefaultSizeStyle}
-								items={STYLES.size}
-								value={size}
-								onValueChange={(style, value) => {
-									handleValueChange(style, value)
-									const selectedShapeIds = editor.getSelectedShapeIds()
-									if (selectedShapeIds.length > 0) {
-										kickoutOccludedShapes(editor, selectedShapeIds)
-									}
-								}}
 								theme={theme}
 								onHistoryMark={onHistoryMark}
 							/>
@@ -272,7 +251,7 @@ export function TextStylePickerSet({ theme, styles }: ThemeStylePickerSetProps) 
 	)
 }
 /** @public @react */
-export function GeoStylePickerSet({ styles }: StylePickerSetProps) {
+export function GeoStylePickerSet({ styles, theme }: StylePickerSetProps) {
 	const msg = useTranslation()
 	const handleValueChange = useStyleChangeCallback()
 
@@ -298,7 +277,7 @@ export function GeoStylePickerSet({ styles }: StylePickerSetProps) {
 	)
 }
 /** @public @react */
-export function SplineStylePickerSet({ styles }: StylePickerSetProps) {
+export function SplineStylePickerSet({ styles, theme }: StylePickerSetProps) {
 	const msg = useTranslation()
 	const handleValueChange = useStyleChangeCallback()
 
