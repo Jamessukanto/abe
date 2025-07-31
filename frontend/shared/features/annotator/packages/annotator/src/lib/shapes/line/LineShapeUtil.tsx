@@ -51,7 +51,7 @@ export class LineShapeUtil extends ShapeUtil<TLLineShape> {
 	override getDefaultProps(): TLLineShape['props'] {
 		const [start, end] = getIndices(2)
 		return {
-			dash: 'draw',
+			dash: 'solid',
 			size: 'm',
 			color: 'black',
 			spline: 'line',
@@ -186,12 +186,10 @@ export class LineShapeUtil extends ShapeUtil<TLLineShape> {
 	}
 
 	indicator(shape: TLLineShape) {
-		const strokeWidth = STROKE_SIZES[shape.props.size] * shape.props.scale
 		const path = getPathForLineShape(shape)
-		const { dash } = shape.props
 
 		return path.toSvg({
-			style: dash === 'draw' ? 'draw' : 'solid',
+			style: 'solid',
 			strokeWidth: 1,
 			passes: 1,
 			randomSeed: shape.id,

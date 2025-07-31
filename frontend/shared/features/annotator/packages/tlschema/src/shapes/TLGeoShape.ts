@@ -93,6 +93,7 @@ const geoShapeVersions = createShapePropsMigrationIds('geo', {
 	MakeUrlsValid: 8,
 	AddScale: 9,
 	AddRichText: 10,
+	RemoveDashStyles: 11,
 })
 
 export { geoShapeVersions as geoShapeVersions }
@@ -193,6 +194,18 @@ export const geoShapeMigrations = createShapePropsMigrationSequence({
 			// down: (props) => {
 			// 	delete props.richText
 			// },
+		},
+		{
+			id: geoShapeVersions.RemoveDashStyles,
+			up: (props) => {
+				// Convert all dash styles to 'solid' since dash styles are no longer supported
+				if (props.dash && props.dash !== 'solid') {
+					props.dash = 'solid'
+				}
+			},
+			down: (props) => {
+				// No down migration needed since we're removing functionality
+			},
 		},
 	],
 })

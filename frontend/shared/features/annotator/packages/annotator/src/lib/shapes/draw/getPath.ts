@@ -82,23 +82,11 @@ export function getFreehandOptions(
 ): StrokeOptions {
 	const last = shapeProps.isComplete || forceComplete
 
-	if (forceSolid) {
-		if (shapeProps.isPen) {
-			return { ...solidRealPressureSettings(strokeWidth), last }
-		} else {
-			return { ...solidSettings(strokeWidth), last }
-		}
+	if (shapeProps.isPen) {
+		return { ...solidRealPressureSettings(strokeWidth), last }
+	} else {
+		return { ...solidSettings(strokeWidth), last }
 	}
-
-	if (shapeProps.dash === 'draw') {
-		if (shapeProps.isPen) {
-			return { ...realPressureSettings(strokeWidth), last }
-		} else {
-			return { ...simulatePressureSettings(strokeWidth), last }
-		}
-	}
-
-	return { ...solidSettings(strokeWidth), last }
 }
 
 export function getPointsFromSegments(segments: AnnotatorShapeSegment[]) {
@@ -117,17 +105,4 @@ export function getPointsFromSegments(segments: AnnotatorShapeSegment[]) {
 	}
 
 	return points
-}
-
-export function getDrawShapeStrokeDashArray(
-	shape: AnnotatorShape,
-	strokeWidth: number,
-	dotAdjustment: number
-) {
-	return {
-		draw: 'none',
-		solid: `none`,
-		dotted: `${dotAdjustment} ${strokeWidth * 2}`,
-		dashed: `${strokeWidth * 2} ${strokeWidth * 2}`,
-	}[shape.props.dash]
 }

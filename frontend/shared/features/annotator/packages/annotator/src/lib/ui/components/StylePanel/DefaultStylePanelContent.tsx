@@ -1,6 +1,5 @@
 import {
 	DefaultColorStyle,
-	DefaultDashStyle,
 	DefaultFillStyle,
 	DefaultFontStyle,
 	DefaultHorizontalAlignStyle,
@@ -109,10 +108,9 @@ export function CommonStylePickerSet({ styles, theme }: ThemeStylePickerSetProps
 
 	const color = styles.get(DefaultColorStyle)
 	const fill = styles.get(DefaultFillStyle)
-	const dash = styles.get(DefaultDashStyle)
 	const size = styles.get(DefaultSizeStyle)
 
-	const showPickers = fill !== undefined || dash !== undefined || size !== undefined
+	const showPickers = fill !== undefined || size !== undefined
 
 	return (
 		<>
@@ -143,20 +141,6 @@ export function CommonStylePickerSet({ styles, theme }: ThemeStylePickerSetProps
 								style={DefaultFillStyle}
 								items={STYLES.fill}
 								value={fill}
-								onValueChange={handleValueChange}
-								theme={theme}
-								onHistoryMark={onHistoryMark}
-							/>
-						</AnnotatorUiToolbar>
-					)}
-					{dash === undefined ? null : (
-						<AnnotatorUiToolbar label={msg('style-panel.dash')}>
-							<AnnotatorUiButtonPicker
-								title={msg('style-panel.dash')}
-								uiType="dash"
-								style={DefaultDashStyle}
-								items={STYLES.dash}
-								value={dash}
 								onValueChange={handleValueChange}
 								theme={theme}
 								onHistoryMark={onHistoryMark}

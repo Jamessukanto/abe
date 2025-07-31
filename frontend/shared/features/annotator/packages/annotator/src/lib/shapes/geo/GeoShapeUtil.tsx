@@ -62,7 +62,7 @@ export class GeoShapeUtil extends BaseBoxShapeUtil<TLGeoShape> {
 			w: 100,
 			h: 100,
 			geo: 'rectangle',
-			dash: 'draw',
+			dash: 'solid',
 			growY: 0,
 			url: '',
 			scale: 1,
@@ -231,17 +231,14 @@ export class GeoShapeUtil extends BaseBoxShapeUtil<TLGeoShape> {
 	}
 
 	indicator(shape: TLGeoShape) {
-		const isZoomedOut = useValue('isZoomedOut', () => this.editor.getZoomLevel() < 0.25, [
-			this.editor,
-		])
-
-		const { size, dash, scale } = shape.props
-		const strokeWidth = STROKE_SIZES[size]
+		const { dash, scale } = shape.props
+		const strokeWidth = STROKE_SIZES[shape.props.size] * scale
+		const isZoomedOut = this.editor.getZoomLevel() < 0.5 && this.editor.getZoomLevel() < 1.5 / strokeWidth
 
 		const path = getGeoShapePath(shape)
 
 		return path.toSvg({
-			style: dash === 'draw' ? 'draw' : 'solid',
+			style: 'solid',
 			strokeWidth: 1,
 			passes: 1,
 			randomSeed: shape.id,

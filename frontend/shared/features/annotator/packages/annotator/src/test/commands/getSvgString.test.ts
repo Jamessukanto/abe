@@ -1,4 +1,4 @@
-import { DefaultDashStyle, TLGeoShape, createShapeId, toRichText } from '@annotator/editor'
+import { TLGeoShape, createShapeId, toRichText } from '@annotator/editor'
 import { TestEditor } from '../TestEditor'
 
 let editor: TestEditor
@@ -18,8 +18,6 @@ jest.useRealTimers()
 
 beforeEach(() => {
 	editor = new TestEditor()
-	editor.setStyleForNextShapes(DefaultDashStyle, 'solid')
-	editor.setStyleForSelectedShapes(DefaultDashStyle, 'solid')
 	editor.createShapes<TLGeoShape>([
 		{
 			id: ids.boxA,

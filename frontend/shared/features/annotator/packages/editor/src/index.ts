@@ -183,7 +183,6 @@ export {
 	type TLShapeUtilConstructor,
 } from './lib/editor/shapes/ShapeUtil'
 export {
-	getPerfectDashProps,
 	type PerfectDashTerminal,
 } from './lib/editor/shapes/shared/getPerfectDashProps'
 export { resizeBox, type ResizeBoxOptions } from './lib/editor/shapes/shared/resizeBox'

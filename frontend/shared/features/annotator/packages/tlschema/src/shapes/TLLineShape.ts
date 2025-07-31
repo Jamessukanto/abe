@@ -62,6 +62,7 @@ export const lineShapeVersions = createShapePropsMigrationIds('line', {
 	HandlesToPoints: 3,
 	PointIndexIds: 4,
 	AddScale: 5,
+	RemoveDashStyles: 6,
 })
 
 /** @public */
@@ -179,6 +180,18 @@ export const lineShapeMigrations = createShapePropsMigrationSequence({
 			},
 			down: (props) => {
 				delete props.scale
+			},
+		},
+		{
+			id: lineShapeVersions.RemoveDashStyles,
+			up: (props) => {
+				// Convert all dash styles to 'solid' since dash styles are no longer supported
+				if (props.dash && props.dash !== 'solid') {
+					props.dash = 'solid'
+				}
+			},
+			down: (props) => {
+				// No down migration needed since we're removing functionality
 			},
 		},
 	],

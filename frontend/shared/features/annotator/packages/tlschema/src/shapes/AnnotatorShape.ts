@@ -52,6 +52,7 @@ export const drawShapeProps: RecordProps<AnnotatorShape> = {
 const Versions = createShapePropsMigrationIds('draw', {
 	AddInPen: 1,
 	AddScale: 2,
+	RemoveDashStyles: 3,
 })
 
 export { Versions as drawShapeVersions }
@@ -91,6 +92,18 @@ export const drawShapeMigrations = createShapePropsMigrationSequence({
 			},
 			down: (props) => {
 				delete props.scale
+			},
+		},
+		{
+			id: Versions.RemoveDashStyles,
+			up: (props) => {
+				// Convert all dash styles to 'solid' since dash styles are no longer supported
+				if (props.dash && props.dash !== 'solid') {
+					props.dash = 'solid'
+				}
+			},
+			down: (props) => {
+				// No down migration needed since we're removing functionality
 			},
 		},
 	],

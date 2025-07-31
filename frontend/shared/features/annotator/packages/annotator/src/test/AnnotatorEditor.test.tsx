@@ -318,7 +318,7 @@ describe('<AnnotatorEditor />', () => {
 						color: 'black',
 						labelColor: 'black',
 						fill: 'none',
-						dash: 'draw',
+						dash: 'solid',
 						size: 'm',
 						font: 'draw',
 						text: '',

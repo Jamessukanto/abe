@@ -33,114 +33,12 @@ function _getGeoPath(shape: TLGeoShape) {
 	const isFilled = shape.props.fill !== 'none'
 
 	switch (shape.props.geo) {
-		case 'arrow-down': {
-			const ox = w * 0.16
-			const oy = Math.min(w, h) * 0.38
-			return new PathBuilder()
-				.moveTo(ox, 0, { geometry: { isFilled } })
-				.lineTo(w - ox, 0)
-				.lineTo(w - ox, h - oy)
-				.lineTo(w, h - oy)
-				.lineTo(w / 2, h)
-				.lineTo(0, h - oy)
-				.lineTo(ox, h - oy)
-				.close()
-		}
-		case 'arrow-left': {
-			const ox = Math.min(w, h) * 0.38
-			const oy = h * 0.16
-			return new PathBuilder()
-				.moveTo(ox, 0, { geometry: { isFilled } })
-				.lineTo(ox, oy)
-				.lineTo(w, oy)
-				.lineTo(w, h - oy)
-				.lineTo(ox, h - oy)
-				.lineTo(ox, h)
-				.lineTo(0, h / 2)
-				.close()
-		}
-		case 'arrow-right': {
-			const ox = Math.min(w, h) * 0.38
-			const oy = h * 0.16
-			return new PathBuilder()
-				.moveTo(0, oy, { geometry: { isFilled } })
-				.lineTo(w - ox, oy)
-				.lineTo(w - ox, 0)
-				.lineTo(w, h / 2)
-				.lineTo(w - ox, h)
-				.lineTo(w - ox, h - oy)
-				.lineTo(0, h - oy)
-				.close()
-		}
-		case 'arrow-up': {
-			const ox = w * 0.16
-			const oy = Math.min(w, h) * 0.38
-			return new PathBuilder()
-				.moveTo(w / 2, 0, { geometry: { isFilled } })
-				.lineTo(w, oy)
-				.lineTo(w - ox, oy)
-				.lineTo(w - ox, h)
-				.lineTo(ox, h)
-				.lineTo(ox, oy)
-				.lineTo(0, oy)
-				.close()
-		}
-		case 'check-box': {
-			const size = Math.min(w, h) * 0.82
-			const ox = (w - size) / 2
-			const oy = (h - size) / 2
-
-			return new PathBuilder()
-				.moveTo(0, 0, { geometry: { isFilled } })
-				.lineTo(w, 0)
-				.lineTo(w, h)
-				.lineTo(0, h)
-				.close()
-				.moveTo(clamp(ox + size * 0.25, 0, w), clamp(oy + size * 0.52, 0, h), {
-					geometry: { isInternal: true, isFilled: false },
-					offset: 0,
-				})
-				.lineTo(clamp(ox + size * 0.45, 0, w), clamp(oy + size * 0.82, 0, h))
-				.lineTo(clamp(ox + size * 0.82, 0, w), clamp(oy + size * 0.22, 0, h), { offset: 0 })
-		}
-		case 'diamond':
-			return new PathBuilder()
-				.moveTo(cx, 0, { geometry: { isFilled } })
-				.lineTo(w, cy)
-				.lineTo(cx, h)
-				.lineTo(0, cy)
-				.close()
 		case 'ellipse':
 			return new PathBuilder()
 				.moveTo(0, cy, { geometry: { isFilled } })
 				.arcTo(cx, cy, false, true, 0, w, cy)
 				.arcTo(cx, cy, false, true, 0, 0, cy)
 				.close()
-		case 'heart': {
-			const o = w / 4
-			const k = h / 4
-			return new PathBuilder()
-				.moveTo(cx, h, { geometry: { isFilled } })
-				.cubicBezierTo(0, k * 1.2, o * 1.5, k * 3, 0, k * 2.5)
-				.cubicBezierTo(cx, k * 0.9, 0, -k * 0.32, o * 1.85, -k * 0.32)
-				.cubicBezierTo(w, k * 1.2, o * 2.15, -k * 0.32, w, -k * 0.32)
-				.cubicBezierTo(cx, h, w, k * 2.5, o * 2.5, k * 3)
-				.close()
-		}
-		case 'hexagon':
-			return PathBuilder.lineThroughPoints(getPolygonVertices(w, h, 6), {
-				geometry: { isFilled },
-			}).close()
-		case 'octagon':
-			return PathBuilder.lineThroughPoints(getPolygonVertices(w, h, 8), {
-				geometry: { isFilled },
-			}).close()
-		case 'oval':
-			return getStadiumPath(w, h, isFilled)
-		case 'pentagon':
-			return PathBuilder.lineThroughPoints(getPolygonVertices(w, h, 5), {
-				geometry: { isFilled },
-			}).close()
 		case 'rectangle':
 			return new PathBuilder()
 				.moveTo(0, 0, { geometry: { isFilled } })
@@ -148,46 +46,6 @@ function _getGeoPath(shape: TLGeoShape) {
 				.lineTo(w, h)
 				.lineTo(0, h)
 				.close()
-		case 'rhombus': {
-			const offset = Math.min(w * 0.38, h * 0.38)
-			return new PathBuilder()
-				.moveTo(offset, 0, { geometry: { isFilled } })
-				.lineTo(w, 0)
-				.lineTo(w - offset, h)
-				.lineTo(0, h)
-				.close()
-		}
-		case 'rhombus-2': {
-			const offset = Math.min(w * 0.38, h * 0.38)
-			return new PathBuilder()
-				.moveTo(0, 0, { geometry: { isFilled } })
-				.lineTo(w - offset, 0)
-				.lineTo(w, h)
-				.lineTo(offset, h)
-				.close()
-		}
-		case 'star':
-			return getStarPath(w, h, isFilled)
-		case 'trapezoid': {
-			const offset = Math.min(w * 0.38, h * 0.38)
-			return new PathBuilder()
-				.moveTo(offset, 0, { geometry: { isFilled } })
-				.lineTo(w - offset, 0)
-				.lineTo(w, h)
-				.lineTo(0, h)
-				.close()
-		}
-		case 'triangle':
-			return new PathBuilder()
-				.moveTo(cx, 0, { geometry: { isFilled } })
-				.lineTo(w, h)
-				.lineTo(0, h)
-				.close()
-		case 'x-box':
-			return getXBoxPath(w, h, sw, shape.props.dash, isFilled)
-
-		case 'cloud':
-			return getCloudPath(w, h, shape.id, shape.props.size, shape.props.scale, isFilled)
 		default:
 			exhaustiveSwitchError(shape.props.geo)
 	}
@@ -210,43 +68,13 @@ function getXBoxPath(
 		.lineTo(0, h)
 		.close()
 
-	if (dash === 'dashed' || dash === 'dotted') {
-		return path
-			.moveTo(0, 0, {
-				geometry: { isInternal: true, isFilled: false },
-				dashStart: 'skip',
-				dashEnd: 'outset',
-			})
-			.lineTo(cx, cy)
-			.moveTo(w, h, {
-				geometry: { isInternal: true, isFilled: false },
-				dashStart: 'skip',
-				dashEnd: 'outset',
-			})
-			.lineTo(cx, cy)
-			.moveTo(0, h, {
-				geometry: { isInternal: true, isFilled: false },
-				dashStart: 'skip',
-				dashEnd: 'outset',
-			})
-			.lineTo(cx, cy)
-			.moveTo(w, 0, {
-				geometry: { isInternal: true, isFilled: false },
-				dashStart: 'skip',
-				dashEnd: 'outset',
-			})
-			.lineTo(cx, cy)
-	}
-
-	const inset = dash === 'draw' ? 0.62 : 0
-
 	path
-		.moveTo(clamp(sw * inset, 0, w), clamp(sw * inset, 0, h), {
+		.moveTo(clamp(sw * 0, 0, w), clamp(sw * 0, 0, h), {
 			geometry: { isInternal: true, isFilled: false },
 		})
-		.lineTo(clamp(w - sw * inset, 0, w), clamp(h - sw * inset, 0, h))
-		.moveTo(clamp(w - sw * inset, 0, w), clamp(sw * inset, 0, h))
-		.lineTo(clamp(sw * inset, 0, w), clamp(h - sw * inset, 0, h))
+		.lineTo(clamp(w - sw * 0, 0, w), clamp(h - sw * 0, 0, h))
+		.moveTo(clamp(w - sw * 0, 0, w), clamp(sw * 0, 0, h))
+		.lineTo(clamp(sw * 0, 0, w), clamp(h - sw * 0, 0, h))
 
 	return path
 }

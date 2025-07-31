@@ -1015,9 +1015,9 @@ const v1SizesToV2Sizes: Record<TLV1SizeStyle, TLDefaultSizeStyle> = {
 
 const v1DashesToV2Dashes: Record<TLV1DashStyle, TLDefaultDashStyle> = {
 	[TLV1DashStyle.Solid]: 'solid',
-	[TLV1DashStyle.Dashed]: 'dashed',
-	[TLV1DashStyle.Dotted]: 'dotted',
-	[TLV1DashStyle.Draw]: 'draw',
+	[TLV1DashStyle.Dashed]: 'solid',
+	[TLV1DashStyle.Dotted]: 'solid',
+	[TLV1DashStyle.Draw]: 'solid',
 }
 
 function getV2Color(color: TLV1ColorStyle | undefined): TLDefaultColorStyle {
@@ -1045,7 +1045,7 @@ function getV2Size(size: TLV1SizeStyle | undefined): TLDefaultSizeStyle {
 }
 
 function getV2Dash(dash: TLV1DashStyle | undefined): TLDefaultDashStyle {
-	return dash ? (v1DashesToV2Dashes[dash] ?? 'draw') : 'draw'
+	return 'solid'
 }
 
 function getV2Point(point: number[]): VecModel {

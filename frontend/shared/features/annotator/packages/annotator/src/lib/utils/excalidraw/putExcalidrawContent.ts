@@ -384,9 +384,9 @@ const colorsToColors: Record<string, TLDefaultColorStyle> = {
 }
 
 const strokeStylesToStrokeTypes: Record<string, TLDefaultDashStyle> = {
-	solid: 'draw',
-	dashed: 'dashed',
-	dotted: 'dotted',
+	solid: 'solid',
+	dashed: 'solid',
+	dotted: 'solid',
 }
 
 const fillStylesToFillType: Record<string, TLDefaultFillStyle> = {
@@ -428,11 +428,7 @@ function getBend(element: any, startPoint: any, endPoint: any) {
 }
 
 const getDash = (element: any): TLDefaultDashStyle => {
-	let dash: TLDefaultDashStyle = strokeStylesToStrokeTypes[element.strokeStyle] ?? 'draw'
-	if (dash === 'draw' && element.roughness === 0) {
-		dash = 'solid'
-	}
-	return dash
+	return 'solid'
 }
 
 const getFill = (element: any): TLDefaultFillStyle => {

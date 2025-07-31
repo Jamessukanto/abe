@@ -9,7 +9,6 @@ import {
 	Geometry2d,
 	Geometry2dFilters,
 	Geometry2dOptions,
-	getPerfectDashProps,
 	getVerticesCountForArcLength,
 	Group2d,
 	modulate,
@@ -31,17 +30,8 @@ export interface BasePathBuilderOpts {
 }
 
 /** @public */
-export interface SolidPathBuilderOpts extends BasePathBuilderOpts {
+export interface PathBuilderOpts extends BasePathBuilderOpts {
 	style: 'solid'
-}
-
-/** @public */
-export interface DashedPathBuilderOpts extends BasePathBuilderOpts {
-	style: 'dashed' | 'dotted'
-	snap?: number
-	end?: PerfectDashTerminal
-	start?: PerfectDashTerminal
-	lengthRatio?: number
 }
 
 /** @public */
@@ -59,8 +49,6 @@ export interface DrawPathBuilderOpts extends BasePathBuilderOpts, DrawPathBuilde
 	style: 'draw'
 }
 
-/** @public */
-export type PathBuilderOpts = SolidPathBuilderOpts | DashedPathBuilderOpts | DrawPathBuilderOpts
 
 /** @public */
 export interface PathBuilderCommandOpts {
@@ -507,22 +495,10 @@ export class PathBuilder {
 	}
 
 	toSvg(opts: PathBuilderOpts) {
-		if (opts.forceSolid) {
+		if (opts.forceSolid || opts.style === 'solid') {
 			return this.toSolidSvg(opts)
 		}
-		switch (opts.style) {
-			case 'solid':
-				return this.toSolidSvg(opts)
-			case 'dashed':
-			case 'dotted':
-				return this.toDashedSvg(opts)
-			case 'draw': {
-				const d = this.toDrawSvg(opts)
-				return d
-			}
-			default:
-				exhaustiveSwitchError(opts, 'style')
-		}
+		exhaustiveSwitchError(opts, 'style')
 	}
 
 	toGeometry(): PathBuilderGeometry2d | Group2d {
@@ -576,111 +552,6 @@ export class PathBuilder {
 
 		return (
 			<path strokeWidth={strokeWidth} d={this.toD({ onlyFilled: opts.onlyFilled })} {...props} />
-		)
-	}
-
-	private toDashedSvg(opts: DashedPathBuilderOpts) {
-		const {
-			style,
-			strokeWidth,
-			snap,
-			lengthRatio,
-			props: { markerStart, markerEnd, ...props } = {},
-		} = opts
-
-		const parts: ReactNode[] = []
-
-		let isCurrentPathClosed = false
-		let isSkippingCurrentLine = false
-		let currentLineOpts: PathBuilderLineOpts | undefined = undefined
-
-		let currentRun: {
-			startIdx: number
-			endIdx: number
-			isFirst: boolean
-			isLast: boolean
-			length: number
-			lineOpts: PathBuilderLineOpts | undefined
-			pathIsClosed: boolean
-		} | null = null
-
-		const addCurrentRun = () => {
-			if (!currentRun) return
-			const { startIdx, endIdx, isFirst, isLast, length, lineOpts, pathIsClosed } = currentRun
-			currentRun = null
-
-			if (startIdx === endIdx && this.commands[startIdx].type === 'move') return
-
-			const start = lineOpts?.dashStart ?? opts.start
-			const end = lineOpts?.dashEnd ?? opts.end
-			const { strokeDasharray, strokeDashoffset } = getPerfectDashProps(length, strokeWidth, {
-				style,
-				snap,
-				lengthRatio,
-				start: isFirst ? (start ?? (pathIsClosed ? 'outset' : 'none')) : 'outset',
-				end: isLast ? (end ?? (pathIsClosed ? 'outset' : 'none')) : 'outset',
-			})
-
-			const d = this.toD({ startIdx, endIdx: endIdx + 1 })
-			parts.push(
-				<path
-					key={parts.length}
-					d={d}
-					strokeDasharray={strokeDasharray}
-					strokeDashoffset={strokeDashoffset}
-					markerStart={isFirst ? markerStart : undefined}
-					markerEnd={isLast ? markerEnd : undefined}
-				/>
-			)
-		}
-
-		for (let i = 0; i < this.commands.length; i++) {
-			const command = this.commands[i]
-			const lastCommand = this.commands[i - 1]
-			if (command.type === 'move') {
-				isCurrentPathClosed = command.closeIdx !== null
-				const isFilled =
-					command.opts?.geometry === false ? false : (command.opts?.geometry?.isFilled ?? false)
-				if (opts.onlyFilled && !isFilled) {
-					isSkippingCurrentLine = true
-				} else {
-					isSkippingCurrentLine = false
-					currentLineOpts = command.opts
-				}
-				continue
-			}
-
-			if (isSkippingCurrentLine) continue
-
-			const segmentLength = this.calculateSegmentLength(lastCommand, command)
-			const isFirst = lastCommand.type === 'move'
-			const isLast =
-				command.isClose || i === this.commands.length - 1 || this.commands[i + 1]?.type === 'move'
-
-			if (currentRun && command.opts?.mergeWithPrevious) {
-				currentRun.length += segmentLength
-				currentRun.endIdx = i
-				currentRun.isLast = isLast
-			} else {
-				addCurrentRun()
-				currentRun = {
-					startIdx: i,
-					endIdx: i,
-					isFirst,
-					isLast,
-					length: segmentLength,
-					lineOpts: currentLineOpts,
-					pathIsClosed: isCurrentPathClosed,
-				}
-			}
-		}
-
-		addCurrentRun()
-
-		return (
-			<g strokeWidth={strokeWidth} {...props}>
-				{parts}
-			</g>
 		)
 	}
 

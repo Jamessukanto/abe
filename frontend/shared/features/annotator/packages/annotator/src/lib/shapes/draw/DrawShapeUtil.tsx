@@ -30,7 +30,7 @@ import { getSvgPathFromStrokePoints } from '../shared/freehand/svg'
 import { svgInk } from '../shared/freehand/svgInk'
 import { interpolateSegments } from '../shared/interpolate-props'
 import { useDefaultColorTheme } from '../shared/useDefaultColorTheme'
-import { getDrawShapeStrokeDashArray, getFreehandOptions, getPointsFromSegments } from './getPath'
+import { getFreehandOptions, getPointsFromSegments } from './getPath'
 
 /** @public */
 export interface DrawShapeOptions {
@@ -66,7 +66,7 @@ export class DrawShapeUtil extends ShapeUtil<AnnotatorShape> {
 			segments: [],
 			color: 'black',
 			fill: 'none',
-			dash: 'draw',
+			dash: 'solid',
 			size: 'm',
 			isComplete: false,
 			isClosed: false,
@@ -144,15 +144,6 @@ export class DrawShapeUtil extends ShapeUtil<AnnotatorShape> {
 			[this.editor, sw]
 		)
 
-		if (
-			!forceSolid &&
-			!shape.props.isPen &&
-			shape.props.dash === 'draw' &&
-			allPointsFromSegments.length === 1
-		) {
-			sw += rng(shape.id)() * (sw / 6)
-		}
-
 		const showAsComplete = shape.props.isComplete || last(shape.props.segments)?.type === 'straight'
 		const options = getFreehandOptions(shape.props, sw, showAsComplete, true)
 		const strokePoints = getStrokePoints(allPointsFromSegments, options)
@@ -204,8 +195,7 @@ export class DrawShapeUtil extends ShapeUtil<AnnotatorShape> {
 	}
 
 	override expandSelectionOutlinePx(shape: AnnotatorShape): number {
-		const multiplier = shape.props.dash === 'draw' ? 1.6 : 1
-		return ((STROKE_SIZES[shape.props.size] * multiplier) / 2) * shape.props.scale
+		return ((STROKE_SIZES[shape.props.size] * 1) / 2) * shape.props.scale
 	}
 	override getInterpolatedProps(
 		startShape: AnnotatorShape,
@@ -249,51 +239,7 @@ function DrawShapeSvg({ shape, zoomOverride }: { shape: AnnotatorShape; zoomOver
 		[editor, sw, zoomOverride]
 	)
 
-	const dotAdjustment = useValue(
-		'dot adjustment',
-		() => {
-			const zoomLevel = zoomOverride ?? editor.getZoomLevel()
-			// If we're zoomed way out (10%), then we need to make the dotted line go to 9 instead 0.1
-			// Chrome doesn't render anything otherwise.
-			return zoomLevel < 0.2 ? 0 : 0.1
-		},
-		[editor, zoomOverride]
-	)
-
-	if (
-		!forceSolid &&
-		!shape.props.isPen &&
-		shape.props.dash === 'draw' &&
-		allPointsFromSegments.length === 1
-	) {
-		sw += rng(shape.id)() * (sw / 6)
-	}
-
 	const options = getFreehandOptions(shape.props, sw, showAsComplete, forceSolid)
-
-	if (!forceSolid && shape.props.dash === 'draw') {
-		return (
-			<>
-				{shape.props.isClosed && shape.props.fill && allPointsFromSegments.length > 1 ? (
-					<ShapeFill
-						d={getSvgPathFromStrokePoints(
-							getStrokePoints(allPointsFromSegments, options),
-							shape.props.isClosed
-						)}
-						theme={theme}
-						color={shape.props.color}
-						fill={shape.props.isClosed ? shape.props.fill : 'none'}
-						scale={shape.props.scale}
-					/>
-				) : null}
-				<path
-					d={svgInk(allPointsFromSegments, options)}
-					strokeLinecap="round"
-					fill={theme[shape.props.color].solid}
-				/>
-			</>
-		)
-	}
 
 	const strokePoints = getStrokePoints(allPointsFromSegments, options)
 	const isDot = strokePoints.length < 2
@@ -316,7 +262,7 @@ function DrawShapeSvg({ shape, zoomOverride }: { shape: AnnotatorShape; zoomOver
 				fill={isDot ? theme[shape.props.color].solid : 'none'}
 				stroke={theme[shape.props.color].solid}
 				strokeWidth={sw}
-				strokeDasharray={isDot ? 'none' : getDrawShapeStrokeDashArray(shape, sw, dotAdjustment)}
+				strokeDasharray="none"
 				strokeDashoffset="0"
 			/>
 		</>

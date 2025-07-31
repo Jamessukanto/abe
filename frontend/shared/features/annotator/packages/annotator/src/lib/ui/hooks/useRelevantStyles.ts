@@ -1,6 +1,5 @@
 import {
 	DefaultColorStyle,
-	DefaultDashStyle,
 	DefaultFillStyle,
 	DefaultSizeStyle,
 	ReadonlySharedStyleMap,
@@ -12,7 +11,6 @@ import {
 
 const selectToolStyles: readonly StyleProp<any>[] = Object.freeze([
 	DefaultColorStyle,
-	DefaultDashStyle,
 	DefaultFillStyle,
 	DefaultSizeStyle,
 ])

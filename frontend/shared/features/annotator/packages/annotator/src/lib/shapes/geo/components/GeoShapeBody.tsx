@@ -16,20 +16,17 @@ export function GeoShapeBody({
 	const scaleToUse = shouldScale ? shape.props.scale : 1
 	const theme = useDefaultColorTheme()
 	const { props } = shape
-	const { color, fill, dash, size } = props
+	const { color, fill, size } = props
 	const strokeWidth = STROKE_SIZES[size] * scaleToUse
 
 	const path = getGeoShapePath(shape)
-	const fillPath =
-		dash === 'draw' && !forceSolid
-			? path.toDrawD({ strokeWidth, randomSeed: shape.id, passes: 1, offset: 0, onlyFilled: true })
-			: path.toD({ onlyFilled: true })
+	const fillPath = path.toD({ onlyFilled: true })
 
 	return (
 		<>
 			<ShapeFill theme={theme} d={fillPath} color={color} fill={fill} scale={scaleToUse} />
 			{path.toSvg({
-				style: dash,
+				style: 'solid',
 				strokeWidth,
 				forceSolid,
 				randomSeed: shape.id,

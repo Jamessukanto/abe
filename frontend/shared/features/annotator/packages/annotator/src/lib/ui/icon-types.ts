@@ -34,10 +34,6 @@ export type TLUiIconType =
 	| 'crop'
 	| 'cross-2'
 	| 'cross-circle'
-	| 'dash-dashed'
-	| 'dash-dotted'
-	| 'dash-draw'
-	| 'dash-solid'
 	| 'disconnected'
 	| 'discord'
 	| 'distribute-horizontal'
@@ -181,10 +177,6 @@ export const iconTypes = [
 	'crop',
 	'cross-2',
 	'cross-circle',
-	'dash-dashed',
-	'dash-dotted',
-	'dash-draw',
-	'dash-solid',
 	'disconnected',
 	'discord',
 	'distribute-horizontal',
