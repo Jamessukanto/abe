@@ -1,0 +1,37 @@
+{
+	"name": "images.annotator.com",
+	"description": "A Cloudflare Worker to resize and optimize images",
+	"version": "0.0.0",
+	"private": true,
+	"author": {
+		"name": "annotator GB Ltd.",
+		"email": "hello@annotator.com"
+	},
+	"main": "src/index.ts",
+	"scripts": {
+		"dev": "yarn run -T tsx ../../../../frontend/shared/features/annotator/internal/scripts/workers/dev.ts --inspector-port 9339",
+		"test-ci": "lazy inherit --passWithNoTests",
+		"test": "yarn run -T jest --passWithNoTests",
+		"test-coverage": "lazy inherit --passWithNoTests",
+		"lint": "yarn run -T tsx ../../../../frontend/shared/features/annotator/internal/scripts/lint.ts"
+	},
+	"dependencies": {
+		"@annotator/dotcom-shared": "workspace:*",
+		"@annotator/validate": "workspace:*",
+		"@annotator/worker-shared": "workspace:*",
+		"itty-router": "^5.0.18",
+		"react": "^18.3.1",
+		"react-dom": "^18.3.1"
+	},
+	"devDependencies": {
+		"@cloudflare/workers-types": "^4.20250703.0",
+		"lazyrepo": "0.0.0-alpha.27",
+		"wrangler": "^4.23.0"
+	},
+	"jest": {
+		"preset": "../../../../frontend/shared/features/annotator/internal/config/jest/node/jest-preset.js",
+		"moduleNameMapper": {
+			"^~(.*)": "<rootDir>/src/$1"
+		}
+	}
+}

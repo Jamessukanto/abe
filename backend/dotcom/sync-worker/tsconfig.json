@@ -1,0 +1,16 @@
+{
+	"extends": "../../../../frontend/shared/features/annotator/internal/config/tsconfig.base.json",
+	"include": ["src", "scripts"],
+	"exclude": ["node_modules", "dist", ".tsbuild*"],
+	"compilerOptions": { "noEmit": true, "emitDeclarationOnly": false },
+	"references": [
+		{ "path": "../../../../frontend/shared/features/annotator/packages/dotcom-shared" },
+		{ "path": "../../../../frontend/shared/features/annotator/packages/state" },
+		{ "path": "../../../../frontend/shared/features/annotator/packages/store" },
+		{ "path": "../../../../frontend/shared/features/annotator/packages/sync-core" },
+		{ "path": "../../../../frontend/shared/features/annotator/packages/tlschema" },
+		{ "path": "../../../../frontend/shared/features/annotator/packages/utils" },
+		{ "path": "../../../../frontend/shared/features/annotator/packages/validate" },
+		{ "path": "../../../../frontend/shared/features/annotator/packages/worker-shared" }
+	]
+}

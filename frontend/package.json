@@ -1,0 +1,30 @@
+{
+  "name": "abe-frontend",
+  "version": "0.0.0",
+  "private": true,
+  "workspaces": [
+    "shared/features/annotator",
+    "shared/features/annotator/packages/*",
+    "shared/features/annotator/apps/*",
+    "shared/features/annotator/internal/*",
+    "dotcom"
+  ],
+  "scripts": {
+    "dev-dotcom": "cd dotcom && yarn dev-no-db",
+    "build-dotcom": "cd dotcom && yarn build",
+    "install-all": "yarn install && cd shared/features/annotator && yarn install"
+  },
+  "devDependencies": {
+    "husky": "^8.0.3",
+    "lazyrepo": "0.0.0-alpha.27",
+    "lint-staged": "^15.4.3",
+    "prettier": "^3.6.1",
+    "tsx": "^4.19.2"
+  },
+  "lint-staged": {
+    "*.{js,jsx,ts,tsx,json}": [
+      "prettier --write --cache --log-level=warn"
+    ]
+  },
+  "packageManager": "yarn@4.7.0"
+}

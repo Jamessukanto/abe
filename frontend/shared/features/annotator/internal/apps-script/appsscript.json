@@ -1,0 +1,33 @@
+{
+	"addOns": {
+		"common": {
+			"layoutProperties": {
+				"primaryColor": "#000",
+				"secondaryColor": "#fff"
+			},
+			"logoUrl": "ANNOTATOR_HOST/android-chrome-maskable-512x512.png",
+			"name": "annotator"
+		},
+		"meet": {
+			"web": {
+				"sidePanelUri": "ANNOTATOR_HOST/ts-side",
+				"mainStageUri": "ANNOTATOR_HOST/ts",
+				"supportsScreenSharing": true,
+				"logoUrl": "ANNOTATOR_HOST/android-chrome-maskable-512x512.png",
+				"addOnOrigins": ["ANNOTATOR_HOST"]
+			}
+		}
+	},
+	"timeZone": "Europe/London",
+	"dependencies": {},
+	"exceptionLogging": "STACKDRIVER",
+	"runtimeVersion": "V8",
+	"oauthScopes": [
+		"https://www.googleapis.com/auth/userinfo.email",
+		"https://www.googleapis.com/auth/userinfo.profile",
+		"https://www.googleapis.com/auth/documents.currentonly",
+		"https://www.googleapis.com/auth/script.external_request",
+		"https://www.googleapis.com/auth/workspace.linkpreview"
+	],
+	"urlFetchWhitelist": ["ANNOTATOR_HOST/"]
+}

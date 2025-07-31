@@ -1,0 +1,47 @@
+{
+	"name": "apps-scripts",
+	"description": "annotator for Google Apps",
+	"version": "0.0.0",
+	"private": true,
+	"author": {
+		"name": "annotator Inc.",
+		"email": "hello@annotator.com"
+	},
+	"homepage": "https://annotator.dev",
+	"license": "SEE LICENSE IN LICENSE.md",
+	"repository": {
+		"type": "git",
+		"url": "https://github.com/annotator/annotator"
+	},
+	"bugs": {
+		"url": "https://github.com/annotator/annotator/issues"
+	},
+	"keywords": [
+		"annotator",
+		"sdk",
+		"drawing",
+		"app",
+		"development",
+		"whiteboard",
+		"canvas",
+		"infinite"
+	],
+	"scripts": {
+		"lint": "yarn run -T tsx ../scripts/lint.ts",
+		"glogin": "clasp login",
+		"glogout": "clasp logout",
+		"gcreate": "clasp create --type standalone --title \"annotator.com\" --rootDir ./dist",
+		"gpull": "yarn build && clasp pull",
+		"gpush": "yarn build && clasp push",
+		"gpull:staging": "yarn build:staging && clasp pull",
+		"gpush:staging": "yarn build:staging && clasp push",
+		"build": "IS_PRODUCTION=1 yarn run -T tsx build-workspace-app.ts",
+		"build:staging": "yarn run -T tsx build-workspace-app.ts"
+	},
+	"dependencies": {
+		"@google/clasp": "^2.5.0"
+	},
+	"devDependencies": {
+		"@types/google-apps-script": "^1.0.91"
+	}
+}

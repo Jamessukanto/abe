@@ -1,0 +1,21 @@
+{
+  "name": "abe-backend",
+  "private": true,
+  "workspaces": [
+    "dotcom/*"
+  ],
+  "scripts": {
+    "dev": "cd dotcom/sync-worker && yarn dev",
+    "dev-upload": "cd dotcom/asset-upload-worker && yarn dev",
+    "dev-image": "cd dotcom/image-resize-worker && yarn dev",
+    "dev-db": "cd dotcom/zero-cache && yarn dev",
+    "build": "yarn workspaces run build",
+    "test": "yarn workspaces run test",
+    "lint": "yarn workspaces run lint"
+  },
+  "devDependencies": {
+    "typescript": "^5.8.3",
+    "wrangler": "^4.23.0"
+  },
+  "packageManager": "yarn@4.7.0"
+} 
