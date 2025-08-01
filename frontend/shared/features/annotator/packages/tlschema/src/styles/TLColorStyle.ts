@@ -5,7 +5,6 @@ import { StyleProp } from './StyleProp'
 /** @public */
 export const defaultColorNames = [
 	'black',
-	'white',
 	'blue',
 	'green',
 	'red',
@@ -139,27 +138,6 @@ export const DefaultColorThemePalette: {
 				p3: 'color(display-p3 0.9992 0.4376 0.45)',
 			},
 		},
-		white: {
-			solid: '#FFFFFF',
-			fill: '#FFFFFF',
-			semi: '#f5f5f5',
-			pattern: '#f9f9f9',
-			frame: {
-				headingStroke: '#7d7d7d',
-				headingFill: '#ffffff',
-				stroke: '#7d7d7d',
-				fill: '#ffffff',
-				text: '#000000',
-			},
-			note: {
-				fill: '#FFFFFF',
-				text: '#000000',
-			},
-			highlight: {
-				srgb: '#ffffff',
-				p3: 'color(display-p3 1 1 1)',
-			},
-		},
 	},
 	darkMode: {
 		id: 'dark',
@@ -250,27 +228,6 @@ export const DefaultColorThemePalette: {
 			highlight: {
 				srgb: '#de002c',
 				p3: 'color(display-p3 0.7978 0.0509 0.2035)',
-			},
-		},
-		white: {
-			solid: '#f3f3f3',
-			fill: '#f3f3f3',
-			semi: '#f5f5f5',
-			pattern: '#f9f9f9',
-			frame: {
-				headingStroke: '#ffffff',
-				headingFill: '#ffffff',
-				stroke: '#ffffff',
-				fill: '#ffffff',
-				text: '#000000',
-			},
-			note: {
-				fill: '#eaeaea',
-				text: '#1d1d1d',
-			},
-			highlight: {
-				srgb: '#ffffff',
-				p3: 'color(display-p3 1 1 1)',
 			},
 		},
 	},

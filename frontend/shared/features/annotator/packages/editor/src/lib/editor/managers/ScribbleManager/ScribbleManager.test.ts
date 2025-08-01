@@ -105,12 +105,12 @@ describe('ScribbleManager', () => {
 			mockUniqueId.mockReturnValueOnce('id1').mockReturnValueOnce('id2').mockReturnValueOnce('id3')
 
 			const scribble1 = scribbleManager.addScribble({ color: 'black' })
-			const scribble2 = scribbleManager.addScribble({ color: 'white' })
+			const scribble2 = scribbleManager.addScribble({ color: 'black' })
 			const scribble3 = scribbleManager.addScribble({ color: 'accent' })
 
 			expect(scribbleManager.scribbleItems.size).toBe(3)
 			expect(scribble1.scribble.color).toBe('black')
-			expect(scribble2.scribble.color).toBe('white')
+			expect(scribble2.scribble.color).toBe('black')
 			expect(scribble3.scribble.color).toBe('accent')
 		})
 	})
@@ -465,7 +465,7 @@ describe('ScribbleManager', () => {
 			it('should update instance state with scribbles', () => {
 				mockUniqueId.mockReturnValueOnce('id1').mockReturnValueOnce('id2')
 				scribbleManager.addScribble({ color: 'black' })
-				scribbleManager.addScribble({ color: 'white' })
+				scribbleManager.addScribble({ color: 'black' })
 
 				scribbleManager.tick(16)
 
@@ -476,7 +476,7 @@ describe('ScribbleManager', () => {
 							points: expect.any(Array),
 						}),
 						expect.objectContaining({
-							color: 'white',
+							color: 'black',
 							points: expect.any(Array),
 						}),
 					]),
@@ -501,7 +501,7 @@ describe('ScribbleManager', () => {
 
 			it('should limit scribbles to 5 items', () => {
 				// Add 7 scribbles
-				const colors = ['accent', 'black', 'white', 'laser', 'muted-1', 'accent', 'black'] as const
+				const colors = ['accent', 'black', 'black', 'laser', 'muted-1', 'accent', 'black'] as const
 				for (let i = 0; i < 7; i++) {
 					mockUniqueId.mockReturnValueOnce(`id${i}`)
 					scribbleManager.addScribble({ color: colors[i] })

@@ -37,7 +37,7 @@ export class PerformanceTracker {
 				: fps > 30
 					? PERFORMANCE_COLORS.Mid
 					: PERFORMANCE_COLORS.Poor
-		const color = background === PERFORMANCE_COLORS.Mid ? 'black' : 'white'
+		const color = 'black'
 		const capitalized = this.name[0].toUpperCase() + this.name.slice(1)
 		// eslint-disable-next-line no-console
 		console.debug(

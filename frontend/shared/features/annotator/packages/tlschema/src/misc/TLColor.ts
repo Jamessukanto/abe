@@ -7,7 +7,6 @@ import { SetValue } from '../util-types'
  *  @public */
 export const TL_CANVAS_UI_COLOR_TYPES = new Set([
 	'accent',
-	'white',
 	'black',
 	'selection-stroke',
 	'selection-fill',

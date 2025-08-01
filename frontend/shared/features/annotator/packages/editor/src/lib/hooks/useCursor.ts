@@ -81,7 +81,7 @@ export function useCursor() {
 
 			container.style.setProperty(
 				'--tl-cursor',
-				getCursor(type, rotation, isDarkMode ? 'white' : 'black')
+				getCursor(type, rotation, 'black')
 			)
 		},
 		[editor, container, isDarkMode]

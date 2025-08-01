@@ -966,7 +966,7 @@ export interface TLV1Document {
 /* ------------------ Translations ------------------ */
 
 const v1ColorsToV2Colors: Record<TLV1ColorStyle, TLDefaultColorStyle> = {
-	[TLV1ColorStyle.White]: 'white',
+	[TLV1ColorStyle.White]: 'black',
 	[TLV1ColorStyle.Black]: 'black',
 	[TLV1ColorStyle.LightGray]: 'black',
 	[TLV1ColorStyle.Gray]: 'black',

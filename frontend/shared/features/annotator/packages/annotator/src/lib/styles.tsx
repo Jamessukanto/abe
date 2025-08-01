@@ -10,7 +10,6 @@ export type StyleValuesForUi<T> =  {
 export const STYLES = {
 	color: [
 		{ value: 'black', icon: 'color' },
-		{ value: 'white', icon: 'color' },
 		{ value: 'blue', icon: 'color' },
 		{ value: 'green', icon: 'color' },
 		{ value: 'red', icon: 'color' },

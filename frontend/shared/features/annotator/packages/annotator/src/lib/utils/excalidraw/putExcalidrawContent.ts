@@ -365,7 +365,7 @@ const colorsToColors: Record<string, TLDefaultColorStyle> = {
 	...mapExcalidrawColorToAnnotatorColors('green', 'green', 'green'),
 	...mapExcalidrawColorToAnnotatorColors('yellow', 'black', 'black'),
 	...mapExcalidrawColorToAnnotatorColors('orange', 'black', 'black'),
-	'#ffffff': 'white',
+	'#ffffff': 'black',
 	'#000000': 'black',
 }
 
