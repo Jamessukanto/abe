@@ -31,15 +31,3 @@ createRoot(document.getElementById('root')!).render(
 		</HelmetProvider>
 	</ClerkProvider>
 )
-
-try {
-	// we have a dummy service worker that unregisters itself immediately
-	// this was needed to remove the service worker we used to have from the cache
-	// we can remove this if we ever need a service worker again, or if enough time passes that
-	// anybody returning to annotator.com should not have a service worker running
-	navigator.serviceWorker.register('/sw.js', {
-		scope: '/',
-	})
-} catch {
-	// ignore
-}

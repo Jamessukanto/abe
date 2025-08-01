@@ -52,8 +52,6 @@ export default [
 			'**/scripts/upload-sourcemaps.js',
 			'**/scripts/lib/auto-plugin.js',
 			'**/coverage/**/*',
-
-			'dotcom/public/sw.js',
 			'**/patchedJestJsDom.js',
 			'**/.clasp.json',
 			'**/*.mjs',
