@@ -24,6 +24,7 @@ import { TLTextShape } from '../shapes/TLTextShape'
 import { TLVideoShape } from '../shapes/TLVideoShape'
 import { StyleProp } from '../styles/StyleProp'
 import { TLPageId } from './TLPage'
+import { StoreValidator } from '@annotator/store'
 
 /**
  * The default set of shapes that are available in the editor.
@@ -139,10 +140,6 @@ export const rootShapeMigrations = createRecordMigrationSequence({
 				// Remove opacity property - all shapes will render at 100% opacity
 				delete record.opacity
 			},
-			down: (record: any) => {
-				// Restore opacity to 1.0 (100%) for backward compatibility
-				record.opacity = 1
-			},
 		},
 	],
 })
@@ -201,17 +198,51 @@ export function createShapePropsMigrationIds<
 
 /** @internal */
 export function createShapeRecordType(shapes: Record<string, SchemaPropsInfo>) {
+	const baseValidator = T.model(
+		'shape',
+		T.union(
+			'type',
+			mapObjectMapValues(shapes, (type, { props, meta }) =>
+				createShapeValidator(type, props, meta)
+			)
+		)
+	)
+
+	// Create a wrapper validator that handles unexpected properties
+	const wrappedValidator: StoreValidator<TLShape> = {
+		validate: (record: unknown) => {
+			try {
+				return baseValidator.validate(record)
+			} catch (error) {
+				// Handle unexpected properties by cleaning them up and retrying
+				if (error instanceof Error && error.message.includes('Unexpected property')) {
+					console.warn('Found shape with unexpected properties, cleaning up:', error.message)
+					
+					// Clean up the record by removing unexpected properties
+					const cleanedRecord = record && typeof record === 'object' ? { ...(record as object) } as any : record
+					
+					// Remove opacity property if it exists
+					if (cleanedRecord && typeof cleanedRecord === 'object' && 'opacity' in cleanedRecord) {
+						delete cleanedRecord.opacity
+					}
+					
+					// Try validation again with cleaned record
+					try {
+						return baseValidator.validate(cleanedRecord)
+					} catch (retryError) {
+						console.error('Failed to validate record after cleanup:', retryError)
+						throw retryError
+					}
+				}
+				
+				throw error
+			}
+		}
+	}
+
 	return createRecordType<TLShape>('shape', {
 		scope: 'document',
-		validator: T.model(
-			'shape',
-			T.union(
-				'type',
-				mapObjectMapValues(shapes, (type, { props, meta }) =>
-					createShapeValidator(type, props, meta)
-				)
-			)
-		),
+		validator: wrappedValidator,
 	}).withDefaultProperties(() => ({
 		x: 0,
 		y: 0,

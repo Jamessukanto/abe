@@ -174,9 +174,41 @@ export class TLLocalSyncClient {
 					// eslint-disable-next-line @typescript-eslint/no-deprecated
 					schema: data.schema ?? this.store.schema.serialize(),
 				})
-
 				if (migrationResult.type === 'error') {
 					console.error('failed to migrate store', migrationResult)
+					
+					// Check if this is a schema incompatibility error
+					// This can happen when the stored data has a schema version that references
+					// migrations that no longer exist in the current code (e.g., after a rollback
+					// or when migrations are reordered/removed). Instead of failing completely,
+					// we clear the store data and start fresh to prevent the app from being broken.
+					if (migrationResult.reason.includes('Incompatible schema')) {
+						console.warn('Schema incompatibility detected. Clearing store data to prevent app from being broken.')
+						
+						// Add debug information to help developers
+						if (data?.schema) {
+							const debugInfo = this.store.schema.debugMigrationIssues(data.schema)
+							console.error('Migration debug info:', debugInfo)
+						}
+						
+						// Clear the database by storing an empty snapshot
+						try {
+							await this.db.storeSnapshot({
+								schema: this.store.schema,
+								snapshot: {},
+								sessionId: this.sessionId,
+								sessionStateSnapshot: null
+							})
+							console.log('Store data cleared successfully. Starting with fresh data.')
+						} catch (clearError) {
+							console.error('Failed to clear store data:', clearError)
+						}
+						
+						// Continue with empty store instead of failing
+						onLoad(this)
+						return
+					}
+					
 					onLoadError(new Error(`Failed to migrate store: ${migrationResult.reason}`))
 					return
 				}

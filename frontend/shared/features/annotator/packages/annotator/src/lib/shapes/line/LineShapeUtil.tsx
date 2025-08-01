@@ -187,14 +187,11 @@ export class LineShapeUtil extends ShapeUtil<TLLineShape> {
 
 	indicator(shape: TLLineShape) {
 		const path = getPathForLineShape(shape)
+		const strokeWidth = 1
 
 		return path.toSvg({
 			style: 'solid',
-			strokeWidth: 1,
-			passes: 1,
-			randomSeed: shape.id,
-			offset: 0,
-			roundness: strokeWidth * 2,
+			strokeWidth,
 			props: { strokeWidth: undefined },
 		})
 	}
@@ -343,7 +340,6 @@ function LineShapeSvg({
 		style: dash,
 		strokeWidth,
 		forceSolid,
-		randomSeed: shape.id,
 		props: { transform: `scale(${scale})`, stroke: theme[color].solid, fill: 'none' },
 	})
 }

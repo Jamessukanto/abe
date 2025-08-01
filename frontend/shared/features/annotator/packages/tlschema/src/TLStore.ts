@@ -151,6 +151,39 @@ export function onValidationFailure({
 		// allow invalid records so people can load old buggy data:
 		phase === 'initialize'
 
+	// Handle specific validation errors that we can fix automatically
+	if (error instanceof Error) {
+		const errorMessage = error.message
+		
+		// Handle unexpected opacity property on shapes
+		if (errorMessage.includes('opacity') && errorMessage.includes('Unexpected property')) {
+			console.warn('Found shape with unexpected opacity property, removing it:', record.id)
+			
+			// Remove the opacity property from the record
+			if ('opacity' in record) {
+				delete (record as any).opacity
+			}
+			
+			// Try to validate again
+			try {
+				const recordType = record.typeName ? (record as any).constructor : null
+				if (recordType && recordType.validate) {
+					return recordType.validate(record, recordBefore ?? undefined)
+				}
+			} catch (retryError) {
+				console.error('Failed to validate record after removing opacity:', retryError)
+			}
+		}
+		
+		// Handle other unexpected properties that might be from old schema versions
+		if (errorMessage.includes('Unexpected property')) {
+			console.warn('Found record with unexpected properties, attempting to clean up:', record.id, errorMessage)
+			
+			// For now, we'll just log and continue with the original record
+			// In the future, we could add more sophisticated property cleanup
+		}
+	}
+
 	annotateError(error, {
 		tags: {
 			origin: 'store.validateRecord',
@@ -164,6 +197,14 @@ export function onValidationFailure({
 			recordAfter: redactRecordForErrorReporting(structuredClone(record)),
 		},
 	})
+
+	// For initialization phase, we can be more lenient and return the record as-is
+	// to prevent the app from crashing on old data
+	if (phase === 'initialize') {
+		const errorMessage = error instanceof Error ? error.message : String(error)
+		console.warn('Validation failed during initialization, returning record as-is:', errorMessage)
+		return record
+	}
 
 	throw error
 }

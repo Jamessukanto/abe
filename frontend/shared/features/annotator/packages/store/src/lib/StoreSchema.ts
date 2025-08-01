@@ -208,7 +208,16 @@ export class StoreSchema<R extends UnknownRecord, P = unknown> {
 			const idx = this.migrations[sequenceId].sequence.findIndex((m) => m.id === theirVersionId)
 			// todo: better error handling
 			if (idx === -1) {
-				const result = Result.err('Incompatible schema?')
+				// Add detailed logging to help debug the issue
+				console.error('Migration not found:', {
+					sequenceId,
+					theirVersion,
+					theirVersionId,
+					availableMigrations: this.migrations[sequenceId].sequence.map(m => m.id),
+					persistedSchema: schema,
+					currentMigrations: Object.keys(this.migrations)
+				})
+				const result = Result.err(`Incompatible schema: Migration '${theirVersionId}' not found in sequence '${sequenceId}'. Available migrations: ${this.migrations[sequenceId].sequence.map(m => m.id).join(', ')}`)
 				// Cache the error result
 				this.migrationCache.set(persistedSchema, result)
 				return result
@@ -289,8 +298,8 @@ export class StoreSchema<R extends UnknownRecord, P = unknown> {
 		let { store } = snapshot
 		const migrations = this.getMigrationsSince(snapshot.schema)
 		if (!migrations.ok) {
-			// TODO: better error
-			console.error('Error migrating store', migrations.error)
+			// Log the detailed error message for debugging
+			console.error('Error migrating store - detailed error:', migrations.error)
 			return { type: 'error', reason: MigrationFailureReason.MigrationError }
 		}
 		const migrationsToApply = migrations.value
@@ -352,5 +361,68 @@ export class StoreSchema<R extends UnknownRecord, P = unknown> {
 		const type = getOwnProperty(this.types, typeName)
 		assert(type, 'record type does not exists')
 		return type
+	}
+
+	/**
+	 * Debug method to help diagnose migration issues
+	 * @internal
+	 */
+	debugMigrationIssues(persistedSchema: SerializedSchema): {
+		upgradeResult: Result<SerializedSchemaV2, string>
+		schema: SerializedSchemaV2 | null
+		sequenceIdsToInclude: string[]
+		migrationIssues: Array<{
+			sequenceId: string
+			theirVersion: number
+			theirVersionId: string
+			availableMigrations: string[]
+			issue: string
+		}>
+	} {
+		const upgradeResult = upgradeSchema(persistedSchema)
+		if (!upgradeResult.ok) {
+			return {
+				upgradeResult,
+				schema: null,
+				sequenceIdsToInclude: [],
+				migrationIssues: []
+			}
+		}
+
+		const schema = upgradeResult.value
+		const sequenceIdsToInclude = Object.keys(schema.sequences).filter((sequenceId) => this.migrations[sequenceId])
+
+		const migrationIssues: Array<{
+			sequenceId: string
+			theirVersion: number
+			theirVersionId: string
+			availableMigrations: string[]
+			issue: string
+		}> = []
+
+		for (const sequenceId of sequenceIdsToInclude) {
+			const theirVersion = schema.sequences[sequenceId]
+			if (typeof theirVersion === 'number' && theirVersion !== 0) {
+				const theirVersionId = `${sequenceId}/${theirVersion}`
+				const idx = this.migrations[sequenceId].sequence.findIndex((m) => m.id === theirVersionId)
+				
+				if (idx === -1) {
+					migrationIssues.push({
+						sequenceId,
+						theirVersion,
+						theirVersionId,
+						availableMigrations: this.migrations[sequenceId].sequence.map(m => m.id),
+						issue: `Migration '${theirVersionId}' not found in sequence '${sequenceId}'`
+					})
+				}
+			}
+		}
+
+		return {
+			upgradeResult,
+			schema,
+			sequenceIdsToInclude,
+			migrationIssues
+		}
 	}
 }
