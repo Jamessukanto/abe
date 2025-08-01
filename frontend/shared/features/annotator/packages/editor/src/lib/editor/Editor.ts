@@ -240,7 +240,6 @@ export interface TLEditorOptions {
 	cameraOptions?: Partial<TLCameraOptions>
 	textOptions?: TLTextOptions
 	options?: Partial<AnnotatorOptions>
-	licenseKey?: string
 	fontAssetUrls?: { [key: string]: string | undefined }
 	/**
 	 * A predicate that should return true if the given shape should be hidden.

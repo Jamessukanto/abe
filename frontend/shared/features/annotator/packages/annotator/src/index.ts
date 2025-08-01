@@ -377,13 +377,8 @@ export {
 } from './lib/ui/components/Toolbar/DefaultToolbar'
 export {
 	DefaultToolbarContent,
-	DrawToolbarItem,
-	EllipseToolbarItem,
-	EraserToolbarItem,
 	HandToolbarItem,
 	LaserToolbarItem,
-	LineToolbarItem,
-	NoteToolbarItem,
 	RectangleToolbarItem,
 	SelectToolbarItem,
 	ToolbarItem,

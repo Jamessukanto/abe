@@ -30,7 +30,6 @@ export interface TLAppUiEventMap {
 	'drop-tldr-file': null
 	'import-tldr-file': null
 	'change-user-name': null
-	'click-watermark': null
 	'open-share-menu': null
 	'change-share-menu-tab': { tab: AnnotatorAppSessionState['shareMenuActiveTab'] }
 	'copy-share-link': null

@@ -218,11 +218,11 @@ describe('<AnnotatorEditor />', () => {
 		// though indicator it should be visible
 		expect(document.querySelectorAll('.tl-shape-indicator')).toHaveLength(1)
 
-		// Select the eraser tool...
-		await act(async () => editor.setCurrentTool('eraser'))
+		// // Select the eraser tool...
+		// await act(async () => editor.setCurrentTool('eraser'))
 
-		// Is the editor's current tool correct?
-		expect(editor.getCurrentToolId()).toBe('eraser')
+		// // Is the editor's current tool correct?
+		// expect(editor.getCurrentToolId()).toBe('eraser')
 	})
 
 	it('renders correctly in strict mode', async () => {
@@ -280,15 +280,15 @@ describe('<AnnotatorEditor />', () => {
 					'com.annotator.asset.image': 5,
 					'com.annotator.asset.video': 5,
 					'com.annotator.shape.bookmark': 2,
-					'com.annotator.shape.draw': 2,
+					// 'com.annotator.shape.draw': 2,
 					'com.annotator.shape.embed': 4,
 					'com.annotator.shape.frame': 0,
 					'com.annotator.shape.geo': 9,
 					'com.annotator.shape.group': 0,
 					'com.annotator.shape.highlight': 1,
 					'com.annotator.shape.image': 4,
-					'com.annotator.shape.line': 5,
-					'com.annotator.shape.note': 7,
+					// 'com.annotator.shape.line': 5,
+					// 'com.annotator.shape.note': 7,
 					'com.annotator.shape.text': 2,
 					'com.annotator.shape.video': 2,
 				},

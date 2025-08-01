@@ -40,8 +40,7 @@ import { useShallowObjectIdentity } from './hooks/useIdentity'
 import { useLocalStore } from './hooks/useLocalStore'
 import { useRefState } from './hooks/useRefState'
 import { useZoomCss } from './hooks/useZoomCss'
-import { LicenseProvider } from './license/LicenseProvider'
-import { Watermark } from './license/Watermark'
+
 import { AnnotatorOptions } from './options'
 import { TLDeepLinkOptions } from './utils/deepLinks'
 import { stopEventPropagation } from './utils/dom'
@@ -179,11 +178,6 @@ export interface AnnotatorEditorBaseProps {
 	options?: Partial<AnnotatorOptions>
 
 	/**
-	 * The license key.
-	 */
-	licenseKey?: string
-
-	/**
 	 * Options for syncing the editor's camera state with the URL.
 	 */
 	deepLinks?: true | TLDeepLinkOptions
@@ -292,7 +286,6 @@ export const AnnotatorEditor = memo(function AnnotatorEditor({
 				onError={(error) => annotateError(error, { tags: { origin: 'react.annotator-before-app' } })}
 			>
 				{container && (
-					<LicenseProvider licenseKey={rest.licenseKey}>
 						<ContainerProvider container={container}>
 							<EditorComponentsProvider overrides={components}>
 								{store ? (
@@ -309,7 +302,6 @@ export const AnnotatorEditor = memo(function AnnotatorEditor({
 								)}
 							</EditorComponentsProvider>
 						</ContainerProvider>
-					</LicenseProvider>
 				)}
 			</OptionalErrorBoundary>
 		</div>
@@ -409,7 +401,6 @@ function AnnotatorEditorWithReadyStore({
 	cameraOptions,
 	textOptions,
 	options,
-	licenseKey,
 	deepLinks: _deepLinks,
 	// eslint-disable-next-line @typescript-eslint/no-deprecated
 	isShapeHidden,
@@ -471,7 +462,6 @@ function AnnotatorEditorWithReadyStore({
 				cameraOptions,
 				textOptions,
 				options,
-				licenseKey,
 				isShapeHidden,
 				getShapeVisibility,
 				fontAssetUrls: assetUrls?.fonts,
@@ -507,7 +497,6 @@ function AnnotatorEditorWithReadyStore({
 			tools,
 			user,
 			setEditor,
-			licenseKey,
 			isShapeHidden,
 			getShapeVisibility,
 			textOptions,
@@ -633,7 +622,6 @@ function AnnotatorEditorWithReadyStore({
 				<EditorProvider editor={editor}>
 					<Layout onMount={onMount}>
 						{children ?? (Canvas ? <Canvas key={editor.contextId} /> : null)}
-						<Watermark />
 					</Layout>
 				</EditorProvider>
 			)}

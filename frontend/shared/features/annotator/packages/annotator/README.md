@@ -42,11 +42,6 @@ npm run dev
 
 This will run our [examples app](https://github.com/annotator/annotator/tree/main/apps/examples) locally at http://localhost:5420. Changes to packages will be reflected live on the examples app.
 
-## License
-
-This project is part of the annotator SDK. It is provided under the [annotator SDK license](https://github.com/annotator/annotator/blob/main/LICENSE.md).
-
-You can use the annotator SDK in commercial or non-commercial projects so long as you preserve the "Made with annotator" watermark on the canvas. To remove the watermark, you can purchase a [business license](https://annotator.dev#pricing). Visit [annotator.dev](https://annotator.dev) to learn more.
 
 ## Trademarks
 

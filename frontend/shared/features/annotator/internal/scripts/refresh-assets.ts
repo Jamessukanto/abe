@@ -334,45 +334,6 @@ async function copyTranslations() {
 	}
 }
 
-// 5. WATERMARKS
-async function copyWatermarks() {
-	const folderName = 'watermarks'
-	const extension = '.svg'
-
-	const sourceFolderPath = join(ASSETS_FOLDER_PATH, folderName)
-	const itemsToCopy = readdirSync(sourceFolderPath).filter((watermark) =>
-		watermark.endsWith(extension)
-	)
-
-	const optimizedItems = itemsToCopy.map((watermark) => {
-		const watermarkPath = join(sourceFolderPath, watermark)
-		const content = readFileSync(watermarkPath, 'utf8')
-		const svg = optimize(content, { path: watermarkPath })
-		return { fileName: watermark, data: svg.data }
-	})
-
-	const assetsDestinationPath = join(REPO_ROOT, 'packages', 'assets', folderName)
-	if (existsSync(assetsDestinationPath)) {
-		rmSync(assetsDestinationPath, { recursive: true })
-	}
-	mkdirSync(assetsDestinationPath)
-
-	const file = new CodeFile()
-	for (const { fileName, data } of optimizedItems) {
-		const varName = file.formatName(fileName)
-		file.append(`export const ${varName} = ${JSON.stringify(data)};`)
-		await writeStringFile(join(assetsDestinationPath, fileName), data)
-	}
-
-	const codeDestinationPath = join(REPO_ROOT, 'packages', 'editor', 'src', 'lib', 'watermarks.ts')
-	await writeCodeFile(
-		'internal/scripts/refresh-assets.ts',
-		'typescript',
-		codeDestinationPath,
-		file.toString()
-	)
-}
-
 // 6. ASSET DECLARATION FILES
 async function writeUrlBasedAssetDeclarationFile() {
 	const codeFilePath = join(REPO_ROOT, 'packages', 'assets', 'urls.js')
@@ -682,8 +643,6 @@ async function main() {
 	await copyFonts()
 	nicelog('Copying translations...')
 	await copyTranslations()
-	nicelog('Copying watermarks...')
-	await copyWatermarks()
 	nicelog('Writing asset declaration file...')
 	await writeAssetDeclarationDTSFile()
 	await writeUrlBasedAssetDeclarationFile()

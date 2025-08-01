@@ -106,33 +106,14 @@ export function ToolsProvider({ overrides, children }: TLUiToolsProviderProps) {
 					onToolSelect(source, this)
 				},
 			},
-			{
-				id: 'eraser',
-				label: 'tool.eraser',
-				icon: 'tool-eraser',
-				kbd: 'e',
-				onSelect(source) {
-					editor.setCurrentTool('eraser')
-					onToolSelect(source, this)
-				},
-			},
-			{
-				id: 'draw',
-				label: 'tool.draw',
-				icon: 'tool-pencil',
-				kbd: 'd,b,x',
-				onSelect(source) {
-					editor.setCurrentTool('draw')
-					onToolSelect(source, this)
-				},
-			},
 			...[...GeoShapeGeoStyle.values].map((id) => ({
 				id,
 				label: `tool.${id}` as TLUiTranslationKey,
 				meta: {
 					geo: id,
 				},
-				kbd: id === 'rectangle' ? 'r' : id === 'ellipse' ? 'o' : undefined,
+				// kbd: id === 'rectangle' ? 'r' : id === 'ellipse' ? 'o' : undefined,
+				kbd: id === 'rectangle' ? 'r' : undefined,
 				icon: ('geo-' + id) as TLUiIconType,
 				onSelect(source: TLUiEventSource) {
 					editor.run(() => {
@@ -142,47 +123,16 @@ export function ToolsProvider({ overrides, children }: TLUiToolsProviderProps) {
 					})
 				},
 			})),
-			{
-				id: 'line',
-				label: 'tool.line',
-				icon: 'tool-line',
-				kbd: 'l',
-				onSelect(source) {
-					editor.setCurrentTool('line')
-					onToolSelect(source, this)
-				},
-			},
-			{
-				id: 'frame',
-				label: 'tool.frame',
-				icon: 'tool-frame',
-				kbd: 'f',
-				onSelect(source) {
-					editor.setCurrentTool('frame')
-					onToolSelect(source, this)
-				},
-			},
-			{
-				id: 'text',
-				label: 'tool.text',
-				icon: 'tool-text',
-				kbd: 't',
-				onSelect(source) {
-					editor.setCurrentTool('text')
-					onToolSelect(source, this)
-				},
-			},
-
-			{
-				id: 'note',
-				label: 'tool.note',
-				icon: 'tool-note',
-				kbd: 'n',
-				onSelect(source) {
-					editor.setCurrentTool('note')
-					onToolSelect(source, this)
-				},
-			},
+			// {
+			// 	id: 'text',
+			// 	label: 'tool.text',
+			// 	icon: 'tool-text',
+			// 	kbd: 't',
+			// 	onSelect(source) {
+			// 		editor.setCurrentTool('text')
+			// 		onToolSelect(source, this)
+			// 	},
+			// },
 			{
 				id: 'laser',
 				label: 'tool.laser',
@@ -194,18 +144,17 @@ export function ToolsProvider({ overrides, children }: TLUiToolsProviderProps) {
 					onToolSelect(source, this)
 				},
 			},
-
-			{
-				id: 'highlight',
-				label: 'tool.highlight',
-				icon: 'tool-highlight',
-				// TODO: pick a better shortcut
-				kbd: 'shift+d',
-				onSelect(source) {
-					editor.setCurrentTool('highlight')
-					onToolSelect(source, this)
-				},
-			},
+			// {
+			// 	id: 'highlight',
+			// 	label: 'tool.highlight',
+			// 	icon: 'tool-highlight',
+			// 	// TODO: pick a better shortcut
+			// 	kbd: 'shift+d',
+			// 	onSelect(source) {
+			// 		editor.setCurrentTool('highlight')
+			// 		onToolSelect(source, this)
+			// 	},
+			// },
 		]
 
 		toolsArray.forEach((t) => (t.onSelect = t.onSelect.bind(t)))

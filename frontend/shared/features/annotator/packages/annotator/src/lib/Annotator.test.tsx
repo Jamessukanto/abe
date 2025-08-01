@@ -121,7 +121,6 @@ describe('<Annotator />', () => {
 		expect(editor!.root.children!['custom-tool']).toBeInstanceOf(CustomTool)
 
 		// Verify that other default tools are still available
-		expect(editor!.root.children!['eraser']).toBeDefined()
 		expect(editor!.root.children!['hand']).toBeDefined()
 		expect(editor!.root.children!['zoom']).toBeDefined()
 	})

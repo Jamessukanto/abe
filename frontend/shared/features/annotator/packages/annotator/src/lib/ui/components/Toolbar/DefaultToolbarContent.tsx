@@ -8,15 +8,13 @@ export function DefaultToolbarContent() {
 		<>
 			<SelectToolbarItem />
 			<HandToolbarItem />
-			<DrawToolbarItem />
-			<EraserToolbarItem />
-
-			<NoteToolbarItem />
 			<RectangleToolbarItem />
-			<EllipseToolbarItem />
-
-			<LineToolbarItem />
 			<LaserToolbarItem />
+
+			{/* <EllipseToolbarItem /> */}
+			{/* <DrawToolbarItem />
+			{/* <NoteToolbarItem /> */}
+			{/* <LineToolbarItem /> */}
 		</>
 	)
 }
@@ -63,33 +61,8 @@ export function HandToolbarItem() {
 }
 
 /** @public @react */
-export function DrawToolbarItem() {
-	return <ToolbarItem tool="draw" />
-}
-
-/** @public @react */
-export function EraserToolbarItem() {
-	return <ToolbarItem tool="eraser" />
-}
-
-/** @public @react */
-export function NoteToolbarItem() {
-	return <ToolbarItem tool="note" />
-}
-
-/** @public @react */
 export function RectangleToolbarItem() {
 	return <ToolbarItem tool="rectangle" />
-}
-
-/** @public @react */
-export function EllipseToolbarItem() {
-	return <ToolbarItem tool="ellipse" />
-}
-
-/** @public @react */
-export function LineToolbarItem() {
-	return <ToolbarItem tool="line" />
 }
 
 /** @public @react */
