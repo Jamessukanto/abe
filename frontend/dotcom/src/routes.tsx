@@ -20,7 +20,7 @@ export const router = createRoutesFromElements(
 
 			let header = 'Something went wrong'
 			let para1 =
-				'Please try refreshing the page. Still having trouble? Let us know at hello@annotator.com.'
+				'Please try refreshing the page. Still having trouble? Let us know at hello@abe.com.'
 			if (error instanceof TLRemoteSyncError) {
 				switch (error.reason) {
 					case TLSyncErrorCloseEventReason.NOT_FOUND: {

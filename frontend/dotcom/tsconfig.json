@@ -20,12 +20,12 @@
 	"include": ["**/*.ts", "**/*.tsx", "zero.config.ts"],
 	"exclude": ["node_modules", "_archive"],
 	"references": [
-		{ "path": "../shared/assets" },
-		{ "path": "../shared/dotcom-shared" },
-		{ "path": "../shared/sync" },
-		{ "path": "../shared/sync-core" },
-		{ "path": "../shared/annotator" },
-		{ "path": "../shared/utils" },
-		{ "path": "../shared/validate" }
+		{ "path": "../shared/features/annotator/packages/assets" },
+		{ "path": "../shared/features/annotator/packages/dotcom-shared" },
+		{ "path": "../shared/features/annotator/packages/sync" },
+		{ "path": "../shared/features/annotator/packages/sync-core" },
+		{ "path": "../shared/features/annotator/packages/annotator" },
+		{ "path": "../shared/features/annotator/packages/utils" },
+		{ "path": "../shared/features/annotator/packages/validate" }
 	]
 }
