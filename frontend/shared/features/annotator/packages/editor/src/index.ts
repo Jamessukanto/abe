@@ -317,15 +317,6 @@ export { useSelectionEvents } from './lib/hooks/useSelectionEvents'
 export { useTLSchemaFromUtils, useTLStore } from './lib/hooks/useTLStore'
 export { useTransform } from './lib/hooks/useTransform'
 export { useViewportHeight } from './lib/hooks/useViewportHeight'
-export {
-	LicenseManager,
-	type InvalidLicenseKeyResult,
-	type InvalidLicenseReason,
-	type LicenseFromKeyResult,
-	type LicenseInfo,
-	type TestEnvironment,
-	type ValidLicenseKeyResult,
-} from './lib/license/LicenseManager'
 export { defaultAnnotatorOptions, type AnnotatorOptions } from './lib/options'
 export {
 	Box,
