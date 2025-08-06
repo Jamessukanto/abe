@@ -48,9 +48,9 @@ import { useFileEditorOverrides } from './useFileEditorOverrides'
 /** @internal */
 export const components: TLComponents = {
 	ErrorFallback: TlaEditorErrorFallback,
-	MenuPanel: TlaEditorMenuPanel,
+	// MenuPanel: TlaEditorMenuPanel,
 	TopPanel: TlaEditorTopPanel,
-	SharePanel: TlaEditorSharePanel,
+	// SharePanel: TlaEditorSharePanel,
 	Dialogs: null,
 	Toasts: null,
 	DebugMenu: () => {

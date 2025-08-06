@@ -38,7 +38,7 @@ export function LocalEditor({
 	return (
 		<div className="annotator__editor" data-testid={dataTestId}>
 			<Annotator
-				licenseKey={getLicenseKey()}
+				// licenseKey={getLicenseKey()}
 				assetUrls={assetUrls}
 				persistenceKey={persistenceKey ?? getScratchPersistenceKey()}
 				onMount={handleMount}

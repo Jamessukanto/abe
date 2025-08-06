@@ -1,7 +1,5 @@
 import {
 	AssetRecordType,
-	DEFAULT_SUPPORTED_IMAGE_TYPES,
-	DEFAULT_SUPPORT_VIDEO_TYPES,
 	Editor,
 	MediaHelpers,
 	TLAsset,
@@ -63,16 +61,6 @@ export interface TLExternalContentProps {
 	 * to 10mb (10 * 1024 * 1024).
 	 */
 	maxAssetSize?: number
-	/**
-	 * The mime types of images that are allowed to be handled. Defaults to
-	 * DEFAULT_SUPPORTED_IMAGE_TYPES.
-	 */
-	acceptedImageMimeTypes?: readonly string[]
-	/**
-	 * The mime types of videos that are allowed to be handled. Defaults to
-	 * DEFAULT_SUPPORT_VIDEO_TYPES.
-	 */
-	acceptedVideoMimeTypes?: readonly string[]
 }
 
 /** @public */
@@ -100,8 +88,6 @@ export function registerDefaultExternalContentHandlers(
 	editor.registerExternalContentHandler('svg-text', async (externalContent) => {
 		return defaultHandleExternalSvgTextContent(editor, externalContent)
 	})
-
-
 
 	// text
 	editor.registerExternalContentHandler('text', async (externalContent) => {
@@ -537,8 +523,6 @@ export async function defaultHandleExternalExcalidrawContent(
 export async function getMediaAssetInfoPartial(
 	file: File,
 	assetId: TLAssetId,
-	isImageType: boolean,
-	isVideoType: boolean,
 	maxImageDimension?: number
 ) {
 	let fileType = file.type
@@ -548,24 +532,14 @@ export async function getMediaAssetInfoPartial(
 		fileType = 'video/mp4'
 	}
 
-	const size = isImageType
-		? await MediaHelpers.getImageSize(file)
-		: await MediaHelpers.getVideoSize(file)
-
-	const isAnimated = (await MediaHelpers.isAnimated(file)) || isVideoType
-
 	const assetInfo = {
 		id: assetId,
-		type: isImageType ? 'image' : 'video',
 		typeName: 'asset',
 		props: {
 			name: file.name,
 			src: '',
-			w: size.w,
-			h: size.h,
 			fileSize: file.size,
 			mimeType: fileType,
-			isAnimated,
 		},
 		meta: {},
 	} as TLImageAsset | TLVideoAsset
@@ -753,22 +727,10 @@ export function createEmptyBookmarkShape(
 
 function runFileChecks(file: File, options: TLDefaultExternalContentHandlerOpts) {
 	const {
-		acceptedImageMimeTypes = DEFAULT_SUPPORTED_IMAGE_TYPES,
-		acceptedVideoMimeTypes = DEFAULT_SUPPORT_VIDEO_TYPES,
 		maxAssetSize = DEFAULT_MAX_ASSET_SIZE,
 		toasts,
 		msg,
 	} = options
-	const isImageType = acceptedImageMimeTypes.includes(file.type)
-	const isVideoType = acceptedVideoMimeTypes.includes(file.type)
-
-	if (!isImageType && !isVideoType) {
-		toasts.addToast({
-			title: msg('assets.files.type-not-allowed'),
-			severity: 'error',
-		})
-		return false
-	}
 
 	if (file.size > maxAssetSize) {
 		toasts.addToast({
@@ -799,20 +761,14 @@ async function getAssetInfo(
 	assetId?: TLAssetId
 ) {
 	const {
-		acceptedImageMimeTypes = DEFAULT_SUPPORTED_IMAGE_TYPES,
-		acceptedVideoMimeTypes = DEFAULT_SUPPORT_VIDEO_TYPES,
 		maxImageDimension = DEFAULT_MAX_IMAGE_DIMENSION,
 	} = options
 
-	const isImageType = acceptedImageMimeTypes.includes(file.type)
-	const isVideoType = acceptedVideoMimeTypes.includes(file.type)
 	const hash = getHashForBuffer(await file.arrayBuffer())
 	assetId ??= AssetRecordType.createId(hash)
 	const assetInfo = await getMediaAssetInfoPartial(
 		file,
 		assetId,
-		isImageType,
-		isVideoType,
 		maxImageDimension
 	)
 	return assetInfo

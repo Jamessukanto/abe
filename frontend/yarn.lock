@@ -80,6 +80,23 @@ __metadata:
   languageName: unknown
   linkType: soft
 
+"@annotator/appschema@workspace:shared/features/annotator/packages/appschema":
+  version: 0.0.0-use.local
+  resolution: "@annotator/appschema@workspace:shared/features/annotator/packages/appschema"
+  dependencies:
+    "@annotator/state": "workspace:*"
+    "@annotator/store": "workspace:*"
+    "@annotator/utils": "workspace:*"
+    "@annotator/validate": "workspace:*"
+    kleur: "npm:^4.1.5"
+    lazyrepo: "npm:0.0.0-alpha.27"
+    react: "npm:^18.3.1"
+  peerDependencies:
+    react: ^18.2.0 || ^19.0.0
+    react-dom: ^18.2.0 || ^19.0.0
+  languageName: unknown
+  linkType: soft
+
 "@annotator/assets@workspace:*, @annotator/assets@workspace:shared/features/annotator/packages/assets":
   version: 0.0.0-use.local
   resolution: "@annotator/assets@workspace:shared/features/annotator/packages/assets"

@@ -1,6 +1,4 @@
 import {
-	DEFAULT_SUPPORTED_IMAGE_TYPES,
-	DEFAULT_SUPPORT_VIDEO_TYPES,
 	TLEditorComponents,
 	TLOnMountHandler,
 	TLTextOptions,
@@ -16,11 +14,11 @@ import {
 	useShallowObjectIdentity,
 } from '@annotator/editor'
 import { useMemo } from 'react'
-import { AnnotatorHandles } from './canvas/annotatorHandles'
-import { AnnotatorOverlays } from './canvas/annotatorOverlays'
-import { AnnotatorScribble } from './canvas/annotatorScribble'
-import { AnnotatorSelectionForeground } from './canvas/annotatorSelectionForeground'
-import { AnnotatorShapeIndicators } from './canvas/annotatorShapeIndicators'
+import { AnnotatorHandles } from './canvas/AnnotatorHandles'
+import { AnnotatorOverlays } from './canvas/AnnotatorOverlays'
+import { AnnotatorScribble } from './canvas/AnnotatorScribble'
+import { AnnotatorSelectionForeground } from './canvas/AnnotatorSelectionForeground'
+import { AnnotatorShapeIndicators } from './canvas/AnnotatorShapeIndicators'
 import { defaultBindingUtils } from './defaultBindingUtils'
 
 import {
@@ -100,19 +98,19 @@ export function Annotator(props: AnnotatorProps) {
 		children,
 		maxImageDimension,
 		maxAssetSize,
-		acceptedImageMimeTypes,
-		acceptedVideoMimeTypes,
 		onMount,
 		components = {},
 		shapeUtils = [],
 		bindingUtils = [],
 		tools = [],
-
 		textOptions,
 		...rest
 	} = props
 
 	const _components = useShallowObjectIdentity(components)
+
+	console.log('\n\nA\n', components)
+	console.log('\n\nB\n', _components)
 
 	const componentsWithDefault = useMemo(
 		() => ({
@@ -147,13 +145,6 @@ export function Annotator(props: AnnotatorProps) {
 		[_tools]
 	)
 
-	const _imageMimeTypes = useShallowArrayIdentity(
-		acceptedImageMimeTypes ?? DEFAULT_SUPPORTED_IMAGE_TYPES
-	)
-	const _videoMimeTypes = useShallowArrayIdentity(
-		acceptedVideoMimeTypes ?? DEFAULT_SUPPORT_VIDEO_TYPES
-	)
-
 	const textOptionsWithDefaults = useMemo((): TLTextOptions => {
 		return {
 			addFontsFromNode: defaultAddFontsFromNode,
@@ -165,10 +156,7 @@ export function Annotator(props: AnnotatorProps) {
 		}
 	}, [textOptions])
 
-	const mediaMimeTypes = useMemo(
-		() => [..._imageMimeTypes, ..._videoMimeTypes],
-		[_imageMimeTypes, _videoMimeTypes]
-	)
+
 
 	const assets = useDefaultEditorAssetsWithOverrides(rest.assetUrls)
 
@@ -191,12 +179,10 @@ export function Annotator(props: AnnotatorProps) {
 					textOptions={textOptionsWithDefaults}
 					assetUrls={assets}
 				>
-					<AnnotatorUi {...rest} components={componentsWithDefault} mediaMimeTypes={mediaMimeTypes}>
+					<AnnotatorUi {...rest} components={componentsWithDefault} >
 						<InsideOfEditorAndUiContext
 							maxImageDimension={maxImageDimension}
 							maxAssetSize={maxAssetSize}
-							acceptedImageMimeTypes={_imageMimeTypes}
-							acceptedVideoMimeTypes={_videoMimeTypes}
 							onMount={onMount}
 						/>
 						{children}
@@ -211,8 +197,6 @@ export function Annotator(props: AnnotatorProps) {
 function InsideOfEditorAndUiContext({
 	maxImageDimension,
 	maxAssetSize,
-	acceptedImageMimeTypes,
-	acceptedVideoMimeTypes,
 	onMount,
 }: TLExternalContentProps & {
 	onMount?: TLOnMountHandler
@@ -239,8 +223,6 @@ function InsideOfEditorAndUiContext({
 		registerDefaultExternalContentHandlers(editor, {
 			maxImageDimension,
 			maxAssetSize,
-			acceptedImageMimeTypes,
-			acceptedVideoMimeTypes,
 			toasts,
 			msg,
 		})
