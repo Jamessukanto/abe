@@ -56,18 +56,12 @@ export function Component() {
 	const [theme, setTheme] = useState<'light' | 'dark' | 'system'>('light')
 	const handleThemeChange = (theme: 'light' | 'dark' | 'system') => setTheme(theme)
 	const handleLocaleChange = (locale: string) => setLocale(locale)
-	const isFocusMode = useValue(
-		'isFocusMode',
-		() => !!globalEditor.get()?.getInstanceState().isFocusMode,
-		[]
-	)
 	return (
 		<div
 			ref={setContainer}
 			className={classNames(`tla tl-container tla-theme-container`, {
 				'tla-theme__light tl-theme__light': theme === 'light',
 				'tla-theme__dark tl-theme__dark': theme !== 'light',
-				'tla-focus-mode': isFocusMode,
 			})}
 		>
 			<IntlWrapper locale={locale}>
