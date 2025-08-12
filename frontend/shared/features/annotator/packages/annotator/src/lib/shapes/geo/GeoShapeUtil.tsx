@@ -72,7 +72,7 @@ export class GeoShapeUtil extends BaseBoxShapeUtil<TLGeoShape> {
 			labelColor: 'black',
 			fill: 'none',
 			size: 'm',
-			font: 'draw',
+			font: 'sans',
 			align: 'middle',
 			verticalAlign: 'middle',
 			richText: toRichText(''),
@@ -126,28 +126,10 @@ export class GeoShapeUtil extends BaseBoxShapeUtil<TLGeoShape> {
 		// we only want to snap handles to the outline of the shape - not to its label etc.
 		const outline = geometry.children[0]
 		switch (shape.props.geo) {
-			case 'arrow-down':
-			case 'arrow-left':
-			case 'arrow-right':
-			case 'arrow-up':
-			case 'check-box':
-			case 'diamond':
-			case 'hexagon':
-			case 'octagon':
-			case 'pentagon':
 			case 'rectangle':
-			case 'rhombus':
-			case 'rhombus-2':
-			case 'star':
-			case 'trapezoid':
-			case 'triangle':
-			case 'x-box':
 				// poly-line type shapes hand snap points for each vertex & the center
 				return { outline: outline, points: [...outline.vertices, geometry.bounds.center] }
-			case 'cloud':
 			case 'ellipse':
-			case 'heart':
-			case 'oval':
 				// blobby shapes only have a snap point in their center
 				return { outline: outline, points: [geometry.bounds.center] }
 			default:
@@ -188,6 +170,7 @@ export class GeoShapeUtil extends BaseBoxShapeUtil<TLGeoShape> {
 		return (
 			<>
 				<SVGContainer>
+					{/* <GeoShapeBody shape={shape} shouldScale={true} forceSolid={isForceSolid} /> */}
 					<GeoShapeBody shape={shape} shouldScale={true} forceSolid={isForceSolid} />
 				</SVGContainer>
 				{showHtmlContainer && (

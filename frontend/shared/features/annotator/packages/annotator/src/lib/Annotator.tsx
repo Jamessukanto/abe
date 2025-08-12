@@ -108,10 +108,6 @@ export function Annotator(props: AnnotatorProps) {
 	} = props
 
 	const _components = useShallowObjectIdentity(components)
-
-	console.log('\n\nA\n', components)
-	console.log('\n\nB\n', _components)
-
 	const componentsWithDefault = useMemo(
 		() => ({
 			Scribble: AnnotatorScribble,
@@ -156,15 +152,15 @@ export function Annotator(props: AnnotatorProps) {
 		}
 	}, [textOptions])
 
-
-
 	const assets = useDefaultEditorAssetsWithOverrides(rest.assetUrls)
 
 	return (
 		// We provide an extra higher layer of asset+translations providers here so that
 		// loading UI (which is rendered outside of AnnotatorUi) may be translated.
 		// Ideally we would refactor to hoist all the UI context providers we can up here. Maybe later.
+		
 		<AssetUrlsProvider assetUrls={useDefaultUiAssetUrlsWithOverrides(rest.assetUrls)}>
+
 			<AnnotatorUiTranslationProvider
 				overrides={useMergedTranslationOverrides(rest.overrides)}
 				locale={rest.user?.userPreferences.get().locale ?? defaultUserPreferences.locale}

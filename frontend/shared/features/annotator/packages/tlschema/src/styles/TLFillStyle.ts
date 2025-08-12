@@ -3,7 +3,7 @@ import { StyleProp } from './StyleProp'
 
 /** @public */
 export const DefaultFillStyle = StyleProp.defineEnum('annotator:fill', {
-	defaultValue: 'none',
+	defaultValue: 'semi',
 	values: ['none', 'semi', 'solid', 'pattern', 'fill'],
 })
 

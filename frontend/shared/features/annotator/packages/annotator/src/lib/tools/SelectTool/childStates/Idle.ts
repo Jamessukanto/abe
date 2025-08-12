@@ -237,6 +237,7 @@ export class Idle extends StateNode {
 				if (!this.editor.inputs.shiftKey) {
 					this.handleDoubleClickOnCanvas(info)
 				}
+				
 				break
 			}
 			case 'selection': {
@@ -281,6 +282,7 @@ export class Idle extends StateNode {
 							return
 						}
 					}
+
 					// For corners OR edges but NOT rotation corners
 					if (
 						util.canCrop(onlySelectedShape) &&
@@ -300,8 +302,8 @@ export class Idle extends StateNode {
 				const { shape } = info
 				const util = this.editor.getShapeUtil(shape)
 
-						// Allow playing videos
-		if (shape.type !== 'video' && this.editor.getIsReadonly()) break
+				// Allow playing videos
+				if (shape.type !== 'video' && this.editor.getIsReadonly()) break
 
 				if (util.onDoubleClick) {
 					// Call the shape's double click handler
@@ -343,9 +345,12 @@ export class Idle extends StateNode {
 				} else {
 					// If the shape's double click handler has not created a change,
 					// and if the shape can edit, then begin editing the shape.
+					
 					if (this.shouldStartEditingShape(shape)) {
 						this.startEditingShape(shape, info, true /* select all */)
 					}
+
+
 				}
 			}
 		}
@@ -586,44 +591,44 @@ export class Idle extends StateNode {
 	}
 
 	handleDoubleClickOnCanvas(info: TLClickEventInfo) {
-		// Create text shape and transition to editing_shape
-		if (this.editor.getIsReadonly()) return
+		// // Create text shape and transition to editing_shape
+		// if (this.editor.getIsReadonly()) return
 
-		if (!this.editor.options.createTextOnCanvasDoubleClick) return
+		// if (!this.editor.options.createTextOnCanvasDoubleClick) return
 
-		this.editor.markHistoryStoppingPoint('creating text shape')
+		// this.editor.markHistoryStoppingPoint('creating text shape')
 
-		const id = createShapeId()
+		// const id = createShapeId()
 
-		const { x, y } = this.editor.inputs.currentPagePoint
+		// const { x, y } = this.editor.inputs.currentPagePoint
 
-		// Allow this to trigger the max shapes reached alert
-		this.editor.createShapes<TLTextShape>([
-			{
-				id,
-				type: 'text',
-				x,
-				y,
-				props: {
-					richText: toRichText(''),
-					autoSize: true,
-				},
-			},
-		])
+		// // Allow this to trigger the max shapes reached alert
+		// this.editor.createShapes<TLTextShape>([
+		// 	{
+		// 		id,
+		// 		type: 'text',
+		// 		x,
+		// 		y,
+		// 		props: {
+		// 			richText: toRichText(''),
+		// 			autoSize: true,
+		// 		},
+		// 	},
+		// ])
 
-		const shape = this.editor.getShape(id)
-		if (!shape) return
+		// const shape = this.editor.getShape(id)
+		// if (!shape) return
 
-		const util = this.editor.getShapeUtil(shape)
-		if (this.editor.getIsReadonly()) {
-			if (!util.canEditInReadonly(shape)) {
-				return
-			}
-		}
+		// const util = this.editor.getShapeUtil(shape)
+		// if (this.editor.getIsReadonly()) {
+		// 	if (!util.canEditInReadonly(shape)) {
+		// 		return
+		// 	}
+		// }
 
-		this.editor.setEditingShape(id)
-		this.editor.select(id)
-		this.parent.transition('editing_shape', info)
+		// this.editor.setEditingShape(id)
+		// this.editor.select(id)
+		// this.parent.transition('editing_shape', info)
 	}
 
 	private nudgeSelectedShapes(ephemeral = false) {

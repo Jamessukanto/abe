@@ -30,9 +30,10 @@ export const ShapeFill = React.memo(function ShapeFill({
 		}
 		case 'solid': {
 			return <path fill={theme[color].semi} d={d} />
+			// return <path fill={theme.solid} d={d} />
 		}
 		case 'semi': {
-			return <path fill={theme.solid} d={d} />
+			return <path fill={theme[color].fill} fillOpacity={0.18} d={d} />
 		}
 		case 'fill': {
 			return <path fill={theme[color].fill} d={d} />

@@ -1,3 +1,4 @@
+import { useEditor, useValue } from '@annotator/editor'
 import {
 	Group2d,
 	HandleSnapGeometry,
@@ -326,6 +327,8 @@ function LineShapeSvg({
 	forceSolid?: boolean
 }) {
 	const theme = useDefaultColorTheme()
+	const editor = useEditor()
+	const zoom = useValue('zoomLevel', () => editor.getZoomLevel(), [editor])
 
 	const path = getPathForLineShape(shape)
 	const { dash, color, size } = shape.props
@@ -334,7 +337,8 @@ function LineShapeSvg({
 
 	const scale = shouldScale ? scaleFactor : 1
 
-	const strokeWidth = STROKE_SIZES[size] * shape.props.scale
+	// const strokeWidth = STROKE_SIZES[size] * shape.props.scale
+	const strokeWidth = STROKE_SIZES[size] * shape.props.scale / (zoom || 1)
 
 	return path.toSvg({
 		style: dash,
