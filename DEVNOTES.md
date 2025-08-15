@@ -114,3 +114,58 @@ Really understand the files and dirs of the project by reading all of them and m
 - Test that other shapes still work properly
 
 Please remove the Arrow functionality systematically and verify everything else still works.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+------------
+
+
+
+
+cool
+
+now, the tree row is about pages. but this is not really what we want. what we want is the panel to be the visualisation of the tree information of the the shapes and/or groups drawn in the canvas.
+
+for example, Scenario:
+1. User draws five rectangles in this order: rect 1, rect 2, rect 3, rect 4, rect 5.
+- rect 1 is frontmost; rect 5 is backmost.
+2. User groups rect 1 and rect 3 into Group 1.
+3. User groups Group 1 and rect 5 into Group 2.
+
+Expected Tree States (front-to-back order, top = frontmost):
+
+- Initial (no groups):
+rect 1
+rect 2
+rect 3
+rect 4
+rect 5
+- After creating Group 1:
+Group 1 (expandable)
+rect 2
+rect 4
+rect 5
+- After creating Group 2:
+Group 2 (contains Group 1 and rect 5)
+rect 4
+
+Rules:
+- Each shape or group is represented by its own row (layer tree row) component in the tree.
+- Rows can be dragged into groups. When hovered over, a group auto-expands so the user can drop the item precisely inside. This should be 
+- All reordering and grouping in the tree is reflected in the canvas, and vice versa.
+- Tree order = front-to-back in canvas (frontmost at top).
+- Selecting in the canvas highlights the corresponding tree row, and selecting in the tree highlights the corresponding canvas object.
+- Selected rows have a lighter background to indicate selection.
+
+Bringing an item to front in the canvas must move it up in the tree (fix current incorrect “down” behavior).

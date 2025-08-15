@@ -53,6 +53,7 @@ export const DefaultStylePanel = memo(function DefaultStylePanel({
 			onPointerLeave={handlePointerOut}
 		>
 			{content}
+			{'aaaa'}
 		</div>
 	)
 })

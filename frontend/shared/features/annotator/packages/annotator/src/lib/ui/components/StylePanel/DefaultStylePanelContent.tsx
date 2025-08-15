@@ -50,7 +50,7 @@ export function DefaultStylePanelContent({ styles }: TLUiStylePanelContentProps)
 	return (
 		<>
 			<CommonStylePickerSet theme={theme} styles={styles} />
-			{!hideText && <TextStylePickerSet theme={theme} styles={styles} />}
+			{/* {!hideText && <TextStylePickerSet theme={theme} styles={styles} />} */}
 			{!(hideGeo && hideSpline) && (
 				<div className="tlui-style-panel__section">
 					<GeoStylePickerSet styles={styles} theme={theme} />
@@ -191,7 +191,7 @@ export function GeoStylePickerSet({ styles, theme }: StylePickerSetProps) {
 
 	return (
 		<AnnotatorUiToolbar label={msg('style-panel.geo')}>
-			<DropdownPicker
+			{/* <DropdownPicker
 				id="geo"
 				type="menu"
 				label={'style-panel.geo'}
@@ -201,7 +201,7 @@ export function GeoStylePickerSet({ styles, theme }: StylePickerSetProps) {
 				items={STYLES.geo}
 				value={geo}
 				onValueChange={handleValueChange}
-			/>
+			/> */}
 		</AnnotatorUiToolbar>
 	)
 }

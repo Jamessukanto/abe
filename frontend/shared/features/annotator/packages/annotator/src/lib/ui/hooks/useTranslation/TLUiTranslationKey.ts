@@ -430,3 +430,4 @@ export type TLUiTranslationKey =
 	| 'ui.close'
 	| 'ui.checked'
 	| 'ui.unchecked'
+	| 'layer-panel.title'

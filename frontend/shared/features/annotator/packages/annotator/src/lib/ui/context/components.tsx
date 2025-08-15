@@ -40,6 +40,8 @@ import {
 	TLUiRichTextToolbarProps,
 } from '../components/Toolbar/DefaultRichTextToolbar'
 import { DefaultToolbar } from '../components/Toolbar/DefaultToolbar'
+import { DefaultLayerPanel } from '../components/DefaultLayerPanel'
+import { DefaultLayerTree } from '../components/LayerTree/DefaultLayerTree'
 import { DefaultVideoToolbar } from '../components/Toolbar/DefaultVideoToolbar'
 import { DefaultTopPanel } from '../components/TopPanel/DefaultTopPanel'
 import { DefaultZoomMenu, TLUiZoomMenuProps } from '../components/ZoomMenu/DefaultZoomMenu'
@@ -57,6 +59,9 @@ export interface TLUiComponents {
 	PageMenu?: ComponentType | null
 	NavigationPanel?: ComponentType | null
 	Toolbar?: ComponentType | null
+	LayerPanel?: ComponentType | null
+	LayerTree?: ComponentType | null
+	InspectorPanel?: ComponentType | null
 	RichTextToolbar?: ComponentType<TLUiRichTextToolbarProps> | null
 	ImageToolbar?: ComponentType | null
 	VideoToolbar?: ComponentType | null
@@ -104,6 +109,8 @@ export function AnnotatorUiComponentsProvider({
 					PageMenu: DefaultPageMenu,
 					NavigationPanel: DefaultNavigationPanel,
 					Toolbar: DefaultToolbar,
+					LayerPanel: DefaultLayerPanel,
+					LayerTree: DefaultLayerTree,
 					RichTextToolbar: DefaultRichTextToolbar,
 					ImageToolbar: DefaultImageToolbar,
 					VideoToolbar: DefaultVideoToolbar,

@@ -9,3 +9,5 @@ export interface TLUiButtonLabelProps {
 export function AnnotatorUiButtonLabel({ children }: TLUiButtonLabelProps) {
 	return <span className="tlui-button__label">{children}</span>
 }
+
+

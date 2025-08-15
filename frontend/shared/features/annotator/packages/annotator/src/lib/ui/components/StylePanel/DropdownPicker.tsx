@@ -57,6 +57,7 @@ function DropdownPickerInner<T extends string>({
 
 	const popoverId = `style panel ${id}`
 	return (
+		
 		<AnnotatorUiPopover id={popoverId} open={isOpen} onOpenChange={setIsOpen}>
 			<AnnotatorUiPopoverTrigger>
 				<AnnotatorUiToolbarButton

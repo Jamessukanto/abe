@@ -203,7 +203,7 @@
 
 /* --------------------- Editor --------------------- */
 
-.tlui-layout__top {
+.tlui-layout__canvas__inner {
 	display: grid;
 	grid-template-columns: 1fr auto;
 	height: fit-content;
@@ -212,16 +212,6 @@
 	min-width: 0;
 	overflow: hidden;
 	gap: 12px;
-}
-
-.tlui-layout__top__left {
-	grid-row: 1;
-	grid-column: 1;
-	max-width: 100%;
-	min-width: 0px;
-	height: auto;
-	overflow: hidden;
-	position: relative;
 }
 
 .tlui-layout__top__right {
@@ -233,11 +223,17 @@
 	max-width: 100%;
 	min-width: 0px;
 	overflow: hidden;
+
 }
 
-.tlui-page-menu__trigger {
-	width: fit-content;
-	max-width: 128px;
+.tlui-layout__top__left {
+	grid-row: 1;
+	grid-column: 1;
+	max-width: 100%;
+	min-width: 0px;
+	height: auto;
+	overflow: hidden;
+	position: relative;
 }
 
 @media (min-width: 640px) {

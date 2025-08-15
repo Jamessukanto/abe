@@ -58,7 +58,6 @@ export {
 	type TLBindingCreate,
 	type TLBindingId,
 	type TLBindingUpdate,
-	type TLDefaultBinding,
 	type TLUnknownBinding,
 } from './records/TLBinding'
 export { CameraRecordType, type TLCamera, type TLCameraId } from './records/TLCamera'

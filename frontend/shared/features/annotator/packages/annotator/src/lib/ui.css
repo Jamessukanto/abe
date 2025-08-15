@@ -10,6 +10,32 @@
 	--layer-cursor: 700;
 	--layer-header-footer: 999;
 	--layer-following-indicator: 1000;
+
+	/* Font sizes */
+	--font-size-xs: 10px;
+	--font-size-sm: 12px;
+	--font-size-md: 14px;
+	--font-size-lg: 16px;
+	--font-size-xl: 24px;
+
+	/* Font weights */
+	--font-weight-normal: 400;
+	--font-weight-medium: 500;
+	--font-weight-semibold: 600;
+	--font-weight-bold: 700;
+	--font-weight-extrabold: 800;
+
+	/* Spacing */
+	--space-1: 2px;
+	--space-2: 4px;
+	--space-3: 8px;
+	--space-4: 12px;
+	--space-5: 16px;
+	--space-6: 20px;
+	--space-7: 28px;
+	--space-8: 32px;
+	--space-9: 64px;
+	--space-10: 72px;
 }
 
 /* Button */
@@ -325,7 +351,7 @@
 .tlui-layout {
 	position: relative;
 	display: grid;
-	grid-template-columns: 1fr;
+	grid-template-columns: minmax(0, 3fr) 360px;
 	grid-template-rows: minmax(0px, 1fr) auto;
 	grid-auto-rows: auto;
 	height: 100%;
@@ -345,7 +371,24 @@
 	text-rendering: optimizeLegibility;
 }
 
-.tlui-layout__top {
+.tlui-layout__right {
+	grid-column: 2;
+	grid-row: 1;
+	display: flex;
+	flex-direction: column;
+	align-items: flex-start;
+	min-width: 0px;
+	justify-content: space-between;
+}
+
+.tlui-layout__canvas__outer {
+	justify-content:space-between;
+	display: flex;
+	flex-direction: column;
+}
+
+
+.tlui-layout__canvas__inner {
 	grid-column: 1;
 	grid-row: 1;
 	display: flex;
@@ -709,6 +752,7 @@
 	}
 }
 
+
 /* ------------------- Page Select ------------------ */
 
 .tlui-page-menu__wrapper {
@@ -721,7 +765,8 @@
 }
 
 .tlui-page-menu__trigger {
-	width: auto;
+	width: fit-content;
+	max-width: 128px;
 }
 
 .tlui-page-menu__header {
@@ -766,19 +811,24 @@
 	position: relative;
 }
 
-.tlui-page_menu__item__submenu[data-isediting='true'] > .tlui-button[data-state='open'] {
-	opacity: 1;
-}
 
-@media (hover: hover) {
-	.tlui-page-menu__item:hover > .tlui-page_menu__item__submenu > .tlui-button {
-		opacity: 1;
-	}
-}
+
+
+
+
+
+
+
+
+
 
 .tlui-page-menu__item:nth-of-type(n + 2) {
 	margin-top: -4px;
 }
+
+
+
+
 
 .tlui-page-menu__item__button {
 	width: 100%;
@@ -827,6 +877,13 @@
 	color: var(--color-text);
 }
 
+.tlui-page-menu__item__button .tlui-button__icon {
+	margin-right: 4px;
+}
+
+
+
+
 .tlui-page_menu__item__sortable {
 	position: absolute;
 	top: 0px;
@@ -867,6 +924,28 @@
 	cursor: grabbing;
 }
 
+
+
+
+
+
+
+.tlui-page_menu__item__submenu[data-isediting='true'] > .tlui-button[data-state='open'] {
+	opacity: 1;
+}
+
+@media (hover: hover) {
+	.tlui-page-menu__item:hover > .tlui-page_menu__item__submenu > .tlui-button {
+		opacity: 1;
+	}
+}
+
+.tlui-page_menu__item__sortable:focus-visible > .tlui-page_menu__item__submenu > .tlui-button,
+/* Show submenu when hovering anywhere over the sortable page item */
+.tlui-page_menu__item__sortable:hover > .tlui-page_menu__item__submenu > .tlui-button {
+	opacity: 1;
+}
+
 .tlui-page-menu__item__input {
 	margin-left: 12px;
 	height: 100%;
@@ -891,13 +970,13 @@
 .tlui-page_menu__item__submenu > .tlui-button {
 	opacity: 0;
 }
-
-.tlui-page_menu__item__sortable:focus-visible > .tlui-page_menu__item__submenu > .tlui-button,
 .tlui-page_menu__item__submenu[data-isediting='true'],
 .tlui-page_menu__item__submenu > .tlui-button[data-state='open'],
 .tlui-page_menu__item__submenu > .tlui-button:focus-visible {
 	opacity: 1;
 }
+
+
 
 .tlui-page_menu__item__submenu > .tlui-button[data-state='open']::after {
 	background: linear-gradient(90deg, rgba(144, 144, 144, 0) 0%, var(--color-muted-2) 100%);
@@ -917,14 +996,6 @@
 	}
 }
 
-.tlui-button__icon {
-	padding: 0px;
-}
-
-.tlui-page-menu__item__button .tlui-button__icon {
-	margin-right: 4px;
-}
-
 @media (hover: hover) {
 	.tlui-page_menu__item__submenu[data-isediting='true'] > .tlui-button {
 		opacity: 0;
@@ -934,6 +1005,32 @@
 		opacity: 1;
 	}
 }
+
+.tlui-layer-tree__item__sortable:focus-visible > .tlui-page_menu__item__submenu > .tlui-button,
+/* Show submenu when hovering anywhere over the sortable page item */
+.tlui-layer-tree__item__sortable:hover > .tlui-page_menu__item__submenu > .tlui-button {
+	opacity: 1;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+.tlui-button__icon {
+	padding: 0px;
+}
+
+.tlui-page-menu__item__button .tlui-button__icon {
+	margin-right: 4px;
+}
+
 
 /* -------------- Skip to main content -------------- */
 
@@ -969,6 +1066,346 @@
 	animation-delay: 2s;
 	animation-fill-mode: forwards;
 }
+
+
+/* ------------------- Layer panel ------------------ */
+
+.tlui-layer-panel__wrapper {
+	box-shadow: var(--shadow-2);
+	pointer-events: all;
+	background-color: var(--color-panel);
+	height: 100%;
+	touch-action: auto;
+	overscroll-behavior: none;
+	overflow-y: auto;
+	overflow-x: hidden;
+	color: var(--color-text);
+}
+
+.tlui-layer-panel__header {
+	display: flex;
+	align-items: center;
+	padding: var(--space-7) var(--space-6) var(--space-5);
+	border-bottom: 1px solid var(--color-divider);
+	/* flexShrink: 0 */
+	position: sticky;
+	z-index: 10;
+}
+
+.tlui-layer-panel__header__title {
+	font-size: var(--font-size-md);
+	font-weight: var(--font-weight-semibold);
+	color: var(--color-text-2);
+
+}
+
+/* if the layer panel is the only child (ie no share menu), increase the margin */
+.tlui-layer-panel__wrapper:only-child {
+	margin-top: 0px;
+}
+
+.tlui-layer-panel {
+	position: relative;
+	z-index: var(--layer-panels);
+	pointer-events: all;
+	width: 360px;
+	max-width: 360px;
+}
+
+.tlui-layer-panel::-webkit-scrollbar {
+	display: none;
+}
+
+.tlui-layer-panel .tlui-button.select {
+	width: 100%;
+}
+
+.tlui-layer-panel__section {
+	display: flex;
+	position: relative;
+	flex-direction: column;
+}
+
+.tlui-layer-panel__section:nth-of-type(n + 2):not(:last-child) {
+	border-bottom: 1px solid var(--color-divider);
+}
+
+.tlui-layer-panel__section:empty {
+	display: none;
+}
+
+.tlui-layer-panel__section__common:not(:only-child) {
+	margin-bottom: 7px;
+	border-bottom: 1px solid var(--color-divider);
+}
+
+.tlui-layer-panel__row {
+	position: relative;
+	display: flex;
+	align-items: center;
+	min-height: 28px;
+	padding: 2px var(--space-3);
+	border-radius: var(--radius-2);
+	user-select: none;
+}
+
+.tlui-layer-panel__row:hover {
+	background: var(--color-muted-2);
+}
+
+.tlui-layer-panel__row[draggable='true'] { cursor: grab; }
+.tlui-layer-panel__row[draggable='true']:active { cursor: grabbing; }
+
+.tlui-layer-panel__row[data-selected] {
+	background: var(--color-muted-1);
+	box-shadow: inset 0 0 0 1px var(--color-divider);
+}
+
+.tlui-layer-panel__row[data-drop='above']::before,
+.tlui-layer-panel__row[data-drop='below']::after {
+	content: '';
+	position: absolute;
+	left: var(--space-3);
+	right: var(--space-3);
+	height: 2px;
+	background: var(--color-primary);
+	border-radius: 1px;
+}
+.tlui-layer-panel__row[data-drop='above']::before { top: 0; }
+.tlui-layer-panel__row[data-drop='below']::after { bottom: 0; }
+
+.tlui-layer-panel__row[data-drop='inside'] {
+	background: var(--color-muted-2);
+	box-shadow: inset 0 0 0 1px var(--color-primary);
+}
+/* Only really used for the alignment picker */
+.tlui-layer-panel__row__extra-button {
+	margin-left: -2px;
+}
+
+.tlui-layer-panel__double-select-picker {
+	display: flex;
+	grid-template-columns: 1fr auto;
+	align-items: center;
+	padding-left: var(--space-4);
+	color: var(--color-text-1);
+	font-size: 12px;
+}
+
+.tlui-layer-panel__double-select-picker-label {
+	text-overflow: ellipsis;
+	overflow: hidden;
+	white-space: nowrap;
+	flex-grow: 2;
+	max-width: 100%;
+}
+
+.tlui-layer-panel .tlui-button[data-state='open']::after {
+	opacity: 1;
+	background: linear-gradient(270deg, rgba(144, 144, 144, 0) 0%, var(--color-muted-2) 100%);
+}
+
+@media (hover: hover) {
+	.tlui-layer-panel .tlui-button[data-state='open']:not(:hover)::after {
+		opacity: 1;
+		background: linear-gradient(270deg, rgba(144, 144, 144, 0) 0%, var(--color-muted-2) 100%);
+	}
+}
+
+
+/* ------------------- Layer Select ------------------ */
+
+.tlui-layer-tree__item__sortable {
+	position: absolute;
+	top: 0px;
+	left: 0px;
+	width: 100%;
+	height: fit-content;
+	display: flex;
+	flex-direction: row;
+	align-items: center;
+	overflow: hidden;
+	z-index: var(--layer-above);
+}
+
+/* .tlui-layer-tree__item__sortable:hover {
+    background-color: var(--color-muted-2);
+    border-radius: var(--radius-2);
+    padding: 0;
+    margin: 0;
+} */
+
+/* .tlui-layer-tree__item__sortable__title {
+	flex: 1;
+}
+
+.tlui-layer-tree__item__sortable__title > .tlui-input__wrapper {
+	height: 100%;
+} */
+
+.tlui-layer-tree__item__sortable:focus-visible {
+	z-index: var(--layer-focused-input);
+}
+
+::-webkit-meter-even-less-good-value
+
+
+/* ------- */
+
+
+.tlui-layer-tree__item__button {
+	width: 100%;
+}
+
+.tlui-layer-tree__item__button:focus::after {
+	background-color: var(--color-muted-1);
+	opacity: 1;
+}
+
+/* Selected state - persists regardless of focus */
+.tlui-layer-tree__item__button--selected::after {
+	background-color: var(--color-muted-1);
+	opacity: 1;
+}
+
+.tlui-layer-tree__item__button:not(:only-child) {
+	flex-grow: 2;
+	margin: 0px;
+}
+
+.tlui-layer-tree__item__button > span {
+	display: block;
+	flex-grow: 2;
+	text-align: left;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	white-space: nowrap;
+}
+
+.tlui-layer-tree__item__button > span {
+	padding-right: calc(40px - 12px);
+}
+
+@media (hover: hover) {
+	.tlui-layer-tree__item__button > span {
+		padding-right: 0px;
+	}
+
+	.tlui-layer-tree__item:hover > .tlui-layer-tree__item__button > span {
+		padding-right: calc(40px - 12px);
+	}
+}
+
+.tlui-layer-tree__item__button__checkbox {
+	padding-left: 35px;
+}
+
+.tlui-layer-tree__item__button__check {
+	position: absolute;
+	left: 0px;
+	width: 24px;
+	padding-left: 10px;
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	color: var(--color-text);
+}
+
+.tlui-layer-tree__item__button .tlui-button__icon {
+	margin-right: 4px;
+}
+
+/* ---- layer tree item submenu  */
+
+
+.tlui-layer-tree__item__submenu[data-isediting='true'] > .tlui-button[data-state='open'] {
+	opacity: 1;
+}
+
+@media (hover: hover) {
+	.tlui-layer-tree__item:hover > .tlui-layer-tree__item__submenu > .tlui-button {
+		opacity: 1;
+	}
+}
+
+.tlui-layer-tree__item__sortable:focus-visible > .tlui-layer-tree__item__submenu > .tlui-button,
+/* Show submenu when hovering anywhere over the sortable page item */
+.tlui-layer-tree__item__sortable:hover > .tlui-layer-tree__item__submenu > .tlui-button {
+	opacity: 1;
+}
+
+.tlui-layer-tree__item__input {
+	margin-left: 12px;
+	height: 100%;
+}
+
+/* The more menu has complex CSS here: */
+/* If the user can hover, then visible but opacity zero until hover */
+/* If the user cannot hover, then not displayed unless editing, and then opacity 1 */
+
+.tlui-layer-tree__item__submenu {
+	pointer-events: all;
+	position: absolute;
+	right: 0px;
+	top: 0px;
+	height: 100%;
+	cursor: pointer;
+	margin: 0px;
+	margin-left: -2px;
+	z-index: 10;
+}
+
+.tlui-layer-tree__item__submenu > .tlui-button {
+	opacity: 0;
+}
+.tlui-layer-tree__item__submenu[data-isediting='true'],
+.tlui-layer-tree__item__submenu > .tlui-button[data-state='open'],
+.tlui-layer-tree__item__submenu > .tlui-button:focus-visible {
+	opacity: 1;
+}
+
+
+
+.tlui-layer-tree__item__submenu > .tlui-button[data-state='open']::after {
+	background: linear-gradient(90deg, rgba(144, 144, 144, 0) 0%, var(--color-muted-2) 100%);
+	opacity: 1;
+}
+
+@media (hover: hover) {
+	.tlui-layer-tree__item__submenu > .tlui-button[data-state='open']:not(:hover)::after {
+		background: linear-gradient(90deg, rgba(144, 144, 144, 0) 0%, var(--color-muted-2) 100%);
+		opacity: 1;
+	}
+}
+
+@media (any-pointer: coarse) {
+	.tlui-layer-tree__item__submenu > .tlui-button {
+		opacity: 1;
+	}
+}
+
+@media (hover: hover) {
+	.tlui-layer-tree__item__submenu[data-isediting='true'] > .tlui-button {
+		opacity: 0;
+	}
+
+	.tlui-layer-tree__item__submenu:hover > .tlui-button {
+		opacity: 1;
+	}
+}
+
+.tlui-layer-tree__item__sortable:focus-visible > .tlui-layer-tree__item__submenu > .tlui-button,
+/* Show submenu when hovering anywhere over the sortable page item */
+.tlui-layer-tree__item__sortable:hover > .tlui-layer-tree__item__submenu > .tlui-button {
+	opacity: 1;
+}
+
+
+
+
+
+
+
 
 /* ------------------- Style panel ------------------ */
 

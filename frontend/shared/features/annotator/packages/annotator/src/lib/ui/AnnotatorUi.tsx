@@ -104,6 +104,8 @@ const AnnotatorUiContent = React.memo(function AnnotatorUi() {
 		MenuPanel,
 		StylePanel,
 		Toolbar,
+		LayerPanel,
+		InspectorPanel,
 		HelpMenu,
 		NavigationPanel,
 		HelperButtons,
@@ -172,7 +174,7 @@ const AnnotatorUiContent = React.memo(function AnnotatorUi() {
 		>
 			<SkipToMainContent />
 			{isFocusMode ? (
-				<div className="tlui-layout__top">
+				<div className="tlui-layout__canvas__inner">
 					<AnnotatorUiButton
 						type="icon"
 						className="tlui-focus-button"
@@ -184,27 +186,44 @@ const AnnotatorUiContent = React.memo(function AnnotatorUi() {
 				</div>
 			) : (
 				<>
-					<div className="tlui-layout__top">
-						<div className="tlui-layout__top__left">
-							{MenuPanel && <MenuPanel />}
-							{HelperButtons && <HelperButtons />}
+					<div className="tlui-layout__canvas__outer">
+
+						<div className="tlui-layout__canvas__inner">
+
+							<div className="tlui-layout__top__left">
+								{/* {TopPanel && <TopPanel />} */}
+								{/* {MenuPanel && <MenuPanel />} */}
+								{HelperButtons && <HelperButtons />}
+							</div>
+
+							<div className="tlui-layout__top__right">
+								{/* {SharePanel && <SharePanel />} */}
+								{StylePanel && breakpoint >= PORTRAIT_BREAKPOINT.TABLET_SM && !isReadonlyMode && (
+									<StylePanel />
+								)}
+							</div>
+
 						</div>
-						<div className="tlui-layout__top__center">{TopPanel && <TopPanel />}</div>
-						<div className="tlui-layout__top__right">
-							{SharePanel && <SharePanel />}
-							{StylePanel && breakpoint >= PORTRAIT_BREAKPOINT.TABLET_SM && !isReadonlyMode && (
-								<StylePanel />
-							)}
+
+						<div className="tlui-layout__bottom">
+							<div className="tlui-layout__bottom__main">
+								{NavigationPanel && <NavigationPanel />}
+								{Toolbar && <Toolbar />}
+								{HelpMenu && <HelpMenu />}
+							</div>
+							{isDebugMode && DebugPanel && <DebugPanel />}
+							{A11y && <A11y />}
 						</div>
+
 					</div>
-					<div className="tlui-layout__bottom">
-						<div className="tlui-layout__bottom__main">
-							{NavigationPanel && <NavigationPanel />}
-							{Toolbar && <Toolbar />}
-							{HelpMenu && <HelpMenu />}
-						</div>
-						{isDebugMode && DebugPanel && <DebugPanel />}
-						{A11y && <A11y />}
+
+					<div 
+						className="tlui-layout__right" 
+						style={{backgroundColor: 'red'}}
+					>
+						{LayerPanel && <LayerPanel />}
+						{/* {InspectorPanel && <InspectorPanel />} */}
+						<div style={{backgroundColor: 'red'}}>lorem</div>
 					</div>
 				</>
 			)}

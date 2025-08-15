@@ -446,4 +446,5 @@ export const DEFAULT_TRANSLATION = {
 	'ui.close': 'Close',
 	'ui.checked': 'Checked',
 	'ui.unchecked': 'Unchecked',
+	'layer-panel.title': 'All Annotations',
 }

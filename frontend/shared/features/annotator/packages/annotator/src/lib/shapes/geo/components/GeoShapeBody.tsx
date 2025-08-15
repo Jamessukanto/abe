@@ -20,12 +20,6 @@ export function GeoShapeBody({
 	const editor = useEditor()
 	const zoom = useValue('zoomLevel', () => editor.getZoomLevel(), [editor])
 	const strokeWidth = STROKE_SIZES[size] * scaleToUse / (zoom || 1)
-	console.log('\n\n\n\n GOGOGO')
-	console.log('STROKE_SIZES[size]', STROKE_SIZES[size])
-	console.log('scaleToUse', scaleToUse)
-	console.log('strokeWidth', strokeWidth)
-	
-	// const strokeWidth = STROKE_SIZES[size] * scaleToUse
 
 	const path = getGeoShapePath(shape)
 	const fillPath = path.toD({ onlyFilled: true })
