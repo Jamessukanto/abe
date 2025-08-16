@@ -8,7 +8,7 @@
 
 it.todo('Groups all selected shapes when multiple shapes are selected.')
 
-it.todo('Does nothing if only one shape is selected')
+it.todo('Groups single shape when only one shape is selected')
 
 describe('When creating a group...', () => {
 	// - Root

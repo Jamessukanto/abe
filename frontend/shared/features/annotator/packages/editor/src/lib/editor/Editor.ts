@@ -8160,7 +8160,7 @@ export class Editor extends EventEmitter<TLEventMap> {
 				? (shapes as TLShapeId[])
 				: (shapes.map((s) => (s as TLShape).id) as TLShapeId[])
 
-		if (ids.length <= 1) return this
+		if (ids.length < 1) return this
 
 		const shapesToGroup = compact(
 			(this._shouldIgnoreShapeLock ? ids : this._getUnlockedShapeIds(ids)).map((id) =>

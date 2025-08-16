@@ -94,13 +94,15 @@ export class GroupShapeUtil extends ShapeUtil<TLGroupShape> {
 			}
 			this.editor.deleteShapes([group.id])
 			return
-		} else if (children.length === 1) {
-			if (this.editor.getCurrentPageState().focusedGroupId === group.id) {
-				this.editor.popFocusedGroupId()
-			}
-			this.editor.reparentShapes(children, group.parentId)
-			this.editor.deleteShapes([group.id])
-			return
+		// } else if (children.length === 1) {
+		// 	if (this.editor.getCurrentPageState().focusedGroupId === group.id) {
+		// 		this.editor.popFocusedGroupId()
+		// 	}
+		// 	this.editor.reparentShapes(children, group.parentId)
+		// 	this.editor.deleteShapes([group.id])
+		// 	return
 		}
+		// Removed auto-ungrouping when only 1 child remains
+		// This allows groups to persist even with a single child, preventing unwanted flattening
 	}
 }

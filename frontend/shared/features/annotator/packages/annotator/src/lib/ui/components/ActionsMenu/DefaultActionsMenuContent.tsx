@@ -142,9 +142,9 @@ export function GroupOrUngroupMenuItem() {
 /** @public @react */
 
 export function GroupMenuItem() {
-	const twoSelected = useUnlockedSelectedShapesCount(2)
+	const oneOrMoreSelected = useUnlockedSelectedShapesCount(1)
 	const isInSelectState = useIsInSelectState()
-	const enabled = twoSelected && isInSelectState
+	const enabled = oneOrMoreSelected && isInSelectState
 
 	return <AnnotatorUiMenuActionItem actionId="group" disabled={!enabled} />
 }

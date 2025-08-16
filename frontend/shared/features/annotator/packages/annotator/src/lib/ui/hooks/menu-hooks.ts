@@ -41,7 +41,7 @@ export const useAllowGroup = () => {
 		() => {
 			const selectedShapes = editor.getSelectedShapes()
 
-			if (selectedShapes.length < 2) return false
+			if (selectedShapes.length < 1) return false
 
 			return true
 		},

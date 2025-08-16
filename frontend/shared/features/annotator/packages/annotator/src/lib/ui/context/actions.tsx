@@ -406,14 +406,19 @@ export function ActionsProvider({ overrides, children }: ActionsProviderProps) {
 					if (mustGoBackToSelectToolFirst()) return
 
 					trackEvent('group-shapes', { source })
-					const onlySelectedShape = editor.getOnlySelectedShape()
-					if (onlySelectedShape && editor.isShapeOfType<TLGroupShape>(onlySelectedShape, 'group')) {
-						editor.markHistoryStoppingPoint('ungroup')
-						editor.ungroupShapes(editor.getSelectedShapeIds())
-					} else {
-						editor.markHistoryStoppingPoint('group')
-						editor.groupShapes(editor.getSelectedShapeIds())
-					}
+
+                    // const onlySelectedShape = editor.getOnlySelectedShape()
+                    // if (onlySelectedShape && editor.isShapeOfType<TLGroupShape>(onlySelectedShape, 'group')) {
+                    //     editor.markHistoryStoppingPoint('ungroup')
+                    //     editor.ungroupShapes(editor.getSelectedShapeIds())
+                    // } else {
+                    //     editor.markHistoryStoppingPoint('group')
+                    //     editor.groupShapes(editor.getSelectedShapeIds())
+                    // }
+
+					// Always group the selected shapes, even if they're already groups
+					editor.markHistoryStoppingPoint('group')
+					editor.groupShapes(editor.getSelectedShapeIds())
 				},
 			},
 			{
