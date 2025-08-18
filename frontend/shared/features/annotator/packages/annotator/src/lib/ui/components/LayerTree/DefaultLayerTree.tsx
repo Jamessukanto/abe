@@ -208,7 +208,7 @@ export const DefaultLayerTree = memo(function DefaultLayerTree() {
 					isSelected={selectedShapeIds.includes(shape.id)}
 					depth={0}
 					expandedGroupsRef={expandedGroupsRef}
-					rowIndex={index}
+					index={index}
 					y={position.y}
 					offsetY={position.offsetY}
 					handlePointerDown={handlePointerDown}
@@ -218,8 +218,10 @@ export const DefaultLayerTree = memo(function DefaultLayerTree() {
 					listSize={childrenShapes.length}
 					itemHeight={ITEM_HEIGHT}
 				/>
+
 			})}
 		</div>
+
 	)
 })
 
