@@ -1,4 +1,4 @@
-import { PageRecordType, TLPageId, track, useEditor } from '@annotator/editor'
+import { PageRecordType, TLShape, TLShapeId, track, useEditor } from '@annotator/editor'
 import { useCallback } from 'react'
 import { useUiEvents } from '../../context/events'
 import { useTranslation } from '../../hooks/useTranslation/useTranslation'
@@ -12,13 +12,14 @@ import {
 import { AnnotatorUiMenuContextProvider } from '../primitives/menus/AnnotatorUiMenuContext'
 import { AnnotatorUiMenuGroup } from '../primitives/menus/AnnotatorUiMenuGroup'
 import { AnnotatorUiMenuItem } from '../primitives/menus/AnnotatorUiMenuItem'
-import { onMovePage } from './edit-pages-shared'
+import { onMoveShape } from './edit-shapes-shared'
 
 /** @public */
 export interface LayerItemSubmenuProps {
 	index: number
-	item: { id: string; name: string }
-	listSize: number
+	item: TLShape
+	// item: { id: string; name: string }
+	listSize: number 
 	onRename?(): void
 }
 
@@ -31,29 +32,30 @@ export const LayerItemSubmenu = track(function LayerItemSubmenu({
 }: LayerItemSubmenuProps) {
 	const editor = useEditor()
 	const msg = useTranslation()
+
 	const pages = editor.getPages()
 	const trackEvent = useUiEvents()
 
-	const onDuplicate = useCallback(() => {
-		editor.markHistoryStoppingPoint('creating page')
-		const newId = PageRecordType.createId()
-		editor.duplicatePage(item.id as TLPageId, newId)
-		trackEvent('duplicate-page', { source: 'page-menu' })
-	}, [editor, item, trackEvent])
+	// const onDuplicate = useCallback(() => {
+	// 	editor.markHistoryStoppingPoint('creating page')
+	// 	const newId = PageRecordType.createId()
+	// 	editor.duplicatePage(item.id as TLShapeId, newId)
+	// 	trackEvent('duplicate-page', { source: 'page-menu' })
+	// }, [editor, item, trackEvent])
 
-	const onMoveUp = useCallback(() => {
-		onMovePage(editor, item.id as TLPageId, index, index - 1, trackEvent)
-	}, [editor, item, index, trackEvent])
+	// const onMoveUp = useCallback(() => {
+	// 	onMoveShape(editor, item.id as TLShapeId, index, index - 1, trackEvent)
+	// }, [editor, item, index, trackEvent])
 
-	const onMoveDown = useCallback(() => {
-		onMovePage(editor, item.id as TLPageId, index, index + 1, trackEvent)
-	}, [editor, item, index, trackEvent])
+	// const onMoveDown = useCallback(() => {
+	// 	onMoveShape(editor, item.id as TLShapeId, index, index + 1, trackEvent)
+	// }, [editor, item, index, trackEvent])
 
-	const onDelete = useCallback(() => {
-		editor.markHistoryStoppingPoint('deleting page')
-		editor.deletePage(item.id as TLPageId)
-		trackEvent('delete-page', { source: 'page-menu' })
-	}, [editor, item, trackEvent])
+	// const onDelete = useCallback(() => {
+	// 	editor.markHistoryStoppingPoint('deleting page')
+	// 	editor.deletePage(item.id as TLShapeId)
+	// 	trackEvent('delete-page', { source: 'page-menu' })
+	// }, [editor, item, trackEvent])
 
 	return (
 		<AnnotatorUiDropdownMenuRoot id={`page item submenu ${index}`}>
@@ -68,7 +70,7 @@ export const LayerItemSubmenu = track(function LayerItemSubmenu({
 						{onRename && (
 							<AnnotatorUiMenuItem id="rename" label="page-menu.submenu.rename" onSelect={onRename} />
 						)}
-						<AnnotatorUiMenuItem
+						{/* <AnnotatorUiMenuItem
 							id="duplicate"
 							label="page-menu.submenu.duplicate-page"
 							onSelect={onDuplicate}
@@ -87,11 +89,12 @@ export const LayerItemSubmenu = track(function LayerItemSubmenu({
 								label="page-menu.submenu.move-down"
 								onSelect={onMoveDown}
 							/>
-						)}
+						)} */}
 					</AnnotatorUiMenuGroup>
 					{listSize > 1 && (
 						<AnnotatorUiMenuGroup id="delete">
-							<AnnotatorUiMenuItem id="delete" onSelect={onDelete} label="page-menu.submenu.delete" />
+							<AnnotatorUiMenuItem id="delete" onSelect={() => {}} label="page-menu.submenu.delete" />
+							{/* <AnnotatorUiMenuItem id="delete" onSelect={onDelete} label="page-menu.submenu.delete" /> */}
 						</AnnotatorUiMenuGroup>
 					)}
 				</AnnotatorUiMenuContextProvider>

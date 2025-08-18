@@ -24,6 +24,7 @@ export type TLUiEventSource =
 	| 'rich-text-menu'
 	| 'image-toolbar'
 	| 'video-toolbar'
+	| 'layer-tree'
 	| 'unknown'
 
 /** @public */
@@ -37,6 +38,8 @@ export interface TLUiEventMap {
 	'delete-page': null
 	'duplicate-page': null
 	'move-page': null
+	'move-shape': null
+	'rename-shape': null
 	'new-page': null
 	'rename-page': null
 	'move-to-page': null

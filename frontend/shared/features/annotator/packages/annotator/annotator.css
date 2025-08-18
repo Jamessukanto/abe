@@ -2494,7 +2494,6 @@ it from receiving any pointer events or affecting the cursor. */
 	max-height: 100%;
 	overflow-x: hidden;
 	overflow-y: auto;
-	touch-action: auto;
 }
 
 .tlui-page-menu__item {
@@ -2907,13 +2906,9 @@ it from receiving any pointer events or affecting the cursor. */
 
 .tlui-layer-tree__item__sortable {
 	position: absolute;
-	top: 0px;
-	left: 0px;
-	width: 100%;
 	height: fit-content;
 	display: flex;
 	flex-direction: row;
-	align-items: center;
 	overflow: hidden;
 	z-index: var(--layer-above);
 }

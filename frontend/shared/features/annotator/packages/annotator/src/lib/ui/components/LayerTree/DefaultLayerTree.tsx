@@ -1,42 +1,43 @@
 import {
 	PageRecordType,
-	TLPageId,
+	TLShapeId,
+	TLShape,
+	TLGroupShape,
 	releasePointerCapture,
 	setPointerCapture,
 	stopEventPropagation,
 	tlenv,
 	useEditor,
 	useValue,
+	useRefState,
 } from '@annotator/editor'
-import { memo, useCallback, useEffect, useLayoutEffect, useRef, useState } from 'react'
+import { memo, useCallback, useLayoutEffect, useRef, useState } from 'react'
 import { useUiEvents } from '../../context/events'
 import { useTranslation } from '../../hooks/useTranslation/useTranslation'
 
 import { LayerTreeRow } from './LayerTreeRow'
-import { onMovePage } from './edit-pages-shared'
+import { onMoveShape } from './edit-shapes-shared'
 import classNames from 'classnames'
+
+const ITEM_HEIGHT = 36
 
 
 /** @public @react */
 export const DefaultLayerTree = memo(function DefaultLayerTree() {
-	const ITEM_HEIGHT = 36
-
 	const editor = useEditor()
 	const msg = useTranslation()
 	const trackEvent = useUiEvents()
-	const rSortableContainer = useRef<HTMLDivElement>(null)
 
-	const pages = useValue('pages', () => editor.getPages(), [editor])
-	const currentPageId = useValue('currentPageId', () => editor.getCurrentPageId(), [editor])
-	const [editingPageId, setEditingPageId] = useState<string | null>(null)
-
-	const startEditingPage = useCallback((pageId: string) => { 
-		setEditingPageId(pageId) 
-	}, [])
-
-	const stopEditingPage = useCallback(() => { 
-		setEditingPageId(null) 
-	}, [])
+	const selectedShapeIds = useValue('selectedShapeIds', () => 
+		editor.getSelectedShapeIds(), [editor]
+	)
+	const currentPageId = editor.getCurrentPageId()
+	const childrenShapes = useValue('childrenShapes', () => {
+		return editor.getSortedChildIdsForParent(currentPageId)
+			.map(id => editor.getShape(id))
+			.filter((shape): shape is TLShape => shape !== undefined)
+			.reverse() // Reverse positions in array only, not z-index
+	}, [editor])
 
 	const rMutables = useRef({
 		isPointing: false,
@@ -47,60 +48,26 @@ export const DefaultLayerTree = memo(function DefaultLayerTree() {
 		dragIndex: 0,
 	})
 
-	const [sortablePositionItems, setSortablePositionItems] = useState(
-		Object.fromEntries(
-			pages.map((page, i) => [page.id, { y: i * ITEM_HEIGHT, offsetY: 0, isSelected: false }])
-		)
-	)
+	const expandedGroupsRef = useRef(new Set<TLShapeId>())
 
-	// Update the sortable position items when the pages change
+	const [sortablePositionItems, setSortablePositionItems] = useRefState<
+		Record<string, { y: number; offsetY: number }>
+	>({})
 	useLayoutEffect(() => {
 		setSortablePositionItems(
-			Object.fromEntries(
-				pages.map((page, i) => [page.id, { y: i * ITEM_HEIGHT, offsetY: 0, isSelected: false }])
-			)
+			Object.fromEntries(childrenShapes.map(
+				(shape, i) => [shape.id, { y: i * ITEM_HEIGHT, offsetY: 0 }]
+			))
 		)
-	}, [ITEM_HEIGHT, pages])
-
-	// Scroll the current page into view when the menu opens / when current page changes
-	useEffect(() => {
-		editor.timers.requestAnimationFrame(() => {
-			const elm = document.querySelector(`[data-pageid="${currentPageId}"]`) as HTMLDivElement
-
-			if (elm) {
-				elm.querySelector('button')?.focus()
-
-				const container = rSortableContainer.current
-				if (!container) return
-				// Scroll into view is slightly borked on iOS Safari
-
-				// if top of less than top cuttoff, scroll into view at top
-				const elmTopPosition = elm.offsetTop
-				const containerScrollTopPosition = container.scrollTop
-				if (elmTopPosition < containerScrollTopPosition) {
-					container.scrollTo({ top: elmTopPosition })
-				}
-				// if bottom position is greater than bottom cutoff, scroll into view at bottom
-				const elmBottomPosition = elmTopPosition + ITEM_HEIGHT
-				const containerScrollBottomPosition = container.scrollTop + container.offsetHeight
-				if (elmBottomPosition > containerScrollBottomPosition) {
-					container.scrollTo({ top: elmBottomPosition - container.offsetHeight })
-				}
-			}
-		})
-	}, [ITEM_HEIGHT, currentPageId, editor])
+	}, [ITEM_HEIGHT, childrenShapes])
 
 	const handlePointerDown = useCallback(
 		(e: React.PointerEvent<HTMLButtonElement>) => {
 			const { clientY, currentTarget } = e
-			const {
-				dataset: { id, index },
-			} = currentTarget
-
+			const { dataset: { id, index } } = currentTarget
 			if (!id || !index) return
 
 			const mut = rMutables.current
-
 			setPointerCapture(e.currentTarget, e)
 
 			mut.status = 'pointing'
@@ -109,9 +76,12 @@ export const DefaultLayerTree = memo(function DefaultLayerTree() {
 			const dragY = current.y
 
 			mut.startY = clientY
-			mut.startIndex = Math.max(0, Math.min(Math.round(dragY / ITEM_HEIGHT), pages.length - 1))
+			mut.startIndex = Math.max(0, Math.min(
+				Math.round(dragY / ITEM_HEIGHT),
+				childrenShapes.length - 1
+			))
 		},
-		[ITEM_HEIGHT, pages.length, sortablePositionItems]
+		[ITEM_HEIGHT, childrenShapes.length, sortablePositionItems]
 	)
 
 	const handlePointerMove = useCallback(
@@ -132,20 +102,21 @@ export const DefaultLayerTree = memo(function DefaultLayerTree() {
 
 				const { startIndex, pointing } = mut
 				const dragY = current.y + offsetY
-				const dragIndex = Math.max(0, Math.min(Math.round(dragY / ITEM_HEIGHT), pages.length - 1))
-
+				const dragIndex = Math.max(0, Math.min(
+					Math.round(dragY / ITEM_HEIGHT), childrenShapes.length - 1
+				))
 				const next = { ...sortablePositionItems }
 				next[pointing!.id] = {
 					y: current.y,
 					offsetY,
-					isSelected: true,
+					// isSelected: true,
 				}
 
 				if (dragIndex !== mut.dragIndex) {
 					mut.dragIndex = dragIndex
 
-					for (let i = 0; i < pages.length; i++) {
-						const item = pages[i]
+					for (let i = 0; i < childrenShapes.length; i++) {
+						const item = childrenShapes[i]
 						if (item.id === mut.pointing!.id) {
 							continue
 						}
@@ -169,15 +140,15 @@ export const DefaultLayerTree = memo(function DefaultLayerTree() {
 						}
 
 						if (y !== next[item.id].y) {
-							next[item.id] = { y, offsetY: 0, isSelected: true }
+							next[item.id] = { y, offsetY: 0 }
+							// next[item.id] = { y, offsetY: 0, isSelected: true }
 						}
 					}
 				}
-
 				setSortablePositionItems(next)
 			}
 		},
-		[ITEM_HEIGHT, pages, sortablePositionItems]
+		[ITEM_HEIGHT, childrenShapes, sortablePositionItems]
 	)
 
 	const handlePointerUp = useCallback(
@@ -186,67 +157,68 @@ export const DefaultLayerTree = memo(function DefaultLayerTree() {
 
 			if (mut.status === 'dragging') {
 				const { id, index } = mut.pointing!
-				onMovePage(editor, id as TLPageId, index, mut.dragIndex, trackEvent)
+				onMoveShape(editor, childrenShapes, id as TLShapeId, index, mut.dragIndex, trackEvent)
 			}
 
 			releasePointerCapture(e.currentTarget, e)
 			mut.status = 'idle'
+
+			editor.setSelectedShapes([mut.pointing!.id as TLShapeId])
 		},
-		[editor, trackEvent]
+		[editor, trackEvent, childrenShapes]
 	)
 
-	const changePage = useCallback(
-		(id: TLPageId) => {
-			editor.setCurrentPage(id)
-			trackEvent('change-page', { source: 'page-menu' })
+	const handleKeyDown = useCallback(
+		(e: React.KeyboardEvent<HTMLButtonElement>) => {
+			const mut = rMutables.current
+			if (e.key === 'Escape') {
+				if (mut.status === 'dragging') {
+					setSortablePositionItems(Object.fromEntries(
+						childrenShapes.map((shape, i) => [
+							shape.id,
+							{ y: i * ITEM_HEIGHT, offsetY: 0 },
+							// { y: i * ITEM_HEIGHT, offsetY: 0, isSelected: false },
+						])
+					))
+				}
+				mut.status = 'idle'
+			}
 		},
-		[editor, trackEvent]
-	)
-
-	const renamePage = useCallback(
-		(id: TLPageId, name: string) => {
-			editor.renamePage(id, name)
-			trackEvent('rename-page', { source: 'page-menu' })
-		},
-		[editor, trackEvent]
+		[ITEM_HEIGHT, childrenShapes]
 	)
 
 	return (
-		<div style={{ height: '100%', display: 'flex', flexDirection: 'column' }}>
+		<div
+			data-testid="page-menu.list"
+			className={classNames('tlui-layer-panel', 'tlui-page-menu__list')}
+			style={{
+				height: '100%'
+			}}
+		>
+			{childrenShapes.map((shape, index) => {
 
-			<div className="tlui-layer-panel__header">
-				<div className="tlui-layer-panel__header__title">{msg('layer-panel.title')}</div>
-			</div>
+				const position = sortablePositionItems[shape.id] ?? {
+					y: index * ITEM_HEIGHT,
+					offsetY: 0,
+				}
 
-			<div
-				// data-testid="page-menu.list"
-				className={classNames('tlui-layer-panel')}
-				// className={classNames('tlui-layer-panel', 'tlui-page-menu__list')}
-				style={{ height: ITEM_HEIGHT * pages.length + 4 }}
-				ref={rSortableContainer}
-			>
-				
-				{pages.map((page, index, ) => {
-					const position = sortablePositionItems[page.id] ?? {
-						position: index * 40,
-						offsetY: 0,
-					}
-					return <LayerTreeRow
-						page={page}
-						index={index}
-						position={position}
-						handlePointerDown={handlePointerDown}
-						handlePointerMove={handlePointerMove}
-						handlePointerUp={handlePointerUp}
-						changePage={changePage}
-						startEditingPage={startEditingPage}
-						stopEditingPage={stopEditingPage}
-						editingPageId={editingPageId as TLPageId | null}
-						listSize={pages.length}
-					/>
-				})}
-			</div>
-
+				return <LayerTreeRow
+					key={shape.id}
+					shapeId={shape.id}
+					isSelected={selectedShapeIds.includes(shape.id)}
+					depth={0}
+					expandedGroupsRef={expandedGroupsRef}
+					rowIndex={index}
+					y={position.y}
+					offsetY={position.offsetY}
+					handlePointerDown={handlePointerDown}
+					handlePointerMove={handlePointerMove}
+					handlePointerUp={handlePointerUp}
+					handleKeyDown={handleKeyDown}
+					listSize={childrenShapes.length}
+					itemHeight={ITEM_HEIGHT}
+				/>
+			})}
 		</div>
 	)
 })

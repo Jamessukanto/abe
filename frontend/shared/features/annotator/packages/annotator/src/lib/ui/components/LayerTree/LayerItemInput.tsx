@@ -1,4 +1,4 @@
-import { TLPageId, useEditor } from '@annotator/editor'
+import { TLShapeId, useEditor } from '@annotator/editor'
 import { useCallback, useRef } from 'react'
 import { useUiEvents } from '../../context/events'
 import { AnnotatorUiInput } from '../primitives/AnnotatorUiInput'
@@ -6,19 +6,22 @@ import { AnnotatorUiInput } from '../primitives/AnnotatorUiInput'
 /** @public */
 export interface LayerItemInputProps {
 	name: string
-	id: TLPageId
-	isCurrentPage: boolean
+	id: TLShapeId
+	// id: TLPageId
+	isCurrentLayer: boolean
 	onCancel(): void
 	onComplete?(): void
+	renameShape: (id: TLShapeId, name: string) => void
 }
 
 /** @public @react */
 export const LayerItemInput = function LayerItemInput({
 	name,
 	id,
-	isCurrentPage,
+	isCurrentLayer,
 	onCancel,
 	onComplete,
+	renameShape,
 }: LayerItemInputProps) {
 
 	const editor = useEditor()
@@ -30,10 +33,18 @@ export const LayerItemInput = function LayerItemInput({
 		rMark.current = editor.markHistoryStoppingPoint('rename page')
 	}, [editor])
 
+	// const handleChange = useCallback(
+	// 	(value: string) => {
+	// 		editor.renamePage(id, value || 'New Page')
+	// 		trackEvent('rename-page', { source: 'page-menu' })
+	// 	},
+	// 	[editor, id, trackEvent]
+	// )
+
 	const handleChange = useCallback(
 		(value: string) => {
-			editor.renamePage(id, value || 'New Page')
-			trackEvent('rename-page', { source: 'page-menu' })
+			renameShape(id, value || 'New Region')
+			// trackEvent('rename-shape', { source: 'page-menu' })
 		},
 		[editor, id, trackEvent]
 	)
@@ -56,7 +67,7 @@ export const LayerItemInput = function LayerItemInput({
 				onBlur={handleCancel}
 				onFocus={handleFocus}
 				shouldManuallyMaintainScrollPositionWhenFocused
-				autoFocus={isCurrentPage}
+				autoFocus={isCurrentLayer}
 				autoSelect
 			/>
 		</span>

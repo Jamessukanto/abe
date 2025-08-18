@@ -1,11 +1,15 @@
 import {
 	PageRecordType,
 	TLPageId,
+    TLShape,
+    TLGroupShape,
+    TLShapeId,
 	stopEventPropagation,
 	useEditor,
 	useValue,
+    useRefState,
 } from '@annotator/editor'
-import { memo, useCallback, useEffect, useLayoutEffect, useRef, useState } from 'react'
+import { memo, useCallback, useLayoutEffect, useRef, useState } from 'react'
 import { useUiEvents } from '../../context/events'
 import { useTranslation } from '../../hooks/useTranslation/useTranslation'
 import { AnnotatorUiButton } from '../primitives/Button/AnnotatorUiButton'
@@ -16,125 +20,243 @@ import { LayerItemInput } from './LayerItemInput'
 import { LayerItemSubmenu } from './LayerItemSubmenu'
 import classNames from 'classnames'
 
+
 export interface LayerTreeRowProps {
-	page: { id: TLPageId; name: string }
+	shapeId: TLShapeId
+    isSelected: boolean
+    depth: number
+    expandedGroupsRef: React.MutableRefObject<Set<TLShapeId>>
 	index: number
-	position: { y: number; offsetY: number }
+	y: number
+	offsetY: number
 	handlePointerDown: (e: React.PointerEvent<HTMLButtonElement>) => void
 	handlePointerMove: (e: React.PointerEvent<HTMLButtonElement>) => void
 	handlePointerUp: (e: React.PointerEvent<HTMLButtonElement>) => void
-	changePage: (id: TLPageId) => void
-	startEditingPage: (id: TLPageId) => void
-	stopEditingPage: () => void
-	editingPageId: TLPageId | null
+	handleKeyDown: (e: React.KeyboardEvent<HTMLButtonElement>) => void
 	listSize: number
+    itemHeight: number
 }
 
 /** @public @react */
 export function LayerTreeRow({ 
-	page,
+	shapeId,
+    isSelected,
+    depth,
+    expandedGroupsRef,
 	index,
-	position,
+	y,
+	offsetY,
 	handlePointerDown,
 	handlePointerMove,
 	handlePointerUp,
-	changePage,
-	startEditingPage,
-	stopEditingPage,
-	editingPageId,
+	handleKeyDown,
 	listSize,
+    itemHeight,
 }: LayerTreeRowProps) {
 	const msg = useTranslation()
 	const editor = useEditor()
-	const currentPageId = useValue('currentPageId', () => editor.getCurrentPageId(), [editor])
-	return (
-        <>
-            <div
-                key={page.id}
-                data-pageid={page.id}
-                data-testid="page-menu.item"
-                className="tlui-layer-tree__item__sortable"
-                style={{
-                    zIndex: page.id === currentPageId ? 888 : index,
-                    transform: `translate(0px, ${position.y + position.offsetY}px)`,
-                    top: 'auto',
-                }}
-            >
+    const trackEvent = useUiEvents()
 
-                {/* Tree row */}
-                <AnnotatorUiButton
-                    type="normal"
-                    className={classNames(
-                        "tlui-layer-tree__item__button",
-                        { "tlui-layer-tree__item__button--selected": page.id === currentPageId }
-                    )}
-                    tabIndex={-1}
-                    data-id={page.id}
-                    data-index={index}
-                    title={msg('page-menu.go-to-page')}
-                    onPointerDown={handlePointerDown}
-                    onPointerMove={handlePointerMove}
-                    onPointerUp={(e) => {
-                        handlePointerUp(e)
-                        changePage(page.id)
-                    }}
-                    onClick={() => {changePage(page.id)}}
-                    onDoubleClick={() => {
-                        // const name = window.prompt('Rename page', page.name)
-                        // if (name && name !== page.name) {
-                        // 	renamePage(page.id, name)
-                        // }
-                        startEditingPage(page.id)
-                        if (currentPageId !== page.id) {
-                            changePage(page.id)
-                        }
-                    }}
-                    onKeyDown={(e) => {
-                        if (e.key === 'Enter') {
-                            if (page.id === currentPageId) {
-                                startEditingPage(page.id)
-                                stopEventPropagation(e)
-                            }
-                        }
+    const shape = useValue('shape', () => editor.getShape(shapeId), [editor])
+    if (!shape) return null
+
+    const [shapeName, setShapeName] = useState((shape?.meta?.customName as string) ?? shapeId)
+	const [isEditingRow, setIsEditingRow] = useState(false)
+
+    ///////////////////////////// NEW /////////////////////////////////
+
+    const selectedShapeIds = useValue('selectedShapeIds', () => 
+		editor.getSelectedShapeIds(), [editor]
+	)
+	const childrenShapes = useValue('childrenShapes', () => {
+		// const currentPageId = editor.getCurrentPageId()
+		return editor.getSortedChildIdsForParent(shapeId)
+			.map(id => editor.getShape(id))
+			.filter((shape): shape is TLShape => shape !== undefined)
+			.reverse()
+	}, [editor])
+
+
+    const [ isExpanded, setIsExpanded ] = useState(expandedGroupsRef.current.has(shape.id))
+
+
+    const isGroup = editor.isShapeOfType<TLGroupShape>(shape, 'group')
+
+	const [sortablePositionItems, setSortablePositionItems] = useRefState<
+		Record<string, { y: number; offsetY: number }>
+	>({})
+	useLayoutEffect(() => {
+		setSortablePositionItems(
+			Object.fromEntries(childrenShapes.map(
+				(shape, i) => [shape.id, { y: i * itemHeight, offsetY: 0 }]
+			))
+		)
+	}, [itemHeight, childrenShapes])
+
+    //////////////////////////////////////////////////////////////
+
+	const handleExpandGroup = useCallback(
+		(e: React.PointerEvent<HTMLButtonElement>) => {
+			e.stopPropagation()
+            setIsExpanded((isExpanded) => !isExpanded)
+
+            expandedGroupsRef.current.has(shapeId)
+            ? expandedGroupsRef.current.delete(shapeId)
+            : expandedGroupsRef.current.add(shapeId)
+		},
+		[]
+	)
+
+	const renameShape = useCallback(
+		(id: TLShapeId, name: string) => {
+			const shape = editor.getShape(id)
+			if (!shape) return
+			editor.updateShape({
+				id,
+				type: shape.type,
+				meta: { ...shape.meta, customName: name }
+			})
+            setShapeName(name)
+			trackEvent('rename-shape', { source: 'layer-tree' })
+		},
+		[editor, trackEvent]
+	)
+
+	return (
+        <div>
+            {console.log('isExpanded', isExpanded) || null}
+            { isExpanded
+            ? (
+                // Expanded group
+                <div
+                    key={shapeId}
+                    // data-testid="page-menu.list"
+                    // className={classNames('tlui-layer-panel', 'tlui-page-menu__list')}
+                    style={{
+                        height: itemHeight * childrenShapes.length,
+                        // height: '100%',
+                        display: 'flex', flexDirection: 'column'
                     }}
                 >
-                    {/* TO DO: add a chevron icon to the right of the button */}
-                    <AnnotatorUiButtonIcon icon="xxx" />
+                    {childrenShapes.map((shape, index) => {
+                        const position = sortablePositionItems[shape.id] ?? {
+                            y: index * itemHeight,
+                            offsetY: 0,
+                        }
+                        return <LayerTreeRow
+                            key={shape.id}
+                            {...position} 
+                            shapeId={shape.id}
+                            isSelected={selectedShapeIds.includes(shape.id)}
+                            depth={depth + 1}
+                            expandedGroupsRef={expandedGroupsRef}
+                            index={index}
+                            handlePointerDown={handlePointerDown}
+                            handlePointerMove={handlePointerMove}
+                            handlePointerUp={handlePointerUp}
+                            handleKeyDown={handleKeyDown}
+                            listSize={childrenShapes.length}
+                            itemHeight={itemHeight}
+                        />
+                    })}
+                </div>
 
-                    {editingPageId !== page.id 
-                        ? <AnnotatorUiButtonLabel>{page.name}</AnnotatorUiButtonLabel>
-                        : <LayerItemInput
-                            name={page.name}
-                            id={page.id}
-                            isCurrentPage={page.id === currentPageId}
-                            onComplete={() => {stopEditingPage()}}
-                            onCancel={() => {stopEditingPage()}}
-                    />}
-
-                </AnnotatorUiButton>
-
-                {/* more icon */}
-                <div className="tlui-layer-tree__item__submenu">
-                    <LayerItemSubmenu
-                        index={index}
-                        item={page}
-                        listSize={listSize}
-                        onRename={() => {
-                            startEditingPage(page.id)
-                            if (currentPageId !== page.id) {
-                                changePage(page.id)
+            ) : (
+                // Shape or collapsed group
+                <div
+                    key={shapeId}
+                    data-pageid={shapeId} // TODO
+                    data-testid="page-menu.item" // TODO
+                    className="tlui-layer-tree__item__sortable"
+                    style={{
+                        zIndex: isSelected ? 888 : index,
+                        transform: `translate(0px, ${y + offsetY}px)`,
+                        width: '100%',
+                        top: 'auto',
+                    }}
+                >
+                    {/* Chevron buffer */}
+                    {isGroup 
+                        ? (
+                            <AnnotatorUiButton
+                                type="icon"
+                                // className="tlui-layer-tree__item__button"
+                                onClick={handleExpandGroup}
+                                title={isExpanded ? "Collapse group" : "Expand group"}
+                            >
+                                <AnnotatorUiButtonIcon 
+                                    icon={isExpanded ? "chevron-down" : "chevron-right"}
+                                />
+                            </AnnotatorUiButton>
+                        ) : null
+                    }
+                    
+                    {/*  */}
+                    <AnnotatorUiButton
+                        type="normal"
+                        className={classNames(
+                            "tlui-layer-tree__item__button",
+                            { "tlui-layer-tree__item__button--selected": isSelected }
+                        )}
+                        tabIndex={-1}
+                        data-id={shapeId}
+                        data-index={index}
+                        title={msg('page-menu.go-to-page')}  // TODO: Translate this
+                        onPointerDown={handlePointerDown}
+                        onPointerMove={handlePointerMove}
+                        onPointerUp={handlePointerUp}
+                        onDoubleClick={() => {setIsEditingRow(true)}}
+                        onKeyDown={(e) => {
+                            if (e.key === 'Enter') {
+                                if (isSelected) {
+                                    setIsEditingRow(true)
+                                    stopEventPropagation(e)
+                                }
                             }
                         }}
-                    />
-                </div>
-                    
+                    >
+                        {/* Rename */}
+                        {isEditingRow
+                            ? <LayerItemInput
+                                name={shapeName}
+                                id={shapeId}
+                                renameShape={renameShape}
+                                isCurrentLayer={isSelected}
+                                onComplete={() => {setIsEditingRow(false)}}
+                                onCancel={() => {setIsEditingRow(false)}}
+                            />
+                            : <AnnotatorUiButtonLabel>{shapeName}</AnnotatorUiButtonLabel>
+                        }
 
-            </div>
-        </>
+                    </AnnotatorUiButton>
+
+                    {/* more icon */}
+                    <div className="tlui-layer-tree__item__submenu">
+                        <LayerItemSubmenu
+                            index={index}
+                            item={shape}
+                            // item={page}
+                            listSize={listSize}
+                            onRename={() => {
+                                if (isSelected) {
+                                    setIsEditingRow(true)
+                                    // stopEventPropagation(e)
+                                }
+                            }}
+                        />
+                    </div>
+
+                </div>
+
+            )}
+
+        </div>
 	)
 }
+// return (
 
-
+// )
+// })
 
 
 
