@@ -1,22 +1,21 @@
 import {
-	TLPageId,
 	TLShapeId,
+	TLShape,
 	releasePointerCapture,
 	setPointerCapture,
 	stopEventPropagation,
 	tlenv,
 	useEditor,
-	useValue,
 	useReversedChildrenShapes, 
 	useCurrentPageId,
 } from '@annotator/editor'
-import { memo, useCallback, useLayoutEffect, useRef, useState } from 'react'
+import { memo, useCallback, useEffect, useRef, useState, useMemo } from 'react'
 import { useUiEvents } from '../../context/events'
 import { useTranslation } from '../../hooks/useTranslation/useTranslation'
+import { useSelectedShapeIds } from '../../hooks/useSelectedShapeIds'
 import { LayerTreeRow } from './LayerTreeRow'
 import { onMoveShape } from './edit-shapes-shared'
 import classNames from 'classnames'
-
 
 const ITEM_HEIGHT = 36
 
@@ -28,21 +27,8 @@ export const DefaultLayerTree = memo(function DefaultLayerTree() {
 
 	const currentPageId = useCurrentPageId()
 	const childrenShapes = useReversedChildrenShapes(currentPageId)
-
-	const [editingRowId, setEditingRowId] = useState<TLShapeId | null>(null)
-	const startEditingRow = useCallback((shapeId: TLShapeId) => { 
-		setEditingRowId(shapeId) 
-	}, [])
-	const stopEditingRow = useCallback(() => { 
-		setEditingRowId(null) 
-	}, [])
-
-	const expandedGroupsRef = useRef(new Set<TLShapeId>())
-
-
-	const visibleRowsRef = useRef(Object.fromEntries(
-		childrenShapes.map((shape, i) => [shape.id, { index: i }])
-	))
+	const selectedShapeIds = useSelectedShapeIds()
+	
 	const rMutables = useRef({
 		isPointing: false,
 		status: 'idle' as 'idle' | 'pointing' | 'dragging',
@@ -52,18 +38,57 @@ export const DefaultLayerTree = memo(function DefaultLayerTree() {
 		dragIndex: 0,
 	})
 
-	const [sortablePositionItems, setSortablePositionItems] = useState(Object.fromEntries(
-		childrenShapes.map((shape, i) => [shape.id, { y: i * ITEM_HEIGHT, offsetY: 0 }])
-	))
+	const [expandedGroupIds, setExpandedGroupIds] = useState<Set<TLShapeId>>(new Set())
+	const toggleExpandedGroup = useCallback((groupId: TLShapeId) => {
+		setExpandedGroupIds(prev => {
+			const newSet = new Set(prev)
+			newSet.has(groupId) ? newSet.delete(groupId) : newSet.add(groupId)
+			return newSet
+		})
+	}, [])
 
-	// Update the sortable position items when the childrenShapes change
-	useLayoutEffect(() => {
-		setSortablePositionItems(
-			Object.fromEntries(
-				childrenShapes.map((shape, i) => [shape.id, { y: i * ITEM_HEIGHT, offsetY: 0 }])
-			)
+	const [rowPositions, setRowPositions] = useState<
+		Record<string, { y: number; offsetY: number }>
+	>({})
+
+	const visibleShapes: TLShape[] = useMemo(() => {
+		const acc: TLShape[] = []
+		const walk = (shape: TLShape) => {
+			acc.push(shape)
+			if (shape.type === 'group' && expandedGroupIds.has(shape.id)) {
+				for (const childId of editor.getSortedChildIdsForParent(shape.id)) {
+					const childShape = editor.getShape(childId)
+					if (!childShape) continue
+					walk(childShape)
+				}
+			}
+		}
+		for (const s of childrenShapes) walk(s)
+		return acc
+	}, [expandedGroupIds, childrenShapes, editor])
+	
+	const reverseShapesByIndex = useCallback(
+		(shapes: TLShape[]): TLShape[] => {
+			const reversedShapes = shapes.sort((a, b) => {
+				if (a.index < b.index) return 1
+				if (a.index > b.index) return -1
+				return 0
+			})
+			return reversedShapes
+		},
+		[]
+	)
+
+	useEffect(() => {
+		const rowShapes = reverseShapesByIndex(visibleShapes)
+		setRowPositions(
+			Object.fromEntries(rowShapes.map((shape, i) => {
+				return [shape.id, { y: i * ITEM_HEIGHT, offsetY: 0 }]
+			}))
 		)
-	}, [ITEM_HEIGHT, childrenShapes])
+	}, [visibleShapes])
+
+	// Drag handlers
 
 	const handlePointerDown = useCallback(
 		(e: React.PointerEvent<HTMLButtonElement>) => {
@@ -80,13 +105,13 @@ export const DefaultLayerTree = memo(function DefaultLayerTree() {
 
 			mut.status = 'pointing'
 			mut.pointing = { id, index: +index! }
-			const current = sortablePositionItems[id]
+			const current = rowPositions[id]
 			const dragY = current.y
 
 			mut.startY = clientY
-			mut.startIndex = Math.max(0, Math.min(Math.round(dragY / ITEM_HEIGHT), childrenShapes.length - 1))
+			mut.startIndex = Math.max(0, Math.min(Math.round(dragY / ITEM_HEIGHT), visibleShapes.length - 1))
 		},
-		[ITEM_HEIGHT, childrenShapes.length, sortablePositionItems]
+		[ITEM_HEIGHT, visibleShapes, rowPositions]
 	)
 
 	const handlePointerMove = useCallback(
@@ -103,13 +128,13 @@ export const DefaultLayerTree = memo(function DefaultLayerTree() {
 			if (mut.status === 'dragging') {
 				const { clientY } = e
 				const offsetY = clientY - mut.startY
-				const current = sortablePositionItems[mut.pointing!.id]
+				const current = rowPositions[mut.pointing!.id]
 
 				const { startIndex, pointing } = mut
 				const dragY = current.y + offsetY
-				const dragIndex = Math.max(0, Math.min(Math.round(dragY / ITEM_HEIGHT), childrenShapes.length - 1))
+				const dragIndex = Math.max(0, Math.min(Math.round(dragY / ITEM_HEIGHT), visibleShapes.length - 1))
 
-				const next = { ...sortablePositionItems }
+				const next = { ...rowPositions }
 				next[pointing!.id] = {
 					y: current.y,
 					offsetY,
@@ -119,8 +144,8 @@ export const DefaultLayerTree = memo(function DefaultLayerTree() {
 				if (dragIndex !== mut.dragIndex) {
 					mut.dragIndex = dragIndex
 
-					for (let i = 0; i < childrenShapes.length; i++) {
-						const item = childrenShapes[i]
+					for (let i = 0; i < visibleShapes.length; i++) {
+						const item = visibleShapes[i]
 						if (item.id === mut.pointing!.id) {
 							continue
 						}
@@ -149,10 +174,10 @@ export const DefaultLayerTree = memo(function DefaultLayerTree() {
 						}
 					}
 				}
-				setSortablePositionItems(next)
+				setRowPositions(next)
 			}
 		},
-		[ITEM_HEIGHT, childrenShapes, sortablePositionItems]
+		[ITEM_HEIGHT, visibleShapes, rowPositions]
 	)
 
 	const handlePointerUp = useCallback(
@@ -161,25 +186,12 @@ export const DefaultLayerTree = memo(function DefaultLayerTree() {
 
 			if (mut.status === 'dragging') {
 				const { id, index } = mut.pointing!
-				onMoveShape(editor, childrenShapes, id as TLShapeId, index, mut.dragIndex, trackEvent)
+				onMoveShape(editor, visibleShapes, id as TLShapeId, index, mut.dragIndex, trackEvent)
+				// onMoveShape(editor, childrenShapes, id as TLShapeId, index, mut.dragIndex, trackEvent)
 			}
+
 			releasePointerCapture(e.currentTarget, e)
 			mut.status = 'idle'
-		},
-		[editor, trackEvent]
-	)
-
-	const renameShape = useCallback(
-		(id: TLShapeId, name: string) => {
-			const shape = editor.getShape(id)
-			if (shape) {
-				editor.updateShapes([{
-					id,
-					type: shape.type,
-					meta: { customName: name }
-				}])
-			}
-			trackEvent('rename-shape', { source: 'layer-tree' })
 		},
 		[editor, trackEvent]
 	)
@@ -191,36 +203,35 @@ export const DefaultLayerTree = memo(function DefaultLayerTree() {
 				// data-testid="page-menu.list"
 				className={classNames('tlui-layer-panel')}
 				// className={classNames('tlui-layer-panel', 'tlui-page-menu__list')}
-				style={{ height: ITEM_HEIGHT * childrenShapes.length + 4 }}
+				// style={{ height: ITEM_HEIGHT * childrenShapes.length + 4 }}
 			>
-				
-				{childrenShapes.map((shape, childIndex, ) => {
-					const position = sortablePositionItems[shape.id] ?? {
-						position: childIndex * 40,
-						offsetY: 0,
-					}
-					// const rowIndex = getRowIndex(shape.id)
-					// const yPosition = getRowPosition(rowIndex)
-					return <LayerTreeRow
-						key={shape.id}
-						shapeId={shape.id}
-						positionY={position.y}
-						offsetY={position.offsetY}
-						isSelected={shape.id === editingRowId}
-						depth={0}
 
-						expandedGroupsRef={expandedGroupsRef}
-						// visibleRowsRef={visibleRowsRef}
-						index={childIndex}
-						handlePointerDown={handlePointerDown}
-						handlePointerMove={handlePointerMove}
-						handlePointerUp={handlePointerUp}
-						// handleKeyDown={handleKeyDown}
-						setSortablePositionItems={setSortablePositionItems}	
-						listSize={childrenShapes.length}
-						itemHeight={ITEM_HEIGHT}
-					/>
-				})}
+				{(() => {
+					return visibleShapes.map((shape, childIndex, ) => {
+						const rowPosition = rowPositions[shape.id] ?? {
+							y: 0, offsetY: 0,
+						}
+						return <LayerTreeRow
+							key={shape.id}
+							shapeId={shape.id}
+							positionY={rowPosition.y}
+							offsetY={rowPosition.offsetY}
+							isSelected={selectedShapeIds.includes(shape.id)}
+
+							expandedGroupIds={expandedGroupIds}
+							toggleExpandedGroup={toggleExpandedGroup}
+							visibleShapes={visibleShapes}
+							index={visibleShapes.findIndex(s => s.id === shape.id)}
+							rowPositions={rowPositions}
+							itemHeight={ITEM_HEIGHT}
+
+							handlePointerDown={handlePointerDown}
+							handlePointerMove={handlePointerMove}
+							handlePointerUp={handlePointerUp}
+							// handleKeyDown={handleKeyDown}
+						/>
+					})
+				})()}
 			</div>
 
 		</div>

@@ -19,14 +19,12 @@ export interface LayerItemSubmenuProps {
 	index: number
 	item: TLShape
 	// item: { id: string; name: string }
-	listSize: number 
 	onRename?(): void
 }
 
 /** @public */
 export const LayerItemSubmenu = track(function LayerItemSubmenu({
 	index,
-	listSize,
 	item,
 	onRename,
 }: LayerItemSubmenuProps) {
@@ -91,12 +89,12 @@ export const LayerItemSubmenu = track(function LayerItemSubmenu({
 							/>
 						)} */}
 					</AnnotatorUiMenuGroup>
-					{listSize > 1 && (
-						<AnnotatorUiMenuGroup id="delete">
-							<AnnotatorUiMenuItem id="delete" onSelect={() => {}} label="page-menu.submenu.delete" />
-							{/* <AnnotatorUiMenuItem id="delete" onSelect={onDelete} label="page-menu.submenu.delete" /> */}
-						</AnnotatorUiMenuGroup>
-					)}
+
+					<AnnotatorUiMenuGroup id="delete">
+						<AnnotatorUiMenuItem id="delete" onSelect={() => {}} label="page-menu.submenu.delete" />
+						{/* <AnnotatorUiMenuItem id="delete" onSelect={onDelete} label="page-menu.submenu.delete" /> */}
+					</AnnotatorUiMenuGroup>
+
 				</AnnotatorUiMenuContextProvider>
 			</AnnotatorUiDropdownMenuContent>
 		</AnnotatorUiDropdownMenuRoot>

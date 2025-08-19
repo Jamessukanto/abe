@@ -1105,7 +1105,9 @@
 
 .tlui-layer-panel {
 	position: relative;
-	z-index: var(--layer-panels);
+
+
+	/* z-index: var(--layer-panels); */
 	pointer-events: all;
 	width: 360px;
 	max-width: 360px;

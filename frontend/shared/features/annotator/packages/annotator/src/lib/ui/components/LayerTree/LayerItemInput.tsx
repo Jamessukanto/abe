@@ -7,8 +7,6 @@ import { AnnotatorUiInput } from '../primitives/AnnotatorUiInput'
 export interface LayerItemInputProps {
 	name: string
 	id: TLShapeId
-	// id: TLPageId
-	isCurrentLayer: boolean
 	onCancel(): void
 	onComplete?(): void
 	renameShape: (id: TLShapeId, name: string) => void
@@ -18,7 +16,6 @@ export interface LayerItemInputProps {
 export const LayerItemInput = function LayerItemInput({
 	name,
 	id,
-	isCurrentLayer,
 	onCancel,
 	onComplete,
 	renameShape,
@@ -67,7 +64,7 @@ export const LayerItemInput = function LayerItemInput({
 				onBlur={handleCancel}
 				onFocus={handleFocus}
 				shouldManuallyMaintainScrollPositionWhenFocused
-				autoFocus={isCurrentLayer}
+				autoFocus={true}
 				autoSelect
 			/>
 		</span>
