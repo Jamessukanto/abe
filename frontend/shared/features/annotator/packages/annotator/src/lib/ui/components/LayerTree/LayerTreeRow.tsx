@@ -1,9 +1,9 @@
 import {
-	PageRecordType,
-	TLPageId,
+	// PageRecordType,
+	// TLPageId,
     TLShape,
-    TLGroupShape,
     TLShapeId,
+    TLGroupShape,
 	stopEventPropagation,
 	useEditor,
 	useValue,
@@ -27,12 +27,13 @@ export interface LayerTreeRowProps {
     depth: number
     expandedGroupsRef: React.MutableRefObject<Set<TLShapeId>>
 	index: number
-	y: number
+	positionY: number
 	offsetY: number
 	handlePointerDown: (e: React.PointerEvent<HTMLButtonElement>) => void
 	handlePointerMove: (e: React.PointerEvent<HTMLButtonElement>) => void
 	handlePointerUp: (e: React.PointerEvent<HTMLButtonElement>) => void
-	handleKeyDown: (e: React.KeyboardEvent<HTMLButtonElement>) => void
+	// handleKeyDown: (e: React.KeyboardEvent<HTMLButtonElement>) => void
+    setSortablePositionItems: React.Dispatch<React.SetStateAction<Record<string, { y: number; offsetY: number; }>>>
 	listSize: number
     itemHeight: number
 }
@@ -44,12 +45,13 @@ export function LayerTreeRow({
     depth,
     expandedGroupsRef,
 	index,
-	y,
+	positionY,
 	offsetY,
 	handlePointerDown,
 	handlePointerMove,
 	handlePointerUp,
-	handleKeyDown,
+	// handleKeyDown,
+    setSortablePositionItems,
 	listSize,
     itemHeight,
 }: LayerTreeRowProps) {
@@ -82,9 +84,9 @@ export function LayerTreeRow({
 
     const isGroup = editor.isShapeOfType<TLGroupShape>(shape, 'group')
 
-	const [sortablePositionItems, setSortablePositionItems] = useRefState<
-		Record<string, { y: number; offsetY: number }>
-	>({})
+	// const [sortablePositionItems, setSortablePositionItems] = useRefState<
+	// 	Record<string, { y: number; offsetY: number }>
+	// >({})
 	useLayoutEffect(() => {
 		setSortablePositionItems(
 			Object.fromEntries(childrenShapes.map(
@@ -99,7 +101,6 @@ export function LayerTreeRow({
 		(e: React.PointerEvent<HTMLButtonElement>) => {
 			e.stopPropagation()
             setIsExpanded((isExpanded) => !isExpanded)
-
             expandedGroupsRef.current.has(shapeId)
             ? expandedGroupsRef.current.delete(shapeId)
             : expandedGroupsRef.current.add(shapeId)
@@ -124,7 +125,6 @@ export function LayerTreeRow({
 
 	return (
         <div>
-            {console.log('isExpanded', isExpanded) || null}
             { isExpanded
             ? (
                 // Expanded group
@@ -138,7 +138,7 @@ export function LayerTreeRow({
                         display: 'flex', flexDirection: 'column'
                     }}
                 >
-                    {childrenShapes.map((shape, index) => {
+                    {/* {childrenShapes.map((shape, index) => {
                         const position = sortablePositionItems[shape.id] ?? {
                             y: index * itemHeight,
                             offsetY: 0,
@@ -158,19 +158,19 @@ export function LayerTreeRow({
                             listSize={childrenShapes.length}
                             itemHeight={itemHeight}
                         />
-                    })}
+                    })} */}
                 </div>
 
             ) : (
                 // Shape or collapsed group
                 <div
                     key={shapeId}
-                    data-pageid={shapeId} // TODO
-                    data-testid="page-menu.item" // TODO
+                    // data-pageid={shapeId} // TODO
+                    // data-testid="page-menu.item" // TODO
                     className="tlui-layer-tree__item__sortable"
                     style={{
                         zIndex: isSelected ? 888 : index,
-                        transform: `translate(0px, ${y + offsetY}px)`,
+                        transform: `translate(0px, ${positionY + offsetY}px)`,
                         width: '100%',
                         top: 'auto',
                     }}
@@ -201,7 +201,7 @@ export function LayerTreeRow({
                         tabIndex={-1}
                         data-id={shapeId}
                         data-index={index}
-                        title={msg('page-menu.go-to-page')}  // TODO: Translate this
+                        // title={msg('page-menu.go-to-page')}  // TODO: Translate this
                         onPointerDown={handlePointerDown}
                         onPointerMove={handlePointerMove}
                         onPointerUp={handlePointerUp}

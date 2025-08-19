@@ -74,11 +74,11 @@ export const onMoveShape = (
 
 	if (index !== shapeToMove.index) {
 		editor.markHistoryStoppingPoint('moving shape')
-		editor.updateShape({
+		editor.updateShapes([{
 			id: id as TLShapeId,
 			type: shapeToMove.type,
 			index,
-		})
+		}])
 		trackEvent('move-shape', { source: 'layer-tree' })
 	}
 }

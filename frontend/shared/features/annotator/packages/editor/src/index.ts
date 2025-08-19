@@ -314,6 +314,8 @@ export {
 	type SafeId,
 } from './lib/hooks/useSafeId'
 export { useSelectionEvents } from './lib/hooks/useSelectionEvents'
+export { useReversedChildrenShapes } from './lib/hooks/useReversedChildrenShapes'
+export { useCurrentPageId } from './lib/hooks/useCurrentPageId'
 export { useTLSchemaFromUtils, useTLStore } from './lib/hooks/useTLStore'
 export { useTransform } from './lib/hooks/useTransform'
 export { useViewportHeight } from './lib/hooks/useViewportHeight'
