@@ -9,31 +9,6 @@ import {
 } from '@annotator/editor'
 import { TLUiEventContextType } from '../../context/events'
 
-
-
-
-
-// 	const below = from > to ? pages[to - 1] : pages[to]
-// 	const above = from > to ? pages[to] : pages[to + 1]
-
-// 	if (below && !above) {
-// 		index = getIndexAbove(below.index)
-// 	} else if (!below && above) {
-// 		index = getIndexBelow(pages[0].index)
-// 	} else {
-// 		index = getIndexBetween(below.index, above.index)
-// 	}
-
-// 	if (index !== pages[from].index) {
-// 		editor.markHistoryStoppingPoint('moving page')
-// 		editor.updatePage({
-// 			id: id as TLPageId,
-// 			index,
-// 		})
-// 		trackEvent('move-page', { source: 'page-menu' })
-// 	}
-// }
-
 export const onMoveShape = (
 	editor: Editor,
 	shapes: TLShape[],
@@ -72,15 +47,5 @@ export const onMoveShape = (
 			index,
 		}])
 		trackEvent('move-shape', { source: 'layer-tree' })
-	}
-
-
-	
+	}	
 }
-
-
-
-// The key insight is that you need to transform the visual positions 
-// (from, to) into actual sorted positions before using them to index into sortedShapes. 
-// This way you maintain the visual ordering you want while ensuring the fractional 
-// indexing gets the correct key relationships.

@@ -1,3 +1,4 @@
+import classNames from 'classnames'
 import { AnnotatorUiIcon, TLUiIconJsx } from '../AnnotatorUiIcon'
 
 /** @public */
@@ -5,18 +6,20 @@ export interface TLUiButtonIconProps {
 	icon: string | TLUiIconJsx
 	small?: boolean
 	invertIcon?: boolean
+	className?: string
 }
 
 /** @public @react */
-export function AnnotatorUiButtonIcon({ icon, small, invertIcon }: TLUiButtonIconProps) {
+export function AnnotatorUiButtonIcon({ icon, small, invertIcon, className }: TLUiButtonIconProps) {
 	return (
 		<AnnotatorUiIcon
 			aria-hidden="true"
 			label=""
-			className="tlui-button__icon"
+			className={classNames("tlui-button__icon", className)}
 			icon={icon}
 			small={small}
 			invertIcon={invertIcon}
 		/>
 	)
 }
+

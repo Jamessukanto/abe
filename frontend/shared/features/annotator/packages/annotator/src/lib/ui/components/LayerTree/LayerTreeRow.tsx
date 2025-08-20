@@ -23,6 +23,7 @@ export interface LayerTreeRowProps {
 	shapeId: TLShapeId
 	positionY: number
 	offsetY: number
+    depth: number
     isSelected: boolean
     expandedGroupIds: Set<TLShapeId>
     toggleExpandedGroup: (id: TLShapeId) => void
@@ -41,6 +42,7 @@ export function LayerTreeRow({
 	shapeId,
 	positionY,
 	offsetY,
+    depth,
     isSelected,
     expandedGroupIds,
     toggleExpandedGroup,
@@ -66,6 +68,7 @@ export function LayerTreeRow({
 	const [isEditingRow, setIsEditingRow] = useState(false)
 
     const isGroup = editor.isShapeOfType<TLGroupShape>(shape, 'group')
+    // const [isExpanded, setIsExpanded] = useState(expandedGroupIds.has(shapeId))
     const isExpanded = expandedGroupIds.has(shapeId)
     
     // Event handlers
@@ -112,36 +115,44 @@ export function LayerTreeRow({
     )
 
 	return (
-        <div className="flex flex-col">
-
-            {/* // Shape or collapsed group */}
+        <>
             <div
                 key={shapeId}
                 // data-pageid={shapeId} // TODO
                 // data-testid="page-menu.item" // TODO
                 className="tlui-layer-tree__item__sortable"
                 style={{
-                    // zIndex: isSelected ? 888 : shape.index,
                     transform: `translate(0px, ${positionY + offsetY}px)`,
                     width: '100%',
+                    paddingLeft: `${depth * 26}px`,
                     top: 'auto',
+                    // gap: '-24px',
                 }}
             >
-                {/* Chevron buffer */}
+                {/* Chevron button */}
                 {isGroup 
                     ? (
                         <AnnotatorUiButton
-                            type="icon"
-                            // className="tlui-layer-tree__item__button"
+                            type="narrow"
                             onClick={handleToggleExpand}
                             title={isExpanded ? "Collapse group" : "Expand group"}
                         >
                             <AnnotatorUiButtonIcon 
                                 icon={isExpanded ? "chevron-down" : "chevron-right"}
+                                className="tlui-button__icon--narrow"
                             />
                         </AnnotatorUiButton>
-                    ) : null
+                    ) : ( <AnnotatorUiButton type="narrow" disabled={true}/> )
                 }
+                
+                {/* Thumbnail */}
+                {/* <AnnotatorUiButton
+                    type="narrow"
+                    onClick={handleToggleExpand}
+                    title={isExpanded ? "Collapse group" : "Expand group"}
+                >
+                    <AnnotatorUiButtonIcon icon="" />
+                </AnnotatorUiButton> */}
                 
                 {/* Row button */}
                 <AnnotatorUiButton
@@ -150,6 +161,7 @@ export function LayerTreeRow({
                         "tlui-layer-tree__item__button",
                         { "tlui-layer-tree__item__button--selected": isSelected }
                     )}
+                    style={{marginLeft: '-5px',}}
                     tabIndex={-1}
                     data-id={shapeId}
                     data-index={index}
@@ -187,16 +199,11 @@ export function LayerTreeRow({
                         }}
                     />
                 </div>
+
             </div>
 
             { expandedGroupIds.has(shapeId) &&                        
-                <div
-                    // data-testid="page-menu.list"
-                    className={classNames('tlui-layer-panel')}
-                    // className="flex flex-col"
-                    // className={classNames('tlui-layer-panel', 'tlui-page-menu__list')}
-                    // style={{ height: itemHeight * childrenShapes.length + 4 }}
-                >
+                <div className={classNames('tlui-layer-panel')}>
                     {
                         (() => {
                             return childrenShapes.map((shape, childIndex, ) => {
@@ -208,6 +215,7 @@ export function LayerTreeRow({
                                     shapeId={shape.id}
                                     positionY={rowPosition.y}
                                     offsetY={rowPosition.offsetY}
+                                    depth={depth + 1}
                                     isSelected={selectedShapeIds.includes(shape.id)}
         
                                     expandedGroupIds={expandedGroupIds}
@@ -230,7 +238,6 @@ export function LayerTreeRow({
 
 
 
-            
-        </div>
+        </>
 	)
 }

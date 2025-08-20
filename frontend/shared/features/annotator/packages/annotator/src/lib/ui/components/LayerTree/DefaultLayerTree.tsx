@@ -9,7 +9,7 @@ import {
 	useReversedChildrenShapes, 
 	useCurrentPageId,
 } from '@annotator/editor'
-import { memo, useCallback, useEffect, useRef, useState, useMemo } from 'react'
+import { memo, useCallback, useEffect, useLayoutEffect, useRef, useState, useMemo } from 'react'
 import { useUiEvents } from '../../context/events'
 import { useTranslation } from '../../hooks/useTranslation/useTranslation'
 import { useSelectedShapeIds } from '../../hooks/useSelectedShapeIds'
@@ -28,7 +28,7 @@ export const DefaultLayerTree = memo(function DefaultLayerTree() {
 	const currentPageId = useCurrentPageId()
 	const childrenShapes = useReversedChildrenShapes(currentPageId)
 	const selectedShapeIds = useSelectedShapeIds()
-	
+
 	const rMutables = useRef({
 		isPointing: false,
 		status: 'idle' as 'idle' | 'pointing' | 'dragging',
@@ -47,42 +47,33 @@ export const DefaultLayerTree = memo(function DefaultLayerTree() {
 		})
 	}, [])
 
-	const [rowPositions, setRowPositions] = useState<
-		Record<string, { y: number; offsetY: number }>
-	>({})
-
 	const visibleShapes: TLShape[] = useMemo(() => {
 		const acc: TLShape[] = []
 		const walk = (shape: TLShape) => {
 			acc.push(shape)
 			if (shape.type === 'group' && expandedGroupIds.has(shape.id)) {
-				for (const childId of editor.getSortedChildIdsForParent(shape.id)) {
-					const childShape = editor.getShape(childId)
-					if (!childShape) continue
-					walk(childShape)
-				}
+				const reversedChildren = editor.getSortedChildIdsForParent(shape.id)
+					.map(id => editor.getShape(id))
+					.filter((shape): shape is TLShape => shape !== undefined)
+					.sort((a, b) => {
+						if (a.index < b.index) return 1
+						if (a.index > b.index) return -1
+						return 0
+					})
+				for (const c of reversedChildren) walk(c)
 			}
 		}
-		for (const s of childrenShapes) walk(s)
+		for (const c of childrenShapes) walk(c)
 		return acc
-	}, [expandedGroupIds, childrenShapes, editor])
-	
-	const reverseShapesByIndex = useCallback(
-		(shapes: TLShape[]): TLShape[] => {
-			const reversedShapes = shapes.sort((a, b) => {
-				if (a.index < b.index) return 1
-				if (a.index > b.index) return -1
-				return 0
-			})
-			return reversedShapes
-		},
-		[]
-	)
+	}, [editor, expandedGroupIds, childrenShapes])
 
-	useEffect(() => {
-		const rowShapes = reverseShapesByIndex(visibleShapes)
+	const [rowPositions, setRowPositions] = useState<
+		Record<string, { y: number; offsetY: number }>
+	>({})
+
+	useLayoutEffect(() => {
 		setRowPositions(
-			Object.fromEntries(rowShapes.map((shape, i) => {
+			Object.fromEntries(visibleShapes.map((shape, i) => {
 				return [shape.id, { y: i * ITEM_HEIGHT, offsetY: 0 }]
 			}))
 		)
@@ -189,11 +180,13 @@ export const DefaultLayerTree = memo(function DefaultLayerTree() {
 				onMoveShape(editor, visibleShapes, id as TLShapeId, index, mut.dragIndex, trackEvent)
 				// onMoveShape(editor, childrenShapes, id as TLShapeId, index, mut.dragIndex, trackEvent)
 			}
-
 			releasePointerCapture(e.currentTarget, e)
 			mut.status = 'idle'
+
+			const selectedShapeId = e.currentTarget.dataset.id
+			editor.setSelectedShapes([selectedShapeId as TLShapeId])
 		},
-		[editor, trackEvent]
+		[editor, trackEvent, visibleShapes]
 	)
 
 	return (
@@ -205,9 +198,8 @@ export const DefaultLayerTree = memo(function DefaultLayerTree() {
 				// className={classNames('tlui-layer-panel', 'tlui-page-menu__list')}
 				// style={{ height: ITEM_HEIGHT * childrenShapes.length + 4 }}
 			>
-
 				{(() => {
-					return visibleShapes.map((shape, childIndex, ) => {
+					return childrenShapes.map((shape, childIndex, ) => {
 						const rowPosition = rowPositions[shape.id] ?? {
 							y: 0, offsetY: 0,
 						}
@@ -216,6 +208,7 @@ export const DefaultLayerTree = memo(function DefaultLayerTree() {
 							shapeId={shape.id}
 							positionY={rowPosition.y}
 							offsetY={rowPosition.offsetY}
+							depth={0}
 							isSelected={selectedShapeIds.includes(shape.id)}
 
 							expandedGroupIds={expandedGroupIds}

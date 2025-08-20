@@ -1020,7 +1020,19 @@
 
 
 
+.tlui-button__narrow {
+	width: 16px;
+	min-width: 16px;
+	/* padding: 0px; */
+	min-width: 16px;
+}
 
+.tlui-button__icon--narrow {
+	width: 16px; 
+	min-width: 16px;
+	padding: 0px;
+	margin-right: 0px;
+}
 
 .tlui-button__icon {
 	padding: 0px;
@@ -1223,6 +1235,7 @@
 	flex-direction: row;
 	overflow: hidden;
 	z-index: var(--layer-above);
+
 }
 
 /* .tlui-layer-tree__item__sortable:hover {
@@ -1252,6 +1265,7 @@
 
 .tlui-layer-tree__item__button {
 	width: 100%;
+	padding: 0px;
 }
 
 .tlui-layer-tree__item__button:focus::after {

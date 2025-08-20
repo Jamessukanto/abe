@@ -214,11 +214,11 @@ export class Idle extends StateNode {
 							if (focusedGroupId && parent.id === focusedGroupId) {
 								// noop, double click on the shape as normal below
 							} else {
-								// The shape is the child of some group other than our current
-								// focus layer. We should probably select the group instead.
-								selectOnCanvasPointerUp(this.editor, info)
-								return
-							}
+									// The shape is the child of some group other than our current
+									// focus layer. We should select the group instead.
+									this.editor.setSelectedShapes([parent.id])
+									return
+								}
 						}
 					}
 
