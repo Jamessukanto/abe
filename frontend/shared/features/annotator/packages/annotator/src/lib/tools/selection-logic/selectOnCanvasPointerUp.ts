@@ -9,13 +9,25 @@ export function selectOnCanvasPointerUp(
 	const { shiftKey, altKey, accelKey } = info
 	const additiveSelectionKey = shiftKey || accelKey
 
-	const hitShape = editor.getShapeAtPoint(currentPagePoint, {
-		hitInside: false,
-		margin: editor.options.hitTestMargin / editor.getZoomLevel(),
-		hitLabels: true,
-		renderingOnly: true,
-		filter: (shape) => !shape.isLocked,
-	})
+	// const hitShape = editor.getShapeAtPoint(currentPagePoint, {
+	// 	hitInside: false,
+	// 	margin: editor.options.hitTestMargin / editor.getZoomLevel(),
+	// 	hitLabels: true,
+	// 	renderingOnly: true,
+	// 	filter: (shape) => !shape.isLocked,
+	// })
+
+	const hoveredShape = editor.getHoveredShape()
+	let hitShape: TLShape | undefined = undefined
+
+	if (hoveredShape) {	
+		hitShape = editor.getOutermostSelectableShape(
+			hoveredShape!,
+			(s) => {
+				return !selectedShapeIds.includes(s.id) && !s.isLocked
+			}
+		)
+	}
 
 	// Note at the start: if we select a shape that is inside of a group,
 	// the editor will automatically adjust the selection to the outermost
@@ -30,6 +42,7 @@ export function selectOnCanvasPointerUp(
 		// If the user is holding shift, they're either adding to or removing from
 		// their selection.
 		if (additiveSelectionKey && !altKey) {
+			console.log('4a')
 			editor.cancelDoubleClick() // fuckin eh
 
 			if (selectedShapeIds.includes(outermostSelectableShape.id)) {

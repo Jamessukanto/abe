@@ -36,7 +36,6 @@ const SKIPPED_KEYS_FOR_AUTO_EDITING = [
 
 export class Idle extends StateNode {
 	static override id = 'idle'
-
 	selectedShapesOnKeyDown: TLShape[] = []
 
 	override onEnter() {
@@ -57,39 +56,80 @@ export class Idle extends StateNode {
 	override onPointerDown(info: TLPointerEventInfo) {
 		const shouldEnterCropMode = info.ctrlKey && getShouldEnterCropMode(this.editor)
 
+		console.log('\n\n -----\n ON POINTER DOWN')
+		console.log('target:', info.target)
+
 		switch (info.target) {
 			case 'canvas': {
-				// Check to see if we hit any shape under the pointer; if so,
-				// handle this as a pointer down on the shape instead of the canvas
-				const hitShape = getHitShapeOnCanvasPointerDown(this.editor)
-				if (hitShape && !hitShape.isLocked) {
-					this.onPointerDown({
-						...info,
-						shape: hitShape,
-						target: 'shape',
-					})
-					return
-				}
 
-				const selectedShapeIds = this.editor.getSelectedShapeIds()
-				const onlySelectedShape = this.editor.getOnlySelectedShape()
-				const {
-					inputs: { currentPagePoint },
-				} = this.editor
-
-				if (
-					selectedShapeIds.length > 1 ||
-					(onlySelectedShape &&
-						!this.editor.getShapeUtil(onlySelectedShape).hideSelectionBoundsBg(onlySelectedShape))
-				) {
-					if (isPointInRotatedSelectionBounds(this.editor, currentPagePoint)) {
+				const hoveredShape = this.editor.getHoveredShape()
+				if (hoveredShape && !hoveredShape.isLocked) {
+					const selectedShapeIds = this.editor.getSelectedShapeIds()
+					const hitShape = this.editor.getOutermostSelectableShape(
+						hoveredShape,
+						(s) => !selectedShapeIds.includes(s.id)
+					)
+					
+					if (hitShape && !hitShape.isLocked) {
 						this.onPointerDown({
 							...info,
-							target: 'selection',
+							shape: hitShape,
+							target: 'shape',
 						})
 						return
 					}
 				}
+
+				// Check to see if we hit any shape under the pointer; if so,
+				// handle this as a pointer down on the shape instead of the canvas
+				// const hitShape = getHitShapeOnCanvasPointerDown(this.editor)
+
+				// if (hoveredShape && !hoveredShape.isLocked) {
+				// 	const selectedShapeIds = this.editor.getSelectedShapeIds()
+				// 	const hitShape = this.editor.getOutermostSelectableShape(
+				// 		hoveredShape!,
+				// 		(s) => !selectedShapeIds.includes(s.id)
+				// 	)
+					
+				// 	if (hitShape && !hitShape.isLocked) {
+				// 		this.onPointerDown({
+				// 			...info,
+				// 			shape: hitShape,
+				// 			target: 'shape',
+				// 		})
+				// 		return
+				// 	}
+				// }
+
+				// if (hitShape && !hitShape.isLocked) {
+				// 	this.onPointerDown({
+				// 		...info,
+				// 		shape: hitShape,
+				// 		target: 'shape',
+				// 	})
+				// 	return
+				// }
+
+				// Possibly dead code:
+				// const selectedShapeIds = this.editor.getSelectedShapeIds()
+				// const onlySelectedShape = this.editor.getOnlySelectedShape()
+				// const {
+				// 	inputs: { currentPagePoint },
+				// } = this.editor
+
+				// if (
+				// 	selectedShapeIds.length > 1 ||
+				// 	(onlySelectedShape &&
+				// 		!this.editor.getShapeUtil(onlySelectedShape).hideSelectionBoundsBg(onlySelectedShape))
+				// ) {
+				// 	if (isPointInRotatedSelectionBounds(this.editor, currentPagePoint)) {
+				// 		this.onPointerDown({
+				// 			...info,
+				// 			target: 'selection',
+				// 		})
+				// 		return
+				// 	}
+				// }
 
 				this.parent.transition('pointing_canvas', info)
 				break
@@ -182,123 +222,134 @@ export class Idle extends StateNode {
 			case 'canvas': {
 				const hoveredShape = this.editor.getHoveredShape()
 
-				// todo
-				// double clicking on the middle of a hollow geo shape without a label, or
-				// over the label of a hollwo shape that has a label, should start editing
-				// that shape's label. We can't support "double click anywhere inside"
-				// of the shape yet because that also creates text shapes, and can produce
-				// unexpected results when working "inside of" a hollow shape.
-
-				const hitShape =
-					hoveredShape && !this.editor.isShapeOfType<TLGroupShape>(hoveredShape, 'group')
-						? hoveredShape
-						: (this.editor.getSelectedShapeAtPoint(this.editor.inputs.currentPagePoint) ??
-							this.editor.getShapeAtPoint(this.editor.inputs.currentPagePoint, {
-								margin: this.editor.options.hitTestMargin / this.editor.getZoomLevel(),
-								hitInside: false,
-							}))
-
-				const focusedGroupId = this.editor.getFocusedGroupId()
-
+				if (!hoveredShape) {
+				  if (!this.editor.inputs.shiftKey) this.handleDoubleClickOnCanvas(info)
+				  break
+				}
+			  
+				const hitShape = this.editor.getOutermostSelectableShape(hoveredShape)
 				if (hitShape) {
-					if (this.editor.isShapeOfType<TLGroupShape>(hitShape, 'group')) {
-						// Probably select the shape
-						selectOnCanvasPointerUp(this.editor, info)
-						return
-					} else {
-						const parent = this.editor.getShape(hitShape.parentId)
-						if (parent && this.editor.isShapeOfType<TLGroupShape>(parent, 'group')) {
-							// The shape is the direct child of a group. If the group is
-							// selected, then we can select the shape. If the group is the
-							// focus layer id, then we can double click into it as usual.
-							if (focusedGroupId && parent.id === focusedGroupId) {
-								// noop, double click on the shape as normal below
-							} else {
-									// The shape is the child of some group other than our current
-									// focus layer. We should select the group instead.
-									this.editor.setSelectedShapes([parent.id])
-									return
-								}
-						}
-					}
-
-					// double click on the shape. We'll start editing the
-					// shape if it's editable or else do a double click on
-					// the canvas.
-					this.onDoubleClick({
-						...info,
-						shape: hitShape,
-						target: 'shape',
-					})
-
+					// Probably select the shape
+					selectOnCanvasPointerUp(this.editor, info)
 					return
 				}
+			  
+				if (!this.editor.inputs.shiftKey) this.handleDoubleClickOnCanvas(info)
+				break
 
-				if (!this.editor.inputs.shiftKey) {
-					this.handleDoubleClickOnCanvas(info)
-				}
+				// // todo
+				// // double clicking on the middle of a hollow geo shape without a label, or
+				// // over the label of a hollwo shape that has a label, should start editing
+				// // that shape's label. We can't support "double click anywhere inside"
+				// // of the shape yet because that also creates text shapes, and can produce
+				// // unexpected results when working "inside of" a hollow shape.
+
+				// const hitShape =
+				// 	hoveredShape && !this.editor.isShapeOfType<TLGroupShape>(hoveredShape, 'group')
+				// 		? hoveredShape
+				// 		: (this.editor.getSelectedShapeAtPoint(this.editor.inputs.currentPagePoint) ??
+				// 			this.editor.getShapeAtPoint(this.editor.inputs.currentPagePoint, {
+				// 				margin: this.editor.options.hitTestMargin / this.editor.getZoomLevel(),
+				// 				hitInside: false,
+				// 			}))
+				//
+				// const focusedGroupId = this.editor.getFocusedGroupId()
+
+				// Possibly dead code:
+				// if (hitShape) {
+					// if (this.editor.isShapeOfType<TLGroupShape>(hitShape, 'group')) {
+					// 	// Probably select the shape
+					// 	selectOnCanvasPointerUp(this.editor, info)
+					// } else {
+						// this.editor.setSelectedShapes([hitShape.id])
+						// const parent = this.editor.getShape(hitShape.parentId)
+						// if (parent && this.editor.isShapeOfType<TLGroupShape>(parent, 'group')) {
+						// 	// The shape is the direct child of a group. If the group is
+						// 	// selected, then we can select the shape. If the group is the
+						// 	// focus layer id, then we can double click into it as usual.
+						// 	console.log('OUT')
+						// 	if (focusedGroupId && parent.id === focusedGroupId) {
+						// 		console.log('NOOP')
+						// 		// noop, double click on the shape as normal below
+						// 	} else {
+						// 		console.log('SELECTING PARENT')
+						// 			// The shape is the child of some group other than our current
+						// 			// focus layer. We should select the group instead.
+						// 			this.editor.setSelectedShapes([parent.id])
+						// 			return
+						// 		}
+						// }
+					// }
+					// return
+				// }
 				
-				break
+				// if (!this.editor.inputs.shiftKey) {
+				// 	this.handleDoubleClickOnCanvas(info)
+				// }
+				
+				// break
 			}
-			case 'selection': {
-				if (this.editor.getIsReadonly()) break
+			// case 'selection': {
+			// 	console.log('selection')
+			// 	if (this.editor.getIsReadonly()) break
 
-				const onlySelectedShape = this.editor.getOnlySelectedShape()
+			// 	const onlySelectedShape = this.editor.getOnlySelectedShape()
 
-				if (onlySelectedShape) {
-					const util = this.editor.getShapeUtil(onlySelectedShape)
+			// 	if (onlySelectedShape) {
+			// 		const util = this.editor.getShapeUtil(onlySelectedShape)
 
-					if (!this.canInteractWithShapeInReadOnly(onlySelectedShape)) {
-						return
-					}
+			// 		if (!this.canInteractWithShapeInReadOnly(onlySelectedShape)) {
+			// 			return
+			// 		}
 
-					// Test edges for an onDoubleClickEdge handler
-					if (
-						info.handle === 'right' ||
-						info.handle === 'left' ||
-						info.handle === 'top' ||
-						info.handle === 'bottom'
-					) {
-						const change = util.onDoubleClickEdge?.(onlySelectedShape, info)
-						if (change) {
-							this.editor.markHistoryStoppingPoint('double click edge')
-							this.editor.updateShapes([change])
-							kickoutOccludedShapes(this.editor, [onlySelectedShape.id])
-							return
-						}
-					}
+			// 		// Test edges for an onDoubleClickEdge handler
+			// 		if (
+			// 			info.handle === 'right' ||
+			// 			info.handle === 'left' ||
+			// 			info.handle === 'top' ||
+			// 			info.handle === 'bottom'
+			// 		) {
+			// 			const change = util.onDoubleClickEdge?.(onlySelectedShape, info)
+			// 			if (change) {
+			// 				this.editor.markHistoryStoppingPoint('double click edge')
+			// 				this.editor.updateShapes([change])
+			// 				kickoutOccludedShapes(this.editor, [onlySelectedShape.id])
+			// 				return
+			// 			}
+			// 		}
 
-					if (
-						info.handle === 'top_left' ||
-						info.handle === 'top_right' ||
-						info.handle === 'bottom_right' ||
-						info.handle === 'bottom_left'
-					) {
-						const change = util.onDoubleClickCorner?.(onlySelectedShape, info)
-						if (change) {
-							this.editor.markHistoryStoppingPoint('double click corner')
-							this.editor.updateShapes([change])
-							kickoutOccludedShapes(this.editor, [onlySelectedShape.id])
-							return
-						}
-					}
+			// 		if (
+			// 			info.handle === 'top_left' ||
+			// 			info.handle === 'top_right' ||
+			// 			info.handle === 'bottom_right' ||
+			// 			info.handle === 'bottom_left'
+			// 		) {
+			// 			const change = util.onDoubleClickCorner?.(onlySelectedShape, info)
+			// 			if (change) {
+			// 				this.editor.markHistoryStoppingPoint('double click corner')
+			// 				this.editor.updateShapes([change])
+			// 				kickoutOccludedShapes(this.editor, [onlySelectedShape.id])
+			// 				return
+			// 			}
+			// 		}
 
-					// For corners OR edges but NOT rotation corners
-					if (
-						util.canCrop(onlySelectedShape) &&
-						!this.editor.isShapeOrAncestorLocked(onlySelectedShape)
-					) {
-						this.parent.transition('crop', info)
-						return
-					}
+			// 		// For corners OR edges but NOT rotation corners
+			// 		if (
+			// 			util.canCrop(onlySelectedShape) &&
+			// 			!this.editor.isShapeOrAncestorLocked(onlySelectedShape)
+			// 		) {
+			// 			this.parent.transition('crop', info)
+			// 			return
+			// 		}
 
-					if (this.shouldStartEditingShape(onlySelectedShape)) {
-						this.startEditingShape(onlySelectedShape, info, true /* select all */)
-					}
-				}
-				break
-			}
+			// 		if (this.shouldStartEditingShape(onlySelectedShape)) {
+			// 			this.startEditingShape(onlySelectedShape, info, true /* select all */)
+			// 		}
+			// 	}
+			// 	break
+			// }
 			case 'shape': {
+				console.log('shape')
 				const { shape } = info
 				const util = this.editor.getShapeUtil(shape)
 
@@ -333,26 +384,27 @@ export class Idle extends StateNode {
 				}
 				break
 			}
-			case 'handle': {
-				if (this.editor.getIsReadonly()) break
-				const { shape, handle } = info
+			// case 'handle': {
+			// 	console.log('handle')
+			// 	if (this.editor.getIsReadonly()) break
+			// 	const { shape, handle } = info
 
-				const util = this.editor.getShapeUtil(shape)
-				const changes = util.onDoubleClickHandle?.(shape, handle)
+			// 	const util = this.editor.getShapeUtil(shape)
+			// 	const changes = util.onDoubleClickHandle?.(shape, handle)
 
-				if (changes) {
-					this.editor.updateShapes([changes])
-				} else {
-					// If the shape's double click handler has not created a change,
-					// and if the shape can edit, then begin editing the shape.
+			// 	if (changes) {
+			// 		this.editor.updateShapes([changes])
+			// 	} else {
+			// 		// If the shape's double click handler has not created a change,
+			// 		// and if the shape can edit, then begin editing the shape.
 					
-					if (this.shouldStartEditingShape(shape)) {
-						this.startEditingShape(shape, info, true /* select all */)
-					}
+			// 		if (this.shouldStartEditingShape(shape)) {
+			// 			this.startEditingShape(shape, info, true /* select all */)
+			// 		}
 
 
-				}
-			}
+			// 	}
+			// }
 		}
 	}
 

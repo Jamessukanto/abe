@@ -113,9 +113,10 @@ export class PointingShape extends StateNode {
 
 			const outermostSelectableShape = this.editor.getOutermostSelectableShape(
 				hitShape,
+
 				// if a group is selected, we want to stop before reaching that group
 				// so we can drill down into the group
-				(parent) => !selectedShapeIds.includes(parent.id)
+				// (parent) => !selectedShapeIds.includes(parent.id)
 			)
 
 			// If the outermost shape is selected, then either select or deselect the SELECTING shape

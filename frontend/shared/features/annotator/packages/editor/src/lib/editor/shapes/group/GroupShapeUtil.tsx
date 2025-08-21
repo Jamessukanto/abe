@@ -105,4 +105,5 @@ export class GroupShapeUtil extends ShapeUtil<TLGroupShape> {
 		// Removed auto-ungrouping when only 1 child remains
 		// This allows groups to persist even with a single child, preventing unwanted flattening
 	}
+
 }
