@@ -66,7 +66,11 @@ export const LayerItemSubmenu = track(function LayerItemSubmenu({
 				<AnnotatorUiMenuContextProvider type="menu" sourceId="page-menu">
 					<AnnotatorUiMenuGroup id="modify">
 						{onRename && (
-							<AnnotatorUiMenuItem id="rename" label="page-menu.submenu.rename" onSelect={onRename} />
+							<AnnotatorUiMenuItem 
+								id="rename" 
+								label={msg('shape-menu.submenu.rename')} 
+								onSelect={onRename} 
+							/>
 						)}
 						{/* <AnnotatorUiMenuItem
 							id="duplicate"
@@ -80,19 +84,21 @@ export const LayerItemSubmenu = track(function LayerItemSubmenu({
 								onSelect={onMoveUp}
 								label="page-menu.submenu.move-up"
 							/>
-						)}
-						{index < listSize - 1 && (
-							<AnnotatorUiMenuItem
-								id="move-down"
-								label="page-menu.submenu.move-down"
-								onSelect={onMoveDown}
-							/>
-						)} */}
+						)}*/
+						}
 					</AnnotatorUiMenuGroup>
 
 					<AnnotatorUiMenuGroup id="delete">
-						<AnnotatorUiMenuItem id="delete" onSelect={() => {}} label="page-menu.submenu.delete" />
-						{/* <AnnotatorUiMenuItem id="delete" onSelect={onDelete} label="page-menu.submenu.delete" /> */}
+						<AnnotatorUiMenuItem 
+							id="delete" 
+							onSelect={() => {
+								editor.markHistoryStoppingPoint('deleting shape')
+								editor.deleteShapes([item.id])
+								trackEvent('delete-shape', { source: 'layer-tree' })
+							}} 
+							label={msg('shape-menu.submenu.delete')} 
+							// label={msg('page-menu.submenu.delete')}
+						/>
 					</AnnotatorUiMenuGroup>
 
 				</AnnotatorUiMenuContextProvider>

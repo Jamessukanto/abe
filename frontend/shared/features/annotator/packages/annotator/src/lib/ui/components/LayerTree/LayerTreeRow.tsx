@@ -1,4 +1,5 @@
 import {
+    tlenv,
     TLShape,
     TLShapeId,
     TLGroupShape,
@@ -192,9 +193,13 @@ export function LayerTreeRow({
                         index={index}
                         item={shape}
                         onRename={() => {
-                            if (isSelected) {
-                                setIsEditingRow(true)
-                                // stopEventPropagation(e)
+                            // if (isSelected) {
+                            //     setIsEditingRow(true)
+                            //     // stopEventPropagation(e)
+                            // }
+                            const newName = window.prompt('Rename the region', shapeName)
+                            if (newName && newName !== shapeName) {
+                                renameShape(shape.id, newName)
                             }
                         }}
                     />

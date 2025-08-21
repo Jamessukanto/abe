@@ -40,6 +40,7 @@ export interface TLUiEventMap {
 	'move-page': null
 	'move-shape': null
 	'rename-shape': null
+	'delete-shape': null
 	'new-page': null
 	'rename-page': null
 	'move-to-page': null

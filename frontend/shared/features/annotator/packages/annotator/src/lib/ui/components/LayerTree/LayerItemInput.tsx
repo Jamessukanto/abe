@@ -46,13 +46,10 @@ export const LayerItemInput = function LayerItemInput({
 		[editor, id, trackEvent]
 	)
 	const handleBlur = useCallback(() => {
-		// Only commit if the name actually changed
-		if (onComplete && rInput.current && rInput.current.value !== name) {
+		if (onComplete) {
 			onComplete()
-		} else {
-			onCancel()
 		}
-	}, [onComplete, onCancel, name])
+	}, [onComplete])
 
 	const handleCancel = useCallback(() => {
 		if (rMark.current) {

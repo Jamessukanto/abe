@@ -194,7 +194,9 @@ export const DefaultLayerTree = memo(function DefaultLayerTree() {
 
 			<div className="tlui-layer-panel__header">
 				<div className="tlui-layer-panel__header__title">
-					{msg('layer-panel.title')}
+					{/* {msg('layer-panel.title')} */}
+					{msg('tree-layer-panel.title')}
+					
 				</div>
 			</div>
 
