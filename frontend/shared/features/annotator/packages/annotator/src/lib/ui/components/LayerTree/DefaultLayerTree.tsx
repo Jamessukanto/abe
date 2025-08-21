@@ -190,43 +190,43 @@ export const DefaultLayerTree = memo(function DefaultLayerTree() {
 	)
 
 	return (
-		<div style={ { height: '100%', display: 'flex', flexDirection: 'column' } }>
+		<div  className={classNames('tlui-layer-panel__wrapper')}>
 
-			<div
-				// data-testid="page-menu.list"
-				className={classNames('tlui-layer-panel')}
-				// className={classNames('tlui-layer-panel', 'tlui-page-menu__list')}
-				// style={{ height: ITEM_HEIGHT * childrenShapes.length + 4 }}
-			>
-				{(() => {
-					return childrenShapes.map((shape, childIndex, ) => {
-						const rowPosition = rowPositions[shape.id] ?? {
-							y: 0, offsetY: 0,
-						}
-						return <LayerTreeRow
-							key={shape.id}
-							shapeId={shape.id}
-							positionY={rowPosition.y}
-							offsetY={rowPosition.offsetY}
-							depth={0}
-							isSelected={selectedShapeIds.includes(shape.id)}
-
-							expandedGroupIds={expandedGroupIds}
-							toggleExpandedGroup={toggleExpandedGroup}
-							visibleShapes={visibleShapes}
-							index={visibleShapes.findIndex(s => s.id === shape.id)}
-							rowPositions={rowPositions}
-							itemHeight={ITEM_HEIGHT}
-
-							handlePointerDown={handlePointerDown}
-							handlePointerMove={handlePointerMove}
-							handlePointerUp={handlePointerUp}
-							// handleKeyDown={handleKeyDown}
-						/>
-					})
-				})()}
+			<div className="tlui-layer-panel__header">
+				<div className="tlui-layer-panel__header__title">
+					{msg('layer-panel.title')}
+				</div>
 			</div>
 
+			<div className="tlui-layer-panel--scroll-content">
+				<div className="tlui-layer-panel">
+					{(() => {
+						return childrenShapes.map((shape, childIndex, ) => {
+							const rowPosition = rowPositions[shape.id] ?? {y: 0, offsetY: 0}
+							return <LayerTreeRow
+								key={shape.id}
+								shapeId={shape.id}
+								positionY={rowPosition.y}
+								offsetY={rowPosition.offsetY}
+								depth={0}
+								isSelected={selectedShapeIds.includes(shape.id)}
+
+								expandedGroupIds={expandedGroupIds}
+								toggleExpandedGroup={toggleExpandedGroup}
+								visibleShapes={visibleShapes}
+								index={visibleShapes.findIndex(s => s.id === shape.id)}
+								rowPositions={rowPositions}
+								itemHeight={ITEM_HEIGHT}
+
+								handlePointerDown={handlePointerDown}
+								handlePointerMove={handlePointerMove}
+								handlePointerUp={handlePointerUp}
+								// handleKeyDown={handleKeyDown}
+							/>
+						})
+					})()}
+				</div>
+			</div>
 		</div>
 	)
 })

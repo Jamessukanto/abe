@@ -20,19 +20,8 @@ export const DefaultLayerPanel = memo(function DefaultLayerPanel() {
 	if (!LayerTree) return null
 
 	return (
-
-		<div className={classNames('tlui-layer-panel__wrapper')}>
+		<div className={classNames('tlui-right-panel')}>
 			
-			<div
-				className="tlui-layer-panel__header"
-				style={{
-					stroke: 'red',
-					position: 'sticky',
-				}}
-			>
-				<div className="tlui-layer-panel__header__title">{msg('layer-panel.title')}</div>
-			</div>
-
 			{LayerTree && <LayerTree />}
 
 			{/* <div className="tlui-buttons__horizontal">

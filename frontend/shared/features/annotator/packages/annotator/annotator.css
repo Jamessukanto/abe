@@ -2769,6 +2769,18 @@ it from receiving any pointer events or affecting the cursor. */
 }
 
 
+/* ------------------- Right panel ------------------ */
+
+.tlui-right-panel {
+	box-shadow: var(--shadow-2);
+	pointer-events: all;
+	background-color: var(--color-panel);
+	height: 100%;
+	/* display: flex;
+	flex-direction: column; */
+	color: var(--color-text);
+}
+
 /* ------------------- Layer panel ------------------ */
 
 .tlui-layer-panel__wrapper {
@@ -2776,10 +2788,8 @@ it from receiving any pointer events or affecting the cursor. */
 	pointer-events: all;
 	background-color: var(--color-panel);
 	height: 100%;
-	touch-action: auto;
-	overscroll-behavior: none;
-	overflow-y: auto;
-	overflow-x: hidden;
+	display: flex;
+	flex-direction: column;
 	color: var(--color-text);
 }
 
@@ -2790,6 +2800,7 @@ it from receiving any pointer events or affecting the cursor. */
 	border-bottom: 1px solid var(--color-divider);
 	/* flexShrink: 0 */
 	position: sticky;
+	top: 0;
 	z-index: 10;
 }
 
@@ -2805,11 +2816,20 @@ it from receiving any pointer events or affecting the cursor. */
 	margin-top: 0px;
 }
 
+.tlui-layer-panel--scroll-content {
+	position: relative;
+	height: 100%;
+	touch-action: auto;
+	overscroll-behavior: none;
+	overflow-y: auto;
+	overflow-x: hidden;
+	pointer-events: all;
+	width: 360px;
+	max-width: 360px;
+}
+
 .tlui-layer-panel {
 	position: relative;
-
-
-	/* z-index: var(--layer-panels); */
 	pointer-events: all;
 	width: 360px;
 	max-width: 360px;
