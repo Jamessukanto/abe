@@ -27,7 +27,7 @@ export const LayerItemInput = function LayerItemInput({
 	const rMark = useRef<string | null>(null)
 
 	const handleFocus = useCallback(() => {
-		rMark.current = editor.markHistoryStoppingPoint('rename page')
+		rMark.current = editor.markHistoryStoppingPoint('rename shape')
 	}, [editor])
 
 	// const handleChange = useCallback(
@@ -41,10 +41,18 @@ export const LayerItemInput = function LayerItemInput({
 	const handleChange = useCallback(
 		(value: string) => {
 			renameShape(id, value || 'New Region')
-			// trackEvent('rename-shape', { source: 'page-menu' })
+			trackEvent('rename-shape', { source: 'layer-tree' })
 		},
 		[editor, id, trackEvent]
 	)
+	const handleBlur = useCallback(() => {
+		// Only commit if the name actually changed
+		if (onComplete && rInput.current && rInput.current.value !== name) {
+			onComplete()
+		} else {
+			onCancel()
+		}
+	}, [onComplete, onCancel, name])
 
 	const handleCancel = useCallback(() => {
 		if (rMark.current) {
@@ -61,7 +69,7 @@ export const LayerItemInput = function LayerItemInput({
 				onValueChange={handleChange}
 				onComplete={onComplete}
 				onCancel={handleCancel}
-				onBlur={handleCancel}
+				onBlur={handleBlur}
 				onFocus={handleFocus}
 				shouldManuallyMaintainScrollPositionWhenFocused
 				autoFocus={true}
