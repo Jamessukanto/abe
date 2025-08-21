@@ -1519,14 +1519,14 @@ export class Editor extends EventEmitter<TLEventMap> {
 
 	/**
 	 * Get the next shape name based on the current counter
-	 * @returns The next shape name (e.g., "Shape 1", "Shape 2")
+	 * @returns The next shape name (e.g., "Region 1", "Region 2")
 	 */
 	private getNextShapeName(): string {
 		const document = this.store.get(TLDOCUMENT_ID)
-		if (!document) return 'Shape 1'
+		if (!document) return 'Region 1'
 		
 		const counter = (document.meta?.shapeCounter as number) ?? 0
-		return `Shape ${counter + 1}`
+		return `Region ${counter + 1}`
 	}
 
 	/**
