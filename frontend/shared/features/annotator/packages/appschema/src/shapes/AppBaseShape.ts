@@ -3,17 +3,17 @@ import { IndexKey, JsonObject } from '@annotator/utils'
 import { T } from '@annotator/validate'
 
 import { idValidator } from '../misc/id-validator'
-import { AppParentId, AppShapeId } from '../records/AppShape'
+import { TLParentId, TLShapeId } from '../records/AppShape'
 
 /** @public */
 export interface AppBaseShape<Type extends string, Props extends object>
-	extends BaseRecord<'shape', AppShapeId> {
+	extends BaseRecord<'shape', TLShapeId> {
 	type: Type
 	x: number
 	y: number
 	rotation: number
 	index: IndexKey
-	parentId: AppParentId
+	parentId: TLParentId
 	isLocked: boolean
 	props: Props
 	meta: JsonObject
@@ -24,11 +24,11 @@ export const parentIdValidator = T.string.refine((id) => {
 	if (!id.startsWith('page:') && !id.startsWith('shape:')) {
 		throw new Error('Parent ID must start with "page:" or "shape:"')
 	}
-	return id as AppParentId
+	return id as TLParentId
 })
 
 /** @public */
-export const shapeIdValidator = idValidator<AppShapeId>('shape')
+export const shapeIdValidator = idValidator<TLShapeId>('shape')
 
 /** @public */
 export function createShapeValidator<

@@ -23,7 +23,13 @@ export const DefaultLayerPanel = memo(function DefaultLayerPanel() {
 
 		<div className={classNames('tlui-layer-panel__wrapper')}>
 			
-			<div className="tlui-layer-panel__header">
+			<div
+				className="tlui-layer-panel__header"
+				style={{
+					stroke: 'red',
+					position: 'sticky',
+				}}
+			>
 				<div className="tlui-layer-panel__header__title">{msg('layer-panel.title')}</div>
 			</div>
 

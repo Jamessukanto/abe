@@ -9,11 +9,8 @@ import { mapObjectMapValues, uniqueId } from '@annotator/utils'
 import { T } from '@annotator/validate'
 import { SchemaPropsInfo } from '../createTLSchema'
 import { TLPropsMigrations } from '../recordsWithProps'
-import { TLBaseShape, createShapeValidator } from '../shapes/TLBaseShape'
-import { TLBookmarkShape } from '../shapes/TLBookmarkShape'
+import { AppBaseShape, createShapeValidator } from '../shapes/AppBaseShape'
 import { AnnotatorShape } from '../shapes/AnnotatorShape'
-
-
 import { AppGeoShape } from '../shapes/AppGeoShape'
 import { AppGroupShape } from '../shapes/AppGroupShape'
 import { AppHighlightShape } from '../shapes/AppHighlightShape'
@@ -23,7 +20,7 @@ import { AppNoteShape } from '../shapes/AppNoteShape'
 import { AppTextShape } from '../shapes/AppTextShape'
 import { AppVideoShape } from '../shapes/AppVideoShape'
 import { StyleProp } from '../styles/StyleProp'
-import { TLPageId } from './TLPage'
+import { AppPageId } from './AppPage'
 import { StoreValidator } from '@annotator/store'
 
 /**
@@ -31,24 +28,22 @@ import { StoreValidator } from '@annotator/store'
  *
  * @public */
 export type TLDefaultShape =
-	| TLBookmarkShape
 	| AnnotatorShape
-
-	| TLGeoShape
-	| TLGroupShape
-	| TLImageShape
-	| TLLineShape
-	| TLNoteShape
-	| TLTextShape
-	| TLVideoShape
-	| TLHighlightShape
+	| AppGeoShape
+	| AppGroupShape
+	| AppImageShape
+	| AppLineShape
+	| AppNoteShape
+	| AppTextShape
+	| AppVideoShape
+	| AppHighlightShape
 
 /**
  * A type for a shape that is available in the editor but whose type is
  * unknown—either one of the editor's default shapes or else a custom shape.
  *
  * @public */
-export type TLUnknownShape = TLBaseShape<string, object>
+export type TLUnknownShape = AppBaseShape<string, object>
 
 /**
  * The set of all shapes that are available in the editor, including unknown shapes.
@@ -71,7 +66,7 @@ export type TLShapePartial<T extends TLShape = TLShape> = T extends T
 export type TLShapeId = RecordId<TLUnknownShape>
 
 /** @public */
-export type TLParentId = TLPageId | TLShapeId
+export type TLParentId = AppPageId | TLShapeId
 
 /** @public */
 export const rootShapeVersions = createMigrationIds('com.annotator.shape', {

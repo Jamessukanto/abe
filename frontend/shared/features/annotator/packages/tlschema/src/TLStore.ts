@@ -228,7 +228,14 @@ export function createIntegrityChecker(store: Store<TLRecord, TLStoreProps>): ()
 	const ensureStoreIsUsable = (): void => {
 		// make sure we have exactly one document
 		if (!store.has(TLDOCUMENT_ID)) {
-			store.put([DocumentRecordType.create({ id: TLDOCUMENT_ID, name: store.props.defaultName })])
+			store.put([DocumentRecordType.create({ 
+				id: TLDOCUMENT_ID, 
+				name: store.props.defaultName,
+				meta: {
+					shapeCounter: 0,
+					groupCounter: 0,
+				}
+			})])
 			return ensureStoreIsUsable()
 		}
 

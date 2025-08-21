@@ -1517,6 +1517,64 @@ export class Editor extends EventEmitter<TLEventMap> {
 		return this
 	}
 
+	/**
+	 * Get the next shape name based on the current counter
+	 * @returns The next shape name (e.g., "Shape 1", "Shape 2")
+	 */
+	private getNextShapeName(): string {
+		const document = this.store.get(TLDOCUMENT_ID)
+		if (!document) return 'Shape 1'
+		
+		const counter = (document.meta?.shapeCounter as number) ?? 0
+		return `Shape ${counter + 1}`
+	}
+
+	/**
+	 * Get the next group name based on the current counter
+	 * @returns The next group name (e.g., "Group 1", "Group 2")
+	 */
+	private getNextGroupName(): string {
+		const document = this.store.get(TLDOCUMENT_ID)
+		if (!document) return 'Group 1'
+		
+		const counter = (document.meta?.groupCounter as number) ?? 0
+		return `Group ${counter + 1}`
+	}
+
+	/**
+	 * Increment the shape counter in the document metadata
+	 */
+	private incrementShapeCounter(): void {
+		const document = this.store.get(TLDOCUMENT_ID)
+		if (!document) return
+		
+		const currentCounter = (document.meta?.shapeCounter as number) ?? 0
+		this.store.update(TLDOCUMENT_ID, (doc: any) => ({
+			...doc,
+			meta: {
+				...doc.meta,
+				shapeCounter: currentCounter + 1,
+			},
+		}))
+	}
+
+	/**
+	 * Increment the group counter in the document metadata
+	 */
+	private incrementGroupCounter(): void {
+		const document = this.store.get(TLDOCUMENT_ID)
+		if (!document) return
+		
+		const currentCounter = (document.meta?.groupCounter as number) ?? 0
+		this.store.update(TLDOCUMENT_ID, (doc: any) => ({
+			...doc,
+			meta: {
+				...doc.meta,
+				groupCounter: currentCounter + 1,
+			},
+		}))
+	}
+
 	/* ----------------- Instance State ----------------- */
 
 	/**
@@ -7994,6 +8052,26 @@ export class Editor extends EventEmitter<TLEventMap> {
 				shape.meta = {
 					...this.getInitialMetaForShape(shape),
 					...shape.meta,
+				}
+			})
+
+			// Set default names and increment counters for new shapes
+			shapeRecordsToCreate.forEach((shape) => {
+				// Only set default name if no custom name is provided
+				if (!shape.meta?.customName) {
+					if (shape.type === 'group') {
+						shape.meta = {
+							...shape.meta,
+							customName: this.getNextGroupName(),
+						}
+						this.incrementGroupCounter()
+					} else {
+						shape.meta = {
+							...shape.meta,
+							customName: this.getNextShapeName(),
+						}
+						this.incrementShapeCounter()
+					}
 				}
 			})
 

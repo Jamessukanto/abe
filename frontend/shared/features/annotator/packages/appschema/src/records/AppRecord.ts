@@ -3,11 +3,11 @@ import { AppBinding } from './AppBinding'
 import { AppCamera } from './AppCamera'
 import { AppDocument } from './AppDocument'
 import { AppInstance } from './AppInstance'
-import { TLPage } from './TLPage'
-import { TLInstancePageState } from './TLPageState'
-import { TLPointer } from './TLPointer'
-import { TLInstancePresence } from './TLPresence'
-import { TLShape } from './TLShape'
+import { AppPage } from './AppPage'
+import { TLShape } from './AppShape'
+import { AppInstancePageState } from './AppPageState'
+import { AppPointer } from './AppPointer'
+import { AppInstancePresence } from './AppPresence'
 
 /** @public */
 export type TLRecord =
@@ -18,6 +18,6 @@ export type TLRecord =
 	| AppInstance
 	| AppInstancePageState
 	| AppPage
-	| AppShape
+	| TLShape
 	| AppInstancePresence
 	| AppPointer

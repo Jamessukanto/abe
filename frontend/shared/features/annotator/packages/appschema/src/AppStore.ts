@@ -9,12 +9,12 @@ import {
 import { IndexKey, JsonObject, annotateError, structuredClone } from '@annotator/utils'
 import { AppAsset, AppAssetId } from './records/AppAsset'
 import { CameraRecordType, AppCameraId } from './records/AppCamera'
-import { DocumentRecordType, AppDOCUMENT_ID } from './records/AppDocument'
+import { DocumentRecordType, TLDOCUMENT_ID } from './records/AppDocument'
 import { AppINSTANCE_ID } from './records/AppInstance'
 import { PageRecordType, AppPageId } from './records/AppPage'
 import { InstancePageStateRecordType, AppInstancePageStateId } from './records/AppPageState'
 import { PointerRecordType, AppPOINTER_ID } from './records/AppPointer'
-import { AppRecord } from './records/AppRecord'
+import { TLRecord } from './records/AppRecord'
 
 function sortByIndex<T extends { index: string }>(a: T, b: T) {
 	if (a.index < b.index) {
@@ -38,13 +38,13 @@ function redactRecordForErrorReporting(record: any) {
 }
 
 /** @public */
-export type AppStoreSchema = StoreSchema<AppRecord, AppStoreProps>
+export type AppStoreSchema = StoreSchema<TLRecord, AppStoreProps>
 
 /** @public */
-export type AppSerializedStore = SerializedStore<AppRecord>
+export type AppSerializedStore = SerializedStore<TLRecord>
 
 /** @public */
-export type AppStoreSnapshot = StoreSnapshot<AppRecord>
+export type AppStoreSnapshot = StoreSnapshot<TLRecord>
 
 /** @public */
 export interface AppAssetContext {
@@ -137,7 +137,7 @@ export interface AppStoreProps {
 }
 
 /** @public */
-export type AppStore = Store<AppRecord, AppStoreProps>
+export type AppStore = Store<TLRecord, AppStoreProps>
 
 /** @public */
 export function onValidationFailure({
@@ -145,7 +145,7 @@ export function onValidationFailure({
 	phase,
 	record,
 	recordBefore,
-}: StoreValidationFailure<AppRecord>): AppRecord {
+}: StoreValidationFailure<TLRecord>): TLRecord {
 	const isExistingValidationIssue =
 		// if we're initializing the store for the first time, we should
 		// allow invalid records so people can load old buggy data:
@@ -221,14 +221,21 @@ function getDefaultPages() {
 }
 
 /** @internal */
-export function createIntegrityChecker(store: Store<AppRecord, AppStoreProps>): () => void {
+export function createIntegrityChecker(store: Store<TLRecord, AppStoreProps>): () => void {
 	const $pageIds = store.query.ids('page')
 	const $pageStates = store.query.records('instance_page_state')
 
 	const ensureStoreIsUsable = (): void => {
 		// make sure we have exactly one document
-		if (!store.has(AppDOCUMENT_ID)) {
-			store.put([DocumentRecordType.create({ id: AppDOCUMENT_ID, name: store.props.defaultName })])
+		if (!store.has(TLDOCUMENT_ID)) {
+			store.put([DocumentRecordType.create({ 
+				id: TLDOCUMENT_ID, 
+				name: store.props.defaultName,
+				meta: {
+					shapeCounter: 0,
+					groupCounter: 0,
+				}
+			})])
 			return ensureStoreIsUsable()
 		}
 

@@ -57,7 +57,8 @@
 		"@annotator/state": "workspace:*",
 		"@annotator/store": "workspace:*",
 		"@annotator/utils": "workspace:*",
-		"@annotator/validate": "workspace:*"
+		"@annotator/validate": "workspace:*",
+		"@annotator/tlschema": "workspace:*"
 	},
 	"peerDependencies": {
 		"react": "^18.2.0 || ^19.0.0",
