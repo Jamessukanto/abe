@@ -104,7 +104,7 @@ const AnnotatorUiContent = React.memo(function AnnotatorUi() {
 		MenuPanel,
 		StylePanel,
 		Toolbar,
-		LayerPanel,
+		RightPanel,
 		InspectorPanel,
 		HelpMenu,
 		NavigationPanel,
@@ -192,7 +192,7 @@ const AnnotatorUiContent = React.memo(function AnnotatorUi() {
 
 							<div className="tlui-layout__top__left">
 								{/* {TopPanel && <TopPanel />} */}
-								{/* {MenuPanel && <MenuPanel />} */}
+								{MenuPanel && <MenuPanel />}
 								{HelperButtons && <HelperButtons />}
 							</div>
 
@@ -221,7 +221,7 @@ const AnnotatorUiContent = React.memo(function AnnotatorUi() {
 						className="tlui-layout__right" 
 						style={{backgroundColor: 'red'}}
 					>
-						{LayerPanel && <LayerPanel />}
+						{RightPanel && <RightPanel />}
 						{/* {InspectorPanel && <InspectorPanel />} */}
 						<div style={{backgroundColor: 'red'}}>lorem</div>
 					</div>

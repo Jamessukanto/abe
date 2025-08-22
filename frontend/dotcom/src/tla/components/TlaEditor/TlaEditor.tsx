@@ -48,7 +48,7 @@ import { useFileEditorOverrides } from './useFileEditorOverrides'
 /** @internal */
 export const components: TLComponents = {
 	ErrorFallback: TlaEditorErrorFallback,
-	// MenuPanel: TlaEditorMenuPanel,
+	MenuPanel: TlaEditorMenuPanel,
 	TopPanel: TlaEditorTopPanel,
 	// SharePanel: TlaEditorSharePanel,
 	Dialogs: null,
@@ -253,7 +253,7 @@ function TlaEditorInner({ fileSlug, deepLinks }: TlaEditorProps) {
 		<TlaEditorWrapper>
 			<Annotator
 				className="tla-editor"
-				licenseKey={getLicenseKey()}
+				// licenseKey={getLicenseKey()}
 				store={store}
 				assetUrls={assetUrls}
 				user={app?.tlUser}
