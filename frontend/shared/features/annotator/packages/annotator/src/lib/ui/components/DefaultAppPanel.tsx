@@ -30,7 +30,6 @@ export const DefaultAppPanel = memo(function AppPanel() {
 	const msg = useTranslation()
 	const breakpoint = useBreakpoint()
 	const isTabletAndAbove = breakpoint >= PORTRAIT_BREAKPOINT.TABLET
-	const [inputValue, setInputValue] = useState('')
 
 	const pages = useValue('pages', () => editor.getPages(), [editor])
 	const currentPage = useValue('currentPage', () => editor.getCurrentPage(), [editor])	
@@ -41,6 +40,7 @@ export const DefaultAppPanel = memo(function AppPanel() {
 		currPageIdx = currPageIdx + 1
 		return { currPageIdx, prevPage, nextPage }
 	}, [currentPage])
+	const [inputValue, setInputValue] = useState(currPageIdx.toString())
 
 	const changePage = useCallback(
 		(id: TLPageId) => {
@@ -62,10 +62,6 @@ export const DefaultAppPanel = memo(function AppPanel() {
 		alert(`Please enter digits only from 1 to ${pages.length}.`)
 		setInputValue(currPageIdx.toString())
 	}, [pages, currPageIdx, changePage])
-
-	
-
-
 
 	return (
 		<nav
