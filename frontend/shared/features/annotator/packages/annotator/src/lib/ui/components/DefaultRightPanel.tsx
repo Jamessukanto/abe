@@ -12,7 +12,7 @@ import classNames from 'classnames'
 export const DefaultRightPanel = memo(function DefaultRightPanel() {
 	const breakpoint = useBreakpoint()
 
-	const { LayerTree, MainMenu, ActionsMenu } = useAnnotatorUiComponents()
+	const { LayerTree } = useAnnotatorUiComponents()
 
 	const editor = useEditor()
 
@@ -23,15 +23,6 @@ export const DefaultRightPanel = memo(function DefaultRightPanel() {
 
 			{LayerTree && <LayerTree />}
 
-
-			{/* <div className="tlui-buttons__horizontal">
-				{MainMenu && <MainMenu />}
-				{
-					<AnnotatorUiToolbar className="tlui-buttons__horizontal" label={msg('actions-menu.title')}>
-						{ActionsMenu && <ActionsMenu />}
-					</AnnotatorUiToolbar>
-				}
-			</div> */}
 			
 		</div>
 	)

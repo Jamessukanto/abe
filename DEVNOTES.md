@@ -1,32 +1,24 @@
-**Dependencies to Clean:**
-- Remove Arrow from default shape tools
-- Remove Arrow from default shape utils
-- Remove Arrow from default binding utils
-- Remove Arrow from schema definitions
-- Remove Arrow-related tests
-- Remove Arrow from toolbar and UI components
-
-**Requirements:**
-- Remove ALL Arrow functionality cleanly
-- Ensure no broken references remain
-- Maintain all other drawing tools (rectangle, circle, etc.)
-- Verify the dev server still works
-- Ensure type checking passes
-- Test that other shapes still work properly
+**TO DO:**
+- Nav UI
+- Image as Background component
+    - Background component renders at the page level
+    - Image dimensions are handled by the background component
+    - Canvas scales to fit the image dimensions
+    - Annotations are positioned relative to the image coordinates
+    - upon opening a page, the intial zoom level is relative to the image dimensions ratio
+    - user can pan outside image but not annotate outside image
+- Annotation Positioning relative to IMAGE coordinates
 
 
 
-
-
-
+. Key Files for Implementation
+DefaultCanvas.tsx: Main canvas rendering
+DefaultBackground.tsx: Background system (currently just a colored div)
+ImageShapeUtil.tsx: Current image handling
+Editor.ts: Camera and coordinate system
+AppPage.ts: Page structure
 
 
 
 
-
-
-
-
-
-------------
 

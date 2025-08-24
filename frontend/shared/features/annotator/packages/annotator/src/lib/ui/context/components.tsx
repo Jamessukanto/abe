@@ -13,6 +13,7 @@ import { CursorChatBubble } from '../components/CursorChatBubble'
 import { DefaultDebugMenu } from '../components/DebugMenu/DefaultDebugMenu'
 import { DefaultDebugPanel } from '../components/DefaultDebugPanel'
 import { DefaultMenuPanel } from '../components/DefaultMenuPanel'
+import { DefaultAppPanel } from '../components/DefaultAppPanel'
 import { DefaultDialogs } from '../components/Dialogs'
 import { TLUiHelpMenuProps } from '../components/HelpMenu/DefaultHelpMenu'
 import {
@@ -71,6 +72,7 @@ export interface TLUiComponents {
 	DebugPanel?: ComponentType | null
 	DebugMenu?: ComponentType | null
 	MenuPanel?: ComponentType | null
+	AppPanel?: ComponentType | null
 	TopPanel?: ComponentType | null
 	SharePanel?: ComponentType | null
 	CursorChatBubble?: ComponentType | null
@@ -120,6 +122,7 @@ export function AnnotatorUiComponentsProvider({
 					DebugPanel: DefaultDebugPanel,
 					DebugMenu: DefaultDebugMenu,
 					MenuPanel: DefaultMenuPanel,
+					AppPanel: DefaultAppPanel,
 					SharePanel: showCollaborationUi ? DefaultSharePanel : null,
 					CursorChatBubble: showCollaborationUi ? CursorChatBubble : null,
 					TopPanel: showCollaborationUi ? DefaultTopPanel : null,

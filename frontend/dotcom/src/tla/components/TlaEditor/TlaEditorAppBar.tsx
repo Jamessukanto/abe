@@ -49,13 +49,12 @@ const messages = defineMessages({
 
 // There are some styles in tla.css that adjust the regular tlui top panels
 
-export function TlaEditorTopLeftPanel({ isAnonUser }: { isAnonUser: boolean }) {
+export function TlaEditorAppBar({ isAnonUser }: { isAnonUser: boolean }) {
 	const ref = useRef<HTMLDivElement>(null)
 	usePassThroughWheelEvents(ref)
 
 	return (
 		<div ref={ref} className={classNames(styles.topLeftPanel)}>
-			tla top panel
 			<div className={classNames(styles.topLeftPanelButtons)}>
 				{isAnonUser ? <TlaEditorTopLeftPanelAnonymous /> : <TlaEditorTopLeftPanelSignedIn />}
 			</div>
@@ -89,7 +88,7 @@ export function TlaEditorTopLeftPanelAnonymous() {
 	return (
 		<>
 			{/* TODO: james  */}
-			{/* <Link to="/" className={styles.topLeftOfflineLogo}>
+			<Link to="/" className={styles.topLeftOfflineLogo}>
 				<TlaLogo data-testid="tla-sidebar-logo-icon" />
 			</Link>
 			{anonFileName && (
@@ -107,13 +106,13 @@ export function TlaEditorTopLeftPanelAnonymous() {
 						</button>
 					</div>
 				</>
-			)} */}
-			{/* {hasPages && (
+			)}
+			{hasPages && (
 				<>
 					<span className={styles.topLeftPanelSeparator}>{separator}</span>
 					<DefaultPageMenu />
 				</>
-			)} */}
+			)}
 			<AnnotatorUiDropdownMenuRoot id={`file-menu-anon`}>
 				<AnnotatorUiMenuContextProvider type="menu" sourceId="dialog">
 					<AnnotatorUiDropdownMenuTrigger>

@@ -47,7 +47,7 @@ export const DefaultToolbar = memo(function DefaultToolbar({ children }: Default
 		<div ref={ref} className="tlui-toolbar">
 			<div className="tlui-toolbar__inner">
 				<div className="tlui-toolbar__left">
-					{!isReadonlyMode && (
+					{/* {!isReadonlyMode && (
 						<div className="tlui-toolbar__extras">
 							{showQuickActions && (
 								<AnnotatorUiToolbar
@@ -60,7 +60,7 @@ export const DefaultToolbar = memo(function DefaultToolbar({ children }: Default
 							)}
 							<ToggleToolLockedButton activeToolId={activeToolId} />
 						</div>
-					)}
+					)} */}
 					<OverflowingToolbar>{children ?? <DefaultToolbarContent />}</OverflowingToolbar>
 				</div>
 				{breakpoint < PORTRAIT_BREAKPOINT.TABLET_SM && !isReadonlyMode && (

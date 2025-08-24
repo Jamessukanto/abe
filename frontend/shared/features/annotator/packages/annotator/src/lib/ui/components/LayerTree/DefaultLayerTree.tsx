@@ -4,7 +4,6 @@ import {
 	releasePointerCapture,
 	setPointerCapture,
 	stopEventPropagation,
-	tlenv,
 	useEditor,
 	useReversedChildrenShapes, 
 	useCurrentPageId,

@@ -36,7 +36,7 @@ import { maybeSlurp } from '../../utils/slurping'
 import { A11yAudit } from './TlaDebug'
 import { TlaEditorWrapper } from './TlaEditorWrapper'
 import { TlaEditorErrorFallback } from './editor-components/TlaEditorErrorFallback'
-import { TlaEditorMenuPanel } from './editor-components/TlaEditorMenuPanel'
+import { TlaEditorAppPanel } from './editor-components/TlaEditorAppPanel'
 import { TlaEditorSharePanel } from './editor-components/TlaEditorSharePanel'
 import { TlaEditorTopPanel } from './editor-components/TlaEditorTopPanel'
 import { SneakyDarkModeSync } from './sneaky/SneakyDarkModeSync'
@@ -48,7 +48,7 @@ import { useFileEditorOverrides } from './useFileEditorOverrides'
 /** @internal */
 export const components: TLComponents = {
 	ErrorFallback: TlaEditorErrorFallback,
-	MenuPanel: TlaEditorMenuPanel,
+	// AppPanel: TlaEditorAppPanel,  // TODO: james
 	TopPanel: TlaEditorTopPanel,
 	// SharePanel: TlaEditorSharePanel,
 	Dialogs: null,

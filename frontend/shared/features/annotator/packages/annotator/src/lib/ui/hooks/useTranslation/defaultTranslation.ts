@@ -283,6 +283,8 @@ export const DEFAULT_TRANSLATION = {
 	'page-menu.edit-start': 'Edit',
 	'page-menu.edit-done': 'Done',
 	'page-menu.go-to-page': 'Go to page',
+	'page-menu.go-to-next-image': 'Go to next image frame',
+	'page-menu.go-to-previous-image': 'Go to previous image frame',
 	'page-menu.submenu.rename': 'Rename',
 	'page-menu.submenu.duplicate-page': 'Duplicate',
 	'page-menu.submenu.title': 'Menu',

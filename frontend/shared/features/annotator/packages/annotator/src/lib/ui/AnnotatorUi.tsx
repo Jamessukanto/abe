@@ -95,6 +95,8 @@ const AnnotatorUiContent = React.memo(function AnnotatorUi() {
 	const msg = useTranslation()
 	const breakpoint = useBreakpoint()
 	const isReadonlyMode = useReadonly()
+	const isTabletSmAndAbove = breakpoint >= PORTRAIT_BREAKPOINT.TABLET_SM
+	const isTabletAndAbove = breakpoint >= PORTRAIT_BREAKPOINT.TABLET
 	const isFocusMode = useValue('focus', () => editor.getInstanceState().isFocusMode, [editor])
 	const isDebugMode = useValue('debug', () => editor.getInstanceState().isDebugMode, [editor])
 
@@ -102,6 +104,7 @@ const AnnotatorUiContent = React.memo(function AnnotatorUi() {
 		SharePanel,
 		TopPanel,
 		MenuPanel,
+		AppPanel,
 		StylePanel,
 		Toolbar,
 		RightPanel,
@@ -163,77 +166,82 @@ const AnnotatorUiContent = React.memo(function AnnotatorUi() {
 	const { 'toggle-focus-mode': toggleFocus } = useActions()
 
 	return (
-		<div
-			className={classNames('tlui-layout', {
-				'tlui-layout__mobile': breakpoint < PORTRAIT_BREAKPOINT.TABLET_SM,
-			})}
-			// When the virtual keyboard is opening we want it to hide immediately.
-			// But when the virtual keyboard is closing we want to wait a bit before showing it again.
-			data-iseditinganything={hideToolbarWhileEditing}
-			data-breakpoint={breakpoint}
-		>
-			<SkipToMainContent />
-			{isFocusMode ? (
-				<div className="tlui-layout__canvas__inner">
-					<AnnotatorUiButton
-						type="icon"
-						className="tlui-focus-button"
-						title={msg('focus-mode.toggle-focus-mode')}
-						onClick={() => toggleFocus.onSelect('menu')}
-					>
-						<AnnotatorUiButtonIcon icon="dot" />
-					</AnnotatorUiButton>
-				</div>
-			) : (
-				<>
-					<div className="tlui-layout__canvas__outer">
+		<div className={"tlui-layout__wrapper"}>
+			{AppPanel && <AppPanel />}
 
-						<div className="tlui-layout__canvas__inner">
-
-							<div className="tlui-layout__top__left">
-								{/* {TopPanel && <TopPanel />} */}
-								{MenuPanel && <MenuPanel />}
-								{HelperButtons && <HelperButtons />}
+			<div
+				className={classNames('tlui-layout__grid', {
+					// 'tlui-layout__mobile': breakpoint < PORTRAIT_BREAKPOINT.TABLET_SM,
+					'tlui-layout__grid-tablet': !isTabletAndAbove,
+				})}
+				// When the virtual keyboard is opening we want it to hide immediately.
+				// But when the virtual keyboard is closing we want to wait a bit before showing it again.
+				data-iseditinganything={hideToolbarWhileEditing}
+				data-breakpoint={breakpoint}
+			>
+				<SkipToMainContent />
+				{isFocusMode ? (
+					<div className="tlui-layout__canvas__top">
+						<AnnotatorUiButton
+							type="icon"
+							className="tlui-focus-button"
+							title={msg('focus-mode.toggle-focus-mode')}
+							onClick={() => toggleFocus.onSelect('menu')}
+						>
+							<AnnotatorUiButtonIcon icon="dot" />
+						</AnnotatorUiButton>
+					</div>
+				) : (	
+					<>
+						<div className="tlui-layout__canvas">
+							<div className="tlui-layout__canvas__top">
+								<div className="tlui-layout__canvas__top__left">
+									{TopPanel && <TopPanel />}
+									{/* {MenuPanel && <MenuPanel />} */}
+									{HelperButtons && <HelperButtons />}
+								</div>
+								<div className="tlui-layout__canvas__top__right">
+									{/* {SharePanel && <SharePanel />} */}
+									{StylePanel && isTabletSmAndAbove && !isReadonlyMode && (
+										<StylePanel />
+									)}
+								</div>
 							</div>
 
-							<div className="tlui-layout__top__right">
-								{/* {SharePanel && <SharePanel />} */}
-								{StylePanel && breakpoint >= PORTRAIT_BREAKPOINT.TABLET_SM && !isReadonlyMode && (
-									<StylePanel />
-								)}
+							<div className="tlui-layout__canvas__bottom">
+								<div className="tlui-layout__canvas__bottom__main">
+									{NavigationPanel && <NavigationPanel />}
+									{Toolbar && <Toolbar />}
+									{HelpMenu && <HelpMenu />}
+								</div>
+								{isDebugMode && DebugPanel && <DebugPanel />}
+								{A11y && <A11y />}
 							</div>
-
 						</div>
 
-						<div className="tlui-layout__bottom">
-							<div className="tlui-layout__bottom__main">
-								{NavigationPanel && <NavigationPanel />}
-								{Toolbar && <Toolbar />}
-								{HelpMenu && <HelpMenu />}
-							</div>
-							{isDebugMode && DebugPanel && <DebugPanel />}
-							{A11y && <A11y />}
-						</div>
+						{isTabletSmAndAbove && <div 
+							className="tlui-layout__right__panel" 
+							style={{backgroundColor: 'red'}}
+						>
+							{RightPanel && <RightPanel />}
+							{/* {InspectorPanel && <InspectorPanel />} */}
+							<div style={{backgroundColor: 'red'}}>lorem</div>
+						</div>}
+						{console.log('ImageToolbar', ImageToolbar)}
 
-					</div>
+						
+					</>
+					// </div>
+				)}
+				{RichTextToolbar && <RichTextToolbar />}
+				{ImageToolbar && <ImageToolbar />}
+				{VideoToolbar && <VideoToolbar />}
+				{Toasts && <Toasts />}
+				{Dialogs && <Dialogs />}
+				<FollowingIndicator />
+				{CursorChatBubble && <CursorChatBubble />}
+			</div>
 
-					<div 
-						className="tlui-layout__right" 
-						style={{backgroundColor: 'red'}}
-					>
-						{RightPanel && <RightPanel />}
-						{/* {InspectorPanel && <InspectorPanel />} */}
-						<div style={{backgroundColor: 'red'}}>lorem</div>
-					</div>
-				</>
-			)}
-			{RichTextToolbar && <RichTextToolbar />}
-			{ImageToolbar && <ImageToolbar />}
-			{VideoToolbar && <VideoToolbar />}
-			{Toasts && <Toasts />}
-			{Dialogs && <Dialogs />}
-			<FollowingIndicator />
-			{CursorChatBubble && <CursorChatBubble />}
 		</div>
 	)
 })
