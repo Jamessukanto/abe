@@ -38,22 +38,22 @@ export const pageValidator: T.Validator<AppPage> = T.model(
 	})
 )
 
-/** @public */
-export const pageVersions = createMigrationIds('com.annotator.page', {
-	AddMeta: 1,
-})
+// /** @public */
+// export const pageVersions = createMigrationIds('com.annotator.page', {
+// 	AddMeta: 1,
+// })
 
 /** @public */
 export const pageMigrations = createRecordMigrationSequence({
 	sequenceId: 'com.annotator.page',
 	recordType: 'page',
 	sequence: [
-		{
-			id: pageVersions.AddMeta,
-			up: (record: any) => {
-				record.meta = {}
-			},
-		},
+		// {
+		// 	id: pageVersions.AddMeta,
+		// 	up: (record: any) => {
+		// 		record.meta = {}
+		// 	},
+		// },
 	],
 })
 
