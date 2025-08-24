@@ -72,8 +72,8 @@ export const DefaultAppPanel = memo(function AppPanel() {
 			{/* Frame header */}
 			{isTabletAndAbove && <div className="tlui-layout__app__header">
 				<div className="tlui-layout__app__subtitle">
-					<div>Project Demo</div>
-					<div>{separator}</div>
+					{/* <div>Project Demo</div>
+					<div>{separator}</div> */}
 					<div>Job ID: anno-xxxxx-xxxxx</div>
 				</div>
 				{/* TODO: james to fix demo hack */}
