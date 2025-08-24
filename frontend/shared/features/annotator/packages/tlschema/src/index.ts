@@ -77,6 +77,7 @@ export {
 	isPageId,
 	pageIdValidator,
 	PageRecordType,
+	pageValidator,
 	type TLPage,
 	type TLPageId,
 } from './records/TLPage'

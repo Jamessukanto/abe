@@ -1,16 +1,9 @@
-import {
-	PageRecordType,
-	TLPageId,
-	stopEventPropagation,
-	useEditor,
-	useValue,
-} from '@annotator/editor'
-import { memo, useCallback, ReactNode, useState } from 'react'
-import { useAnnotatorUiComponents } from '../context/components'
+import { TLPage, useEditor, useValue } from '@annotator/editor'
+import { memo, useCallback, useState } from 'react'
 import { useTranslation } from '../hooks/useTranslation/useTranslation'
 import { useBreakpoint } from '../context/breakpoints'
 import { PORTRAIT_BREAKPOINT } from '../constants'
-import { AnnotatorUiToolbar } from './primitives/AnnotatorUiToolbar'
+import { pageValidator } from '@annotator/tlschema'
 
 import { useUiEvents } from '../context/events'
 import { AnnotatorUiButton } from './primitives/Button/AnnotatorUiButton'
@@ -19,7 +12,6 @@ import { AnnotatorUiButtonLabel } from './primitives/Button/AnnotatorUiButtonLab
 import { AnnotatorUiButtonCTA } from './primitives/Button/AnnotatorUiButtonCTA'
 import { AnnotatorUiInput } from './primitives/AnnotatorUiInput'
 import classnames from 'classnames'
-// import { onMovePage } from './edit-pages-shared'
 
 /** @public @react */
 export const DefaultAppPanel = memo(function AppPanel() {
@@ -43,9 +35,10 @@ export const DefaultAppPanel = memo(function AppPanel() {
 	const [inputValue, setInputValue] = useState(currPageIdx.toString())
 
 	const changePage = useCallback(
-		(id: TLPageId) => {
-			editor.setCurrentPage(id)
-			setInputValue((pages.findIndex(page => page.id === id) + 1).toString())
+		(page: TLPage | null) => {
+			if (!page || !pageValidator.validate(page)) return
+			editor.setCurrentPage(page.id)
+			setInputValue((pages.findIndex(p => p.id === page.id) + 1).toString())
 			trackEvent('change-page', { source: 'page-menu' })
 		},
 		[editor, trackEvent]
@@ -55,7 +48,7 @@ export const DefaultAppPanel = memo(function AppPanel() {
 			let val = parseInt(value, 10)
 			if (val > 0) {
 				val = Math.min(val, pages.length)
-				changePage(pages[val - 1].id)
+				changePage(pages[val - 1])
 				return
 			}
 		}
@@ -88,7 +81,7 @@ export const DefaultAppPanel = memo(function AppPanel() {
 			})}>
 				<AnnotatorUiButton
 					type="normal"
-					onClick={() => changePage(prevPage.id)}
+					onClick={() => changePage(prevPage)}
 					title={msg('page-menu.go-to-previous-image')}
 					disabled={!prevPage}
 				>
@@ -115,7 +108,7 @@ export const DefaultAppPanel = memo(function AppPanel() {
 				}
 				<AnnotatorUiButton
 					type="normal"
-					onClick={() => changePage(nextPage.id)}
+					onClick={() => changePage(nextPage)}
 					title={msg('page-menu.go-to-next-image')}
 					disabled={!nextPage}
 				>
